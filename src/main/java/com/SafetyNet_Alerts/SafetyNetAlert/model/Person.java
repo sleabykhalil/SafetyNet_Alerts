@@ -1,6 +1,8 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.model;
 
 
+import lombok.*;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -8,6 +10,11 @@ import javax.persistence.Id;
 /**
  * Person Entity
  */
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Entity
 public class Person {
     @Id
