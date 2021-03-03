@@ -2,6 +2,7 @@ package com.SafetyNet_Alerts.SafetyNetAlert.model;
 
 import lombok.*;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,7 +24,10 @@ public class MedicalRecord {
 
     private String firstName;
     private String lastName;
-    private String birthdate;
+    private String birthDate;
+
+    @ElementCollection
     private List<String> medications;
+    @ElementCollection
     private List<String> allergies;
 }
