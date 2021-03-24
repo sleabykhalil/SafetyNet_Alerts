@@ -12,13 +12,17 @@ import java.util.stream.Stream;
 
 public class JsonFileRW {
 
+public JsonFileModel jsonAsStringToJsonFileModel(String jsonAsString){
+return new JsonFileModel();
+}
+
     public String jsonFileToString() {
         Path path;
         Stream<String> lines = null;
         try {
             path = Paths.get(new ClassPathResource("data.json").getURI());
             lines = Files.lines(path);
-            String data = lines.collect(Collectors.joining("\n"));
+            String data = lines.collect(Collectors.joining(""));
             return data;
         } catch (IOException e) {
             e.printStackTrace();
@@ -27,8 +31,6 @@ public class JsonFileRW {
             lines.close();
 
         }
-
-
     }
 
 
