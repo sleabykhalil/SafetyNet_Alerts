@@ -10,16 +10,9 @@ import javax.persistence.Id;
 /**
  * Person Entity
  */
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
+@Data
 @Entity
 public class Person {
-    @Id
-    @GeneratedValue
-    private int Id;
 
     private String firstName;
     private String lastName;

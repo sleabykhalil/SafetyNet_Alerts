@@ -9,16 +9,9 @@ import javax.persistence.Id;
 /**
  * Firestation Entity
  */
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
+@Data
 @Entity
 public class Firestation {
-    @Id
-    @GeneratedValue
-    private int Id;
 
     private String address;
     private String station;

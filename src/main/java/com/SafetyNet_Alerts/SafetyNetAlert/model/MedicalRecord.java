@@ -11,16 +11,9 @@ import java.util.List;
 /**
  * Medical Record Entity
  */
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
+@Data
 @Entity
 public class MedicalRecord {
-    @Id
-    @GeneratedValue
-    private int Id;
 
     private String firstName;
     private String lastName;
