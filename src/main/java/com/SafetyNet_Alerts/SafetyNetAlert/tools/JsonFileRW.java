@@ -1,6 +1,7 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.tools;
 
 
+import com.jsoniter.JsonIterator;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
@@ -12,9 +13,17 @@ import java.util.stream.Stream;
 
 public class JsonFileRW {
 
-public JsonFileModel jsonAsStringToJsonFileModel(String jsonAsString){
-return new JsonFileModel();
-}
+    public JsonFileModel jsonAsStringToJsonFileModel(String jsonAsString) {
+        JsonFileModel jsonFileModel = JsonIterator.deserialize(jsonAsString, JsonFileModel.class);
+        /*JsonIterator iterator=JsonIterator.parse(jsonAsString);
+        JsonFileModel jsonFileModel = null;
+        try {
+            jsonFileModel = iterator.read(JsonFileModel.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        return jsonFileModel;
+    }
 
     public String jsonFileToString() {
         Path path;

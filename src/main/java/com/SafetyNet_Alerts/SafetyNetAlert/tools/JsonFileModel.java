@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 public class JsonFileModel {
-    List<Person> personList;
-    List<Firestation> firestationList;
-    List<MedicalRecord> medicalRecordList;
+    List<Person> persons;
+    List<Firestation> firestations;
+    List<MedicalRecord> medicalrecords;
 }
