@@ -1,11 +1,9 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.model;
 
-import lombok.*;
+import lombok.Data;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import java.util.List;
 
 /**
@@ -17,10 +15,13 @@ public class MedicalRecord {
 
     private String firstName;
     private String lastName;
-    private String birthDate;
+    private String birthdate;
 
     @ElementCollection
+    //@JsonProperty(decoder = MaybeEmptyArrayDecoder.class)
     private List<String> medications;
+
     @ElementCollection
+    //@JsonProperty(decoder = MaybeEmptyArrayDecoder.class)
     private List<String> allergies;
 }
