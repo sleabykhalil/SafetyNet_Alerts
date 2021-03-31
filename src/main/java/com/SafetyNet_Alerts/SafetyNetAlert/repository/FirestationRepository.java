@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -13,9 +14,18 @@ import java.util.List;
 public class FirestationRepository {
     private static List<Firestation> firestationList;
 
+    /**
+     * Data initialize get all firestation from json file
+     */
     @PostConstruct
     private void setup() {
         JsonFileRW jsonFileRW = new JsonFileRW();
         firestationList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString()).getFirestations();
+    }
+
+    public List<Firestation> findAll() {
+        List<Firestation> result;
+        result = firestationList;
+        return result;
     }
 }

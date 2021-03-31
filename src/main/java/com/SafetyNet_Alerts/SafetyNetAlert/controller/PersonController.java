@@ -13,6 +13,10 @@ public class PersonController {
     @Autowired
     PersonRepository personDao;
 
+    /**
+     * Get  for all persons
+     * @return list of person
+     */
     @GetMapping(value = "/Persons")
     public List<Person> getAllPersons(){
         return personDao.findAll();

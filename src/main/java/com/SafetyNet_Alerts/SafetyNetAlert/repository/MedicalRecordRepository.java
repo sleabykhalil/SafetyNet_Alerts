@@ -6,17 +6,27 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
+
 @Repository
 @AllArgsConstructor
 public class MedicalRecordRepository {
 
-        private static List<MedicalRecord> medicalRecordList;
+    private static List<MedicalRecord> medicalRecordList;
 
-        @PostConstruct
-        private void setup() {
-            JsonFileRW jsonFileRW = new JsonFileRW();
-            medicalRecordList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString()).getMedicalrecords();
-        }
-
+    /**
+     * Data initialize get all Medical records from json file
+     */
+    @PostConstruct
+    private void setup() {
+        JsonFileRW jsonFileRW = new JsonFileRW();
+        medicalRecordList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString()).getMedicalrecords();
     }
+
+    public List<MedicalRecord> findAll() {
+        List<MedicalRecord> result;
+        result = medicalRecordList;
+        return result;
+    }
+}

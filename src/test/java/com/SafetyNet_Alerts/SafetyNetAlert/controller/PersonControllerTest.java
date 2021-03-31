@@ -34,6 +34,7 @@ class PersonControllerTest {
                 .andExpect(content().string(containsString("Khalil")));
 
     }
+
     @Test
     void getAllFirestations() throws Exception {
 
@@ -43,6 +44,7 @@ class PersonControllerTest {
                 .andExpect(content().string(containsString("1509 Culver St")));
 
     }
+
     @Test
     void getAllMedicalRecordss() throws Exception {
 

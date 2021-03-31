@@ -14,14 +14,18 @@ import java.util.List;
 public class PersonRepository {
     private static List<Person> personList;
 
+    /**
+     * Data initialize get all person from json file
+     */
     @PostConstruct
     private void setup() {
         JsonFileRW jsonFileRW = new JsonFileRW();
         personList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString()).getPersons();
     }
-public List<Person> findAll(){
-        List<Person> result= new ArrayList<>();
-        result=personList;
+
+    public List<Person> findAll() {
+        List<Person> result;
+        result = personList;
         return result;
     }
 
