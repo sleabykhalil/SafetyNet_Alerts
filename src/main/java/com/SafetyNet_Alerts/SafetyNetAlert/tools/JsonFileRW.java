@@ -15,15 +15,7 @@ import java.util.stream.Stream;
 public class JsonFileRW {
 
     public JsonFileModel jsonAsStringToJsonFileModel(String jsonAsString) {
-        JsonFileModel jsonFileModel = JsonIterator.deserialize(jsonAsString, JsonFileModel.class);
-        /*JsonIterator iterator=JsonIterator.parse(jsonAsString);
-        JsonFileModel jsonFileModel = null;
-        try {
-            jsonFileModel = iterator.read(JsonFileModel.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-        return jsonFileModel;
+        return JsonIterator.deserialize(jsonAsString, JsonFileModel.class);
     }
 
     public String jsonFileToString() {
@@ -32,14 +24,13 @@ public class JsonFileRW {
         try {
             path = Paths.get(new ClassPathResource("data.json").getURI());
             lines = Files.lines(path);
-            String data = lines.collect(Collectors.joining(""));
-            return data;
+            return lines.collect(Collectors.joining(""));
         } catch (IOException e) {
             e.printStackTrace();
-            return "";
+            return "No result found";
         } finally {
+            assert lines != null;
             lines.close();
-
         }
     }
 
