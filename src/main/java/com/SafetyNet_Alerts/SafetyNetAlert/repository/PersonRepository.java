@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -18,6 +19,10 @@ public class PersonRepository {
         JsonFileRW jsonFileRW = new JsonFileRW();
         personList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString()).getPersons();
     }
-
+public List<Person> findAll(){
+        List<Person> result= new ArrayList<>();
+        result=personList;
+        return result;
+    }
 
 }

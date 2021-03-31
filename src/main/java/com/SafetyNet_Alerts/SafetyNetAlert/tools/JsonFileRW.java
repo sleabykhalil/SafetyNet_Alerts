@@ -16,13 +16,6 @@ public class JsonFileRW {
 
     public JsonFileModel jsonAsStringToJsonFileModel(String jsonAsString) {
         JsonFileModel jsonFileModel = JsonIterator.deserialize(jsonAsString, JsonFileModel.class);
-        /*JsonIterator iterator=JsonIterator.parse(jsonAsString);
-        JsonFileModel jsonFileModel = null;
-        try {
-            jsonFileModel = iterator.read(JsonFileModel.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
         return jsonFileModel;
     }
 
