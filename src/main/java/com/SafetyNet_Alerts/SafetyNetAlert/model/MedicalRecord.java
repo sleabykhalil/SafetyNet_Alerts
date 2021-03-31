@@ -1,7 +1,5 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.model;
 
-import com.jsoniter.annotation.JsonProperty;
-import com.jsoniter.fuzzy.MaybeEmptyArrayDecoder;
 import lombok.Data;
 
 import javax.persistence.ElementCollection;

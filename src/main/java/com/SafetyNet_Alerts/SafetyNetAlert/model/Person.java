@@ -1,11 +1,9 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.model;
 
 
-import lombok.*;
+import lombok.Data;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 /**
  * Person Entity

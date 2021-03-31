@@ -1,6 +1,7 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.tools;
 
 
+import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.jsoniter.JsonIterator;
 import org.springframework.core.io.ClassPathResource;
 
