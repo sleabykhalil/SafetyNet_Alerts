@@ -34,4 +34,22 @@ class PersonControllerTest {
                 .andExpect(content().string(containsString("Khalil")));
 
     }
+    @Test
+    void getAllFirestations() throws Exception {
+
+        mockMvc.perform(get("/Firestations"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("1509 Culver St")));
+
+    }
+    @Test
+    void getAllMedicalRecordss() throws Exception {
+
+        mockMvc.perform(get("/MedicalRecords"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("pharmacol:5000mg")));
+
+    }
 }
