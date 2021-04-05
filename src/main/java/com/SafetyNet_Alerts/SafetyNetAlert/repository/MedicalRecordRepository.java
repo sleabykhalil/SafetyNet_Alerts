@@ -1,5 +1,6 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.constants.jsonDataFileName;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
 import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
 import lombok.AllArgsConstructor;
@@ -21,8 +22,9 @@ public class MedicalRecordRepository {
     @PostConstruct
     private void setup() {
         JsonFileRW jsonFileRW = new JsonFileRW();
-        medicalRecordList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString()).getMedicalrecords();
+        medicalRecordList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString(jsonDataFileName.dataFileName)).getMedicalrecords();
     }
+
 
     public List<MedicalRecord> findAll() {
         List<MedicalRecord> result;
