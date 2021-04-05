@@ -1,13 +1,12 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
-import com.SafetyNet_Alerts.SafetyNetAlert.constants.jsonDataFileName;
+import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileName;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
 import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -22,7 +21,7 @@ public class MedicalRecordRepository {
     @PostConstruct
     private void setup() {
         JsonFileRW jsonFileRW = new JsonFileRW();
-        medicalRecordList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString(jsonDataFileName.dataFileName)).getMedicalrecords();
+        medicalRecordList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString(JsonDataFileName.dataFileName)).getMedicalrecords();
     }
 
 
