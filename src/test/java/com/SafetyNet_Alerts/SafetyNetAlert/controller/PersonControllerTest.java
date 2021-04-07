@@ -11,8 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -60,6 +59,29 @@ class PersonControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName").value("Khalil"))
                 .andExpect(jsonPath("$.lastName").value("Boyd"))
+        //TODO add missing values
+        ;
+    }
+
+    @Test
+    void updatePerson() throws Exception {
+        mockMvc.perform(put("/Person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(" { " + "      \"firstName\": \"Khalil\",\n" +
+                        "      \"lastName\": \"Boyd\",\n" +
+                        "      \"address\": \"new address\",\n" +
+                        "      \"city\": \"new city\",\n" +
+                        "      \"zip\": \"12345\",\n" +
+                        "      \"phone\": \"123-456-7890\",\n" +
+                        "      \"email\": \"khalil@email.com\"\n" +
+                        "    }")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("Khalil"))
+                .andExpect(jsonPath("$.lastName").value("Boyd"))
+                .andExpect(jsonPath("$.address").value("new address"))
+                .andExpect(jsonPath("$.city").value("new city"))
         //TODO add missing values
         ;
     }
