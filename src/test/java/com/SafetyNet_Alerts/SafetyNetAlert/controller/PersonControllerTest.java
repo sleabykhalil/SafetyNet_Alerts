@@ -6,14 +6,15 @@ import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @SpringBootTest
@@ -36,6 +37,25 @@ class PersonControllerTest {
                 .andExpect(content().string(containsString("Khalil")));
 
     }
+
+    @Test
+    void addPerson() throws Exception {
+        mockMvc.perform(post("/Persons")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(" { " + "      \"firstName\": \"Khalil\",\n" +
+                        "      \"lastName\": \"Boyd\",\n" +
+                        "      \"address\": \"1509 Culver St\",\n" +
+                        "      \"city\": \"Culver\",\n" +
+                        "      \"zip\": \"97451\",\n" +
+                        "      \"phone\": \"841-874-6512\",\n" +
+                        "      \"email\": \"jaboyd@email.com\"\n" +
+                        "    }")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("Khalil"));
+    }
+
 
     @Test
     void getAllFirestations() throws Exception {

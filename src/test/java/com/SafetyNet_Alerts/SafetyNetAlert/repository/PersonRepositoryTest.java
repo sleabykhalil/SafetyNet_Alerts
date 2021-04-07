@@ -69,8 +69,8 @@ class PersonRepositoryTest {
                 .build();
         Person personAfter = Person.builder()
                 .firstName("Khalil")
-                .lastName("Batch")//filed to be changed
-                .address("1509 Culver St")
+                .lastName("Boyd")
+                .address("1509 Culver St")//filed to be changed
                 .city("Culver")
                 .zip("97451")
                 .phone("841-874-6512")
