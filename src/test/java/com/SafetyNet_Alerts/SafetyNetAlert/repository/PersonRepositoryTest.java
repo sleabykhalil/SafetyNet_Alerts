@@ -56,10 +56,19 @@ class PersonRepositoryTest {
     }
 
     @Test
-    void updatePerson_whenPersonPassed_AddToJsonFile() {
-        Person person = Person.builder()
+    void updatePerson_whenTowPersonsPassed_AddpersonAfterAndRemovePersonBeforeToJsonFile() {
+        Person personBefore = Person.builder()
                 .firstName("Khalil")
-                .lastName("Sleaby")//filed to be changed
+                .lastName("Boyd")
+                .address("1509 Culver St")
+                .city("Culver")
+                .zip("97451")
+                .phone("841-874-6512")
+                .email("jaboyd@email.com")
+                .build();
+        Person personAfter = Person.builder()
+                .firstName("Khalil")
+                .lastName("Batch")//filed to be changed
                 .address("1509 Culver St")
                 .city("Culver")
                 .zip("97451")
@@ -67,11 +76,10 @@ class PersonRepositoryTest {
                 .email("jaboyd@email.com")
                 .build();
 
-        // when(jsonFileRWMock.jsonFileModelToJsonAsString(any(JsonFileModel.class))).thenReturn("");
-        //doNothing().when(services).saveToJsonFile();
+        Person result = personRepositoryUnderTest.updatePerson(personBefore, personAfter);
 
-        Person result = personRepositoryUnderTest.updatePerson(person);
-
-        assertThat(result).isEqualTo(person);
+        assertThat(result).isEqualTo(personAfter);
     }
+
+
 }

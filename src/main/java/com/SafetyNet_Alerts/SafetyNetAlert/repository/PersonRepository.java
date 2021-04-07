@@ -46,6 +46,13 @@ public class PersonRepository {
         return person;
     }
 
+    public Person updatePerson(Person personBefore, Person personAfter) {
+        personList.add(personAfter);
+        personList.remove(personBefore);
+        services.saveToJsonFile();
+        return personAfter;
+    }
+
 /*    private void writeToFile() {
         jsonFileRW.stringToJsonFile(jsonFileRW.jsonFileModelToJsonAsString(JsonFileModel.builder()
                 .persons(personList)
