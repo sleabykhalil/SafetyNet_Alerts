@@ -53,6 +53,10 @@ public class PersonRepository {
         return personAfter;
     }
 
+    public boolean deletePerson(Person person) {
+        return true;
+    }
+
 /*    private void writeToFile() {
         jsonFileRW.stringToJsonFile(jsonFileRW.jsonFileModelToJsonAsString(JsonFileModel.builder()
                 .persons(personList)

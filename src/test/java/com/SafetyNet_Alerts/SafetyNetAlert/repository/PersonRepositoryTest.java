@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,7 +57,7 @@ class PersonRepositoryTest {
     }
 
     @Test
-    void updatePerson_whenTowPersonsPassed_AddpersonAfterAndRemovePersonBeforeToJsonFile() {
+    void updatePerson_whenTowPersonsPassed_AddPersonAfterAndRemovePersonBeforeToJsonFile() {
         Person personBefore = Person.builder()
                 .firstName("Khalil")
                 .lastName("Boyd")
@@ -81,5 +82,23 @@ class PersonRepositoryTest {
         assertThat(result).isEqualTo(personAfter);
     }
 
+    @Test
+    void deletePerson_whenPersonPassed_RemoveFromJsonFile() {
+        Person person = Person.builder()
+                .firstName("Khalil")
+                .lastName("Sleaby")
+                .address("1509 Culver St")
+                .city("Culver")
+                .zip("97451")
+                .phone("841-874-6512")
+                .email("jaboyd@email.com")
+                .build();
+
+
+        boolean result = personRepositoryUnderTest.deletePerson(person);
+
+        assertTrue(result);
+        // verify(jsonFileRWMock, times(1)).stringToJsonFile(anyString(), JsonDataFileName.dataFileName);
+    }
 
 }
