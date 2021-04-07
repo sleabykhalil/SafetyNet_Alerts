@@ -54,4 +54,24 @@ class PersonRepositoryTest {
         assertThat(result).isEqualTo(person);
         // verify(jsonFileRWMock, times(1)).stringToJsonFile(anyString(), JsonDataFileName.dataFileName);
     }
+
+    @Test
+    void updatePerson_whenPersonPassed_AddToJsonFile() {
+        Person person = Person.builder()
+                .firstName("Khalil")
+                .lastName("Sleaby")//filed to be changed
+                .address("1509 Culver St")
+                .city("Culver")
+                .zip("97451")
+                .phone("841-874-6512")
+                .email("jaboyd@email.com")
+                .build();
+
+        // when(jsonFileRWMock.jsonFileModelToJsonAsString(any(JsonFileModel.class))).thenReturn("");
+        //doNothing().when(services).saveToJsonFile();
+
+        Person result = personRepositoryUnderTest.updatePerson(person);
+
+        assertThat(result).isEqualTo(person);
+    }
 }
