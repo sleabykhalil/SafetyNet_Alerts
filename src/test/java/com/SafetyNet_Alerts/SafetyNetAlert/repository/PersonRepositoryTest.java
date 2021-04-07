@@ -93,7 +93,7 @@ class PersonRepositoryTest {
                 .phone("841-874-6512")
                 .email("jaboyd@email.com")
                 .build();
-
+        personRepositoryUnderTest.personList.add(person);
 
         boolean result = personRepositoryUnderTest.deletePerson(person);
 

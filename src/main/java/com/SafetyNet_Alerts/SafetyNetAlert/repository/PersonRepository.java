@@ -54,7 +54,9 @@ public class PersonRepository {
     }
 
     public boolean deletePerson(Person person) {
-        return true;
+        boolean result = personList.remove(person);
+        services.saveToJsonFile();
+        return result;
     }
 
 /*    private void writeToFile() {
