@@ -5,6 +5,8 @@ import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.output.JsonStream;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,7 +15,7 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
+@Service
 public class JsonFileRW {
 
 

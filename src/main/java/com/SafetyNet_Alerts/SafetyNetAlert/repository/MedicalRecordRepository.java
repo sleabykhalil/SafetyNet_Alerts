@@ -7,13 +7,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 @AllArgsConstructor
 public class MedicalRecordRepository {
 
-    private static List<MedicalRecord> medicalRecordList;
+    public static List<MedicalRecord> medicalRecordList = new ArrayList<>();
 
     /**
      * Data initialize get all Medical records from json file

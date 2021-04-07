@@ -7,12 +7,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 @AllArgsConstructor
 public class FirestationRepository {
-    private static List<Firestation> firestationList;
+    public static List<Firestation> firestationList = new ArrayList<>();
 
     /**
      * Data initialize get all firestation from json file
