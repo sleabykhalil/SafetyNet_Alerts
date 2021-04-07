@@ -48,7 +48,9 @@ public class PersonRepository {
 
     public Person updatePerson(Person personBefore, Person personAfter) {
         personList.add(personAfter);
-        personList.remove(personBefore);
+        //personList.remove(personBefore);
+        personList.removeIf(personToDelete -> personToDelete.getFirstName().equals(personBefore.getFirstName()) &&
+                personToDelete.getLastName().equals(personBefore.getLastName()));
         services.saveToJsonFile();
         return personAfter;
     }
