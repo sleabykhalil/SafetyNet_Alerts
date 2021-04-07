@@ -38,9 +38,14 @@ class PersonControllerTest {
 
     }
 
+    /**
+     * Add new person
+     *
+     * @throws Exception
+     */
     @Test
     void addPerson() throws Exception {
-        mockMvc.perform(post("/Persons")
+        mockMvc.perform(post("/Person")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(" { " + "      \"firstName\": \"Khalil\",\n" +
                         "      \"lastName\": \"Boyd\",\n" +
@@ -53,7 +58,10 @@ class PersonControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("Khalil"));
+                .andExpect(jsonPath("$.firstName").value("Khalil"))
+                .andExpect(jsonPath("$.lastName").value("Boyd"))
+        //TODO add missing values
+        ;
     }
 
 

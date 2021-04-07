@@ -40,7 +40,7 @@ public class PersonRepository {
         return result;
     }
 
-    public Person save(Person person) {
+    public Person savePerson(Person person) {
         personList.add(person);
         services.saveToJsonFile();
         return person;
