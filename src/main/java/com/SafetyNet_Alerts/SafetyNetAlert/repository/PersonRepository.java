@@ -58,7 +58,8 @@ public class PersonRepository {
     }
 
     public boolean deletePerson(Person person) {
-        boolean result = personList.remove(person);
+        boolean result = personList.removeIf(personToDelete -> personToDelete.getFirstName().equals(person.getFirstName()) &&
+                personToDelete.getLastName().equals(person.getLastName()));
         services.saveToJsonFile();
         return result;
     }
