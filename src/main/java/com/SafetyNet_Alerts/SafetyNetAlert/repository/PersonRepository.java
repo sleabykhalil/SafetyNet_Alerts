@@ -5,6 +5,7 @@ import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
 import com.SafetyNet_Alerts.SafetyNetAlert.servec.Services;
 import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,14 +16,15 @@ import java.util.List;
 import static com.SafetyNet_Alerts.SafetyNetAlert.repository.FirestationRepository.firestationList;
 import static com.SafetyNet_Alerts.SafetyNetAlert.repository.MedicalRecordRepository.medicalRecordList;
 
+@AllArgsConstructor
 @Repository
 public class PersonRepository {
     public static List<Person> personList = new ArrayList<>();
 
-    // @Autowired
-    Services services = new Services();
-    // @Autowired
-    JsonFileRW jsonFileRW = new JsonFileRW();
+    @Autowired
+    private Services services;
+    @Autowired
+    private JsonFileRW jsonFileRW;
 
     /**
      * Data initialize get all person from json file

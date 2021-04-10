@@ -2,6 +2,7 @@ package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
 import com.SafetyNet_Alerts.SafetyNetAlert.servec.Services;
+import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
 
 @ExtendWith(MockitoExtension.class)
 class PersonRepositoryTest {
@@ -22,14 +24,18 @@ class PersonRepositoryTest {
     @Mock
     Services services;
 
+    @Mock
+    JsonFileRW jsonFileRW;
+
     @BeforeEach
     void setUp() {
-        personRepositoryUnderTest = new PersonRepository();
+        personRepositoryUnderTest = new PersonRepository(services, jsonFileRW);
 
     }
 
     @Test
     void findAll() {
+        //TODO add TU
     }
 
     @Test
@@ -45,7 +51,8 @@ class PersonRepositoryTest {
                 .build();
 
         // when(jsonFileRWMock.jsonFileModelToJsonAsString(any(JsonFileModel.class))).thenReturn("");
-        //doNothing().when(services).saveToJsonFile();
+        //TODO add this to other TUs
+        doNothing().when(services).saveToJsonFile();
 
         Person result = personRepositoryUnderTest.savePerson(person);
 

@@ -98,7 +98,7 @@ class PersonControllerTest {
     }
 
     @Test
-    void getAllMedicalRecordss() throws Exception {
+    void getAllMedicalRecords() throws Exception {
 
         mockMvc.perform(get("/MedicalRecords"))
                 .andDo(print())
