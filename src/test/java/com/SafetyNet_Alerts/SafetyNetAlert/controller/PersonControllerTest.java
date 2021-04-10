@@ -67,6 +67,31 @@ class PersonControllerTest {
     void updatePerson() throws Exception {
         mockMvc.perform(put("/Person")
                 .contentType(MediaType.APPLICATION_JSON)
+                .param("firstName", "Khalil")
+                .param("lastName", "Boyd")
+                .content(" { " + "      \"firstName\": \"Khalil\",\n" +
+                        "      \"lastName\": \"Boyd\",\n" +
+                        "      \"address\": \"new address\",\n" +
+                        "      \"city\": \"new city\",\n" +
+                        "      \"zip\": \"12345\",\n" +
+                        "      \"phone\": \"123-456-7890\",\n" +
+                        "      \"email\": \"khalil@email.com\"\n" +
+                        "    }")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("Khalil"))
+                .andExpect(jsonPath("$.lastName").value("Boyd"))
+                .andExpect(jsonPath("$.address").value("new address"))
+                .andExpect(jsonPath("$.city").value("new city"))
+        //TODO add missing values
+        ;
+    }
+
+    @Test
+    void deletePerson() throws Exception {
+        mockMvc.perform(delete("/Person")
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(" { " + "      \"firstName\": \"Khalil\",\n" +
                         "      \"lastName\": \"Boyd\",\n" +
                         "      \"address\": \"new address\",\n" +

@@ -31,8 +31,8 @@ public class PersonController {
     }
 
     @PutMapping(value = "/Person")
-    public Person updatePerson(@PathParam("firstName") String firstName,
-                               @PathParam("lastName") String lastName,
+    public Person updatePerson(@RequestParam String firstName,
+                               @RequestParam String lastName,
                                @RequestBody Person person) {
         Person personBefore = Person.builder()
                 .firstName(firstName)
