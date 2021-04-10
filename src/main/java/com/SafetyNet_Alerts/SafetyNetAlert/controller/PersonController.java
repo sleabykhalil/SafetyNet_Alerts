@@ -41,4 +41,15 @@ public class PersonController {
         personRepository.updatePerson(personBefore, person);
         return person;
     }
+
+    @DeleteMapping(value = "/Person")
+    public Person deletePerson(@RequestParam String firstName,
+                               @RequestParam String lastName) {
+        Person person = Person.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .build();
+        personRepository.deletePerson(person);
+        return person;
+    }
 }

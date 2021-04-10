@@ -1,7 +1,6 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileName;
-import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
 import com.SafetyNet_Alerts.SafetyNetAlert.servec.Services;
 import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
@@ -12,9 +11,6 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.SafetyNet_Alerts.SafetyNetAlert.repository.FirestationRepository.firestationList;
-import static com.SafetyNet_Alerts.SafetyNetAlert.repository.MedicalRecordRepository.medicalRecordList;
 
 @AllArgsConstructor
 @Repository
@@ -31,7 +27,6 @@ public class PersonRepository {
      */
     @PostConstruct
     private void setup() {
-        //JsonFileRW jsonFileRW = new JsonFileRW();
         personList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString(JsonDataFileName.dataFileName)).getPersons();
     }
 
@@ -50,7 +45,6 @@ public class PersonRepository {
 
     public Person updatePerson(Person personBefore, Person personAfter) {
         personList.add(personAfter);
-        //personList.remove(personBefore);
         personList.removeIf(personToDelete -> personToDelete.getFirstName().equals(personBefore.getFirstName()) &&
                 personToDelete.getLastName().equals(personBefore.getLastName()));
         services.saveToJsonFile();
@@ -63,12 +57,4 @@ public class PersonRepository {
         services.saveToJsonFile();
         return result;
     }
-
-/*    private void writeToFile() {
-        jsonFileRW.stringToJsonFile(jsonFileRW.jsonFileModelToJsonAsString(JsonFileModel.builder()
-                .persons(personList)
-                .firestations(firestationList)
-                .medicalrecords(medicalRecordList)
-                .build()), JsonDataFileName.dataFileName);
-    }*/
 }
