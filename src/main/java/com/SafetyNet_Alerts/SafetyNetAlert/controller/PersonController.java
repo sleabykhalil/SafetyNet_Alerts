@@ -71,6 +71,7 @@ public class PersonController {
                 .lastName(lastName)
                 .build();
         personRepository.deletePerson(person);
+        //TODO change return
         return person;
     }
 }
