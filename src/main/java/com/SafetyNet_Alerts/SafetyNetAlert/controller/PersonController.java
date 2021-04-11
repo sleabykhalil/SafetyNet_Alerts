@@ -19,7 +19,7 @@ public class PersonController {
      *
      * @return list of person
      */
-    @GetMapping(value = "/Persons")
+    @GetMapping(value = "/persons")
     public List<Person> getAllPersons() {
         return personRepository.findAll();
     }
@@ -30,7 +30,7 @@ public class PersonController {
      * @param person to add
      * @return person after add
      */
-    @PostMapping(value = "/Person")
+    @PostMapping(value = "/person")
     public Person addPerson(@RequestBody Person person) {
         personRepository.savePerson(person);
         return person;
@@ -44,7 +44,7 @@ public class PersonController {
      * @param person    new information passed in body
      * @return
      */
-    @PutMapping(value = "/Person")
+    @PutMapping(value = "/person")
     public Person updatePerson(@RequestParam String firstName,
                                @RequestParam String lastName,
                                @RequestBody Person person) {
@@ -63,7 +63,7 @@ public class PersonController {
      * @param lastName
      * @return
      */
-    @DeleteMapping(value = "/Person")
+    @DeleteMapping(value = "/person")
     public Person deletePerson(@RequestParam String firstName,
                                @RequestParam String lastName) {
         Person person = Person.builder()
