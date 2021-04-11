@@ -24,12 +24,26 @@ public class PersonController {
         return personRepository.findAll();
     }
 
+    /**
+     * Add new person json string passed in body
+     *
+     * @param person to add
+     * @return person after add
+     */
     @PostMapping(value = "/Person")
     public Person addPerson(@RequestBody Person person) {
         personRepository.savePerson(person);
         return person;
     }
 
+    /**
+     * Update person passed in body
+     *
+     * @param firstName passed in url
+     * @param lastName  passed in url
+     * @param person    new information passed in body
+     * @return
+     */
     @PutMapping(value = "/Person")
     public Person updatePerson(@RequestParam String firstName,
                                @RequestParam String lastName,
@@ -42,6 +56,13 @@ public class PersonController {
         return person;
     }
 
+    /**
+     * Delete person , name must pass in url
+     *
+     * @param firstName
+     * @param lastName
+     * @return
+     */
     @DeleteMapping(value = "/Person")
     public Person deletePerson(@RequestParam String firstName,
                                @RequestParam String lastName) {

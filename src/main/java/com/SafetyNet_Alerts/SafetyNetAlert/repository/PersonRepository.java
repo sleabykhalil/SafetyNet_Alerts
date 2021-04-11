@@ -37,12 +37,25 @@ public class PersonRepository {
         return result;
     }
 
+    /**
+     * Add person to person list
+     *
+     * @param person to add
+     * @return person to add
+     */
     public Person savePerson(Person person) {
         personList.add(person);
         services.saveToJsonFile();
         return person;
     }
 
+    /**
+     * Update person in person list , first and last name cannot be modified , use add new person insted
+     *
+     * @param personBefore data before update
+     * @param personAfter  data after update
+     * @return person after update
+     */
     public Person updatePerson(Person personBefore, Person personAfter) {
         personList.add(personAfter);
         personList.removeIf(personToDelete -> personToDelete.getFirstName().equals(personBefore.getFirstName()) &&
@@ -51,6 +64,12 @@ public class PersonRepository {
         return personAfter;
     }
 
+    /**
+     * Delete person from person list
+     *
+     * @param person
+     * @return true in success
+     */
     public boolean deletePerson(Person person) {
         boolean result = personList.removeIf(personToDelete -> personToDelete.getFirstName().equals(person.getFirstName()) &&
                 personToDelete.getLastName().equals(person.getLastName()));
