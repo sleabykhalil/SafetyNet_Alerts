@@ -1,34 +1,88 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
-import com.SafetyNet_Alerts.SafetyNetAlert.constants.jsonDataFileName;
+import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileName;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
+import com.SafetyNet_Alerts.SafetyNetAlert.servec.Services;
 import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@AllArgsConstructor
 public class PersonRepository {
-    private static List<Person> personList;
+    public static List<Person> personList = new ArrayList<>();
+
+    @Autowired
+    private Services services;
+    @Autowired
+    private JsonFileRW jsonFileRW;
 
     /**
-     * Data initialize get all person from json file
+     * Constructor and Data initialize get all person from json file
+     *
+     * @param services
+     * @param jsonFileRW
      */
-    @PostConstruct
-    private void setup() {
-        JsonFileRW jsonFileRW = new JsonFileRW();
-        personList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString(jsonDataFileName.dataFileName)).getPersons();
+    public PersonRepository(final Services services, final JsonFileRW jsonFileRW) {
+        this.services = services;
+        this.jsonFileRW = jsonFileRW;
+        personList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString(JsonDataFileName.dataFileName)).getPersons();
     }
 
-
+    /**
+     * Get list of Persons
+     *
+     * @return
+     */
     public List<Person> findAll() {
         List<Person> result;
         result = personList;
         return result;
     }
 
+    /**
+     * Add person to person list
+     *
+     * @param person to add
+     * @return person to add
+     */
+    public Person savePerson(Person person) {
+        personList.add(person);
+        services.saveToJsonFile();
+        return person;
+    }
+
+    /**
+     * Update person in person list , first and last name cannot be modified , use add new person insted
+     *
+     * @param personBefore data before update
+     * @param personAfter  data after update
+     * @return person after update
+     */
+    public Person updatePerson(Person personBefore, Person personAfter) {
+        for (Person person : personList) {
+            if ((personBefore.getFirstName().equals(person.getFirstName())) &&
+                    (personBefore.getLastName().equals(person.getLastName()))) {
+                personList.set(personList.indexOf(person), personAfter);
+                break;
+            }
+        }
+        services.saveToJsonFile();
+        return personAfter;
+    }
+
+    /**
+     * Delete person from person list
+     *
+     * @param person
+     * @return true if success
+     */
+    public boolean deletePerson(Person person) {
+        boolean result = personList.removeIf(personToDelete -> personToDelete.getFirstName().equals(person.getFirstName()) &&
+                personToDelete.getLastName().equals(person.getLastName()));
+        services.saveToJsonFile();
+        return result;
+    }
 }

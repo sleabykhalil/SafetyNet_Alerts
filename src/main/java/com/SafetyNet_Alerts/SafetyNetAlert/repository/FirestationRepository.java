@@ -1,6 +1,6 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
-import com.SafetyNet_Alerts.SafetyNetAlert.constants.jsonDataFileName;
+import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileName;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 @AllArgsConstructor
 public class FirestationRepository {
-    private static List<Firestation> firestationList;
+    public static List<Firestation> firestationList = new ArrayList<>();
 
     /**
      * Data initialize get all firestation from json file
@@ -21,7 +21,7 @@ public class FirestationRepository {
     @PostConstruct
     private void setup() {
         JsonFileRW jsonFileRW = new JsonFileRW();
-        firestationList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString(jsonDataFileName.dataFileName)).getFirestations();
+        firestationList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString(JsonDataFileName.dataFileName)).getFirestations();
     }
 
     public List<Firestation> findAll() {
