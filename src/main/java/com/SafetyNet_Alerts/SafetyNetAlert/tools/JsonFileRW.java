@@ -5,7 +5,6 @@ import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.output.JsonStream;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
