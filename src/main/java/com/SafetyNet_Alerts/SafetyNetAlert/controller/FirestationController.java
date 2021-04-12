@@ -11,15 +11,16 @@ import java.util.List;
 @RestController
 public class FirestationController {
     @Autowired
-    FirestationRepository firestationDao;
+    FirestationRepository firestationRepository;
 
     /**
      * Get  for all Firestations
+     *
      * @return list of firestation
      */
-    @GetMapping(value = "/Firestations")
+    @GetMapping(value = "/firestations")
     public List<Firestation> getAllFirestations() {
-        return firestationDao.findAll();
+        return firestationRepository.findAll();
     }
 
 }
