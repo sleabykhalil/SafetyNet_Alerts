@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
@@ -57,4 +58,31 @@ class FirestationRepositoryTest {
         assertThat(result.toString()).contains("1234 Street St");
     }
 
+    @Test
+    void saveFirestation_WhenFirestationPassed_FirestationReturn() {
+        Firestation result = firestationRepositoryUnderTest.saveFirestation(firestationUsedByTest);
+        assertThat(result).isEqualTo(firestationRepositoryUnderTest);
+    }
+
+    @Test
+    void updateFirestation_WhenTowFirestationsPassed_NewFirestationShouldRutern() {
+        Firestation firestationBefore = firestationUsedByTest;
+        Firestation firestationAfter = Firestation.builder()
+                .address("1234 Street St")
+                .station("2")
+                .build();
+
+        Firestation result = firestationRepositoryUnderTest.updateFirestation(firestationBefore, firestationAfter);
+
+        assertThat(result).isEqualTo(firestationAfter);
+    }
+
+    @Test
+    void deleteFirestation_whenFirestationPassed_ReturnTrue() {
+        firestationRepositoryUnderTest.firestationList.add(firestationUsedByTest);
+
+        boolean result = firestationRepositoryUnderTest.deleteFirestation(firestationUsedByTest);
+
+        assertTrue(result);
+    }
 }

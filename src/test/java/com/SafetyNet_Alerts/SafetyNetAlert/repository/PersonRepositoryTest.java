@@ -67,14 +67,13 @@ class PersonRepositoryTest {
     }
 
     @Test
-    void savePerson_whenPersonPassed_AddToJsonFile() {
-
+    void savePerson_whenPersonPassed_PersonReturn() {
         Person result = personRepositoryUnderTest.savePerson(personUsedByTest);
         assertThat(result).isEqualTo(personUsedByTest);
     }
 
     @Test
-    void updatePerson_whenTowPersonsPassed_AddPersonAfterAndRemovePersonBeforeToJsonFile() {
+    void updatePerson_whenTowPersonsPassed_NewPersonShouldReturn() {
         Person personBefore = personUsedByTest;
         Person personAfter = Person.builder()
                 .firstName("Khalil")
@@ -92,7 +91,7 @@ class PersonRepositoryTest {
     }
 
     @Test
-    void deletePerson_whenPersonPassed_RemoveFromJsonFile() {
+    void deletePerson_whenPersonPassed_returnTrue() {
 
         personRepositoryUnderTest.personList.add(personUsedByTest);
 
