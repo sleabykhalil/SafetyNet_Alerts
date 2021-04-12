@@ -34,7 +34,7 @@ public class PersonRepository {
     /**
      * Get list of Persons
      *
-     * @return
+     * @return list of persons
      */
     public List<Person> findAll() {
         List<Person> result;
@@ -43,10 +43,10 @@ public class PersonRepository {
     }
 
     /**
-     * Add person to person list
+     * Add person to person list , and create data json file
      *
      * @param person to add
-     * @return person to add
+     * @return person added
      */
     public Person savePerson(Person person) {
         personList.add(person);
@@ -55,7 +55,8 @@ public class PersonRepository {
     }
 
     /**
-     * Update person in person list , first and last name cannot be modified , use add new person insted
+     * Update person in person list , first and last name cannot be modified
+     * and create data json file
      *
      * @param personBefore data before update
      * @param personAfter  data after update
@@ -74,14 +75,15 @@ public class PersonRepository {
     }
 
     /**
-     * Delete person from person list
+     * Delete person from person list  and create data json file
      *
-     * @param person
+     * @param person to be deleted
      * @return true if success
      */
     public boolean deletePerson(Person person) {
-        boolean result = personList.removeIf(personToDelete -> personToDelete.getFirstName().equals(person.getFirstName()) &&
-                personToDelete.getLastName().equals(person.getLastName()));
+        boolean result = personList.removeIf(personToDelete ->
+                personToDelete.getFirstName().equals(person.getFirstName()) &&
+                        personToDelete.getLastName().equals(person.getLastName()));
         services.saveToJsonFile();
         return result;
     }

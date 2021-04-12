@@ -61,7 +61,7 @@ class FirestationRepositoryTest {
     @Test
     void saveFirestation_WhenFirestationPassed_FirestationReturn() {
         Firestation result = firestationRepositoryUnderTest.saveFirestation(firestationUsedByTest);
-        assertThat(result).isEqualTo(firestationRepositoryUnderTest);
+        assertThat(result).isEqualTo(firestationUsedByTest);
     }
 
     @Test
