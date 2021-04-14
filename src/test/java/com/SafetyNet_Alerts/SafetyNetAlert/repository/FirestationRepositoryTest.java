@@ -2,7 +2,7 @@ package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
-import com.SafetyNet_Alerts.SafetyNetAlert.servec.Services;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
 import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ class FirestationRepositoryTest {
     FirestationRepository firestationRepositoryUnderTest;
 
     @Mock
-    Services servicesMock;
+    FileRWService fileRWServiceMock;
 
     @Mock
     JsonFileRW jsonFileRWMock;
@@ -41,7 +41,7 @@ class FirestationRepositoryTest {
                 .address("1234 Street St")
                 .station("1")
                 .build();
-        lenient().doNothing().when(servicesMock).saveToJsonFile();
+        lenient().doNothing().when(fileRWServiceMock).saveToJsonFile();
         jsonFileModel = new JsonFileModel();
         firestationList = new ArrayList<>();
         firestationList.add(firestationUsedByTest);
@@ -49,7 +49,7 @@ class FirestationRepositoryTest {
         when(jsonFileRWMock.jsonFileToString(anyString())).thenReturn("data");
         when(jsonFileRWMock.jsonAsStringToJsonFileModel("data")).thenReturn(jsonFileModel);
 
-        firestationRepositoryUnderTest = new FirestationRepository(servicesMock, jsonFileRWMock);
+        firestationRepositoryUnderTest = new FirestationRepository(fileRWServiceMock, jsonFileRWMock);
     }
 
     @Test

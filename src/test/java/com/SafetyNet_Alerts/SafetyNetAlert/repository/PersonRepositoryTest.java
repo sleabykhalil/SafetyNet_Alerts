@@ -2,7 +2,7 @@ package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
-import com.SafetyNet_Alerts.SafetyNetAlert.servec.Services;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
 import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ class PersonRepositoryTest {
     PersonRepository personRepositoryUnderTest;
 
     @Mock
-    Services servicesMock;
+    FileRWService fileRWServiceMock;
 
     @Mock
     JsonFileRW jsonFileRWMock;
@@ -47,7 +47,7 @@ class PersonRepositoryTest {
                 .phone("841-874-6512")
                 .email("jaboyd@email.com")
                 .build();
-        lenient().doNothing().when(servicesMock).saveToJsonFile();
+        lenient().doNothing().when(fileRWServiceMock).saveToJsonFile();
 
         jsonFileModel = new JsonFileModel();
         personList = new ArrayList<>();
@@ -56,7 +56,7 @@ class PersonRepositoryTest {
         when(jsonFileRWMock.jsonFileToString(anyString())).thenReturn("data");
         when(jsonFileRWMock.jsonAsStringToJsonFileModel("data")).thenReturn(jsonFileModel);
 
-        personRepositoryUnderTest = new PersonRepository(servicesMock, jsonFileRWMock);
+        personRepositoryUnderTest = new PersonRepository(fileRWServiceMock, jsonFileRWMock);
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.SafetyNet_Alerts.SafetyNetAlert.controller;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.repository.FirestationRepository;
-import com.SafetyNet_Alerts.SafetyNetAlert.servec.Services;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +13,7 @@ public class FirestationController {
     @Autowired
     FirestationRepository firestationRepository;
     @Autowired
-    Services services;
+    FileRWService fileRWService;
 
     /**
      * Get  for all Firestations

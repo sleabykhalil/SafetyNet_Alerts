@@ -2,7 +2,7 @@ package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileName;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
-import com.SafetyNet_Alerts.SafetyNetAlert.servec.Services;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
 import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,18 +15,18 @@ public class FirestationRepository {
     public static List<Firestation> firestationList = new ArrayList<>();
 
     @Autowired
-    private Services services;
+    private FileRWService fileRWService;
     @Autowired
     private JsonFileRW jsonFileRW;
 
     /**
      * All arguments constructor and  Data initialize get all firestation from json file
      *
-     * @param services
+     * @param fileRWService
      * @param jsonFileRW
      */
-    public FirestationRepository(final Services services, final JsonFileRW jsonFileRW) {
-        this.services = services;
+    public FirestationRepository(final FileRWService fileRWService, final JsonFileRW jsonFileRW) {
+        this.fileRWService = fileRWService;
         this.jsonFileRW = jsonFileRW;
         firestationList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString(JsonDataFileName.dataFileName)).getFirestations();
     }
@@ -50,7 +50,7 @@ public class FirestationRepository {
      */
     public Firestation saveFirestation(Firestation firestation) {
         firestationList.add(firestation);
-        services.saveToJsonFile();
+        fileRWService.saveToJsonFile();
         return firestation;
     }
 
@@ -68,7 +68,7 @@ public class FirestationRepository {
                 break;
             }
         }
-        services.saveToJsonFile();
+        fileRWService.saveToJsonFile();
         return firestationAfter;
     }
 
@@ -81,7 +81,7 @@ public class FirestationRepository {
     public boolean deleteFirestation(Firestation firestation) {
         boolean result = firestationList.removeIf(firestationToDelete ->
                 firestationToDelete.getAddress().equals(firestation.getAddress()));
-        services.saveToJsonFile();
+        fileRWService.saveToJsonFile();
         return result;
     }
 }

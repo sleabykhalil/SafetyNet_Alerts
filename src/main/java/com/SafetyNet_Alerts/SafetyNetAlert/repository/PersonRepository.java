@@ -2,7 +2,7 @@ package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileName;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
-import com.SafetyNet_Alerts.SafetyNetAlert.servec.Services;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
 import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,18 +15,18 @@ public class PersonRepository {
     public static List<Person> personList = new ArrayList<>();
 
     @Autowired
-    private Services services;
+    private FileRWService fileRWService;
     @Autowired
     private JsonFileRW jsonFileRW;
 
     /**
      * Constructor and Data initialize get all person from json file
      *
-     * @param services
+     * @param fileRWService
      * @param jsonFileRW
      */
-    public PersonRepository(final Services services, final JsonFileRW jsonFileRW) {
-        this.services = services;
+    public PersonRepository(final FileRWService fileRWService, final JsonFileRW jsonFileRW) {
+        this.fileRWService = fileRWService;
         this.jsonFileRW = jsonFileRW;
         personList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString(JsonDataFileName.dataFileName)).getPersons();
     }
@@ -50,7 +50,7 @@ public class PersonRepository {
      */
     public Person savePerson(Person person) {
         personList.add(person);
-        services.saveToJsonFile();
+        fileRWService.saveToJsonFile();
         return person;
     }
 
@@ -70,7 +70,7 @@ public class PersonRepository {
                 break;
             }
         }
-        services.saveToJsonFile();
+        fileRWService.saveToJsonFile();
         return personAfter;
     }
 
@@ -84,7 +84,7 @@ public class PersonRepository {
         boolean result = personList.removeIf(personToDelete ->
                 personToDelete.getFirstName().equals(person.getFirstName()) &&
                         personToDelete.getLastName().equals(person.getLastName()));
-        services.saveToJsonFile();
+        fileRWService.saveToJsonFile();
         return result;
     }
 }
