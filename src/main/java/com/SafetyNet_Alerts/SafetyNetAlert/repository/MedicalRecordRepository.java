@@ -36,4 +36,29 @@ public class MedicalRecordRepository {
         result = medicalRecordList;
         return result;
     }
+
+    public MedicalRecord saveMedicalRecord(MedicalRecord medicalRecord) {
+        medicalRecordList.add(medicalRecord);
+        services.saveToJsonFile();
+        return medicalRecord;
+    }
+
+    public MedicalRecord updateMedicalRecord(MedicalRecord medicalRecordBefore, MedicalRecord medicalRecordAfter) {
+        for (MedicalRecord medicalRecord : medicalRecordList) {
+            if ((medicalRecordBefore.getFirstName().equals(medicalRecord.getFirstName())) &&
+                    (medicalRecordBefore.getLastName().equals(medicalRecord.getLastName()))) {
+                medicalRecordList.set(medicalRecordList.indexOf(medicalRecord), medicalRecordAfter);
+                break;
+            }
+        }
+        services.saveToJsonFile();
+        return medicalRecordAfter;
+    }
+
+    public boolean deleteMedicalRecord(MedicalRecord medicalRecord) {
+        boolean result = medicalRecordList.removeIf(medicalRecordToDelete -> medicalRecordToDelete.getFirstName().equals(medicalRecord.getFirstName()) &&
+                medicalRecordToDelete.getLastName().equals(medicalRecord.getLastName()));
+        services.saveToJsonFile();
+        return result;
+    }
 }
