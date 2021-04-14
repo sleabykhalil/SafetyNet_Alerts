@@ -3,7 +3,6 @@ package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
-import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +16,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,11 +23,11 @@ class FirestationRepositoryTest {
     @Autowired
     FirestationRepository firestationRepositoryUnderTest;
 
-    @Mock
-    FileRWService fileRWServiceMock;
+/*    @Mock
+    FileRWService fileRWServiceMock;*/
 
     @Mock
-    JsonFileRW jsonFileRWMock;
+    FileRWService fileRWServiceMock;
 
     JsonFileModel jsonFileModel;
     Firestation firestationUsedByTest;
@@ -41,15 +39,16 @@ class FirestationRepositoryTest {
                 .address("1234 Street St")
                 .station("1")
                 .build();
-        lenient().doNothing().when(fileRWServiceMock).saveToJsonFile();
+        // lenient().doNothing().when(fileRWServiceMock).saveToJsonFile();
         jsonFileModel = new JsonFileModel();
         firestationList = new ArrayList<>();
         firestationList.add(firestationUsedByTest);
         jsonFileModel.setFirestations(firestationList);
-        when(jsonFileRWMock.jsonFileToString(anyString())).thenReturn("data");
-        when(jsonFileRWMock.jsonAsStringToJsonFileModel("data")).thenReturn(jsonFileModel);
+        when(fileRWServiceMock.jsonFileToString(anyString())).thenReturn("data");
+        when(fileRWServiceMock.jsonAsStringToJsonFileModel("data")).thenReturn(jsonFileModel);
 
-        firestationRepositoryUnderTest = new FirestationRepository(fileRWServiceMock, jsonFileRWMock);
+        //firestationRepositoryUnderTest = new FirestationRepository(fileRWServiceMock, jsonFileRWMock);
+        firestationRepositoryUnderTest = new FirestationRepository(fileRWServiceMock);
     }
 
     @Test

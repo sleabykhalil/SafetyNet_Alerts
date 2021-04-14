@@ -16,19 +16,14 @@ public class FirestationRepository {
 
     @Autowired
     private FileRWService fileRWService;
-    @Autowired
-    private JsonFileRW jsonFileRW;
 
     /**
      * All arguments constructor and  Data initialize get all firestation from json file
      *
      * @param fileRWService
-     * @param jsonFileRW
      */
-    public FirestationRepository(final FileRWService fileRWService, final JsonFileRW jsonFileRW) {
-        this.fileRWService = fileRWService;
-        this.jsonFileRW = jsonFileRW;
-        firestationList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString(JsonDataFileName.dataFileName)).getFirestations();
+    public FirestationRepository(final FileRWService fileRWService) {
+        firestationList = fileRWService.jsonAsStringToJsonFileModel(fileRWService.jsonFileToString(JsonDataFileName.dataFileName)).getFirestations();
     }
 
     /**

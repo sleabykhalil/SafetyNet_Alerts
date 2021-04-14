@@ -3,6 +3,7 @@ package com.SafetyNet_Alerts.SafetyNetAlert.controller;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.repository.FirestationRepository;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.FirestationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,10 +11,10 @@ import java.util.List;
 
 @RestController
 public class FirestationController {
+
     @Autowired
-    FirestationRepository firestationRepository;
-    @Autowired
-    FileRWService fileRWService;
+    FirestationService firestationService;
+
 
     /**
      * Get  for all Firestations
@@ -23,7 +24,7 @@ public class FirestationController {
     @GetMapping(value = "/firestations")
     public List<Firestation> getAllFirestations() {
 
-        return firestationRepository.findAll();
+        return firestationService.getAllFirestation();
     }
 
     /**
@@ -34,8 +35,7 @@ public class FirestationController {
      */
     @PostMapping(value = "/firestation")
     public Firestation addFirestation(@RequestBody Firestation firestation) {
-        firestationRepository.saveFirestation(firestation);
-        return firestation;
+        return firestationService.saveFirestation(firestation);
     }
 
     /**
@@ -48,11 +48,8 @@ public class FirestationController {
     @PutMapping(value = "/firestation")
     public Firestation uprateFirestation(@RequestParam String address,
                                          @RequestBody Firestation firestation) {
-        Firestation firestationBefore = Firestation.builder()
-                .address(address)
-                .build();
-        firestationRepository.updateFirestation(firestationBefore, firestation);
-        return firestation;
+
+        return firestationService.updateFirestation(address, firestation);
     }
 
     /**
@@ -63,11 +60,7 @@ public class FirestationController {
      */
     @DeleteMapping(value = "/firestation")
     public boolean deletaFirestation(@RequestParam String address) {
-        Firestation firestation = Firestation.builder()
-                .address(address)
-                .build();
-        boolean result = firestationRepository.deleteFirestation(firestation);
-        return result;
+        return firestationService.deleteFirestation(address);
     }
 
 }
