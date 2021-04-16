@@ -11,15 +11,15 @@ import java.util.List;
 @RestController
 public class MedicalRecordController {
     @Autowired
-    MedicalRecordRepository medicalRecordDao;
+    MedicalRecordRepository medicalRecordRepository;
 
     /**
      * Get  for all Medical records
      * @return list of medical records
      */
-    @GetMapping(value = "/MedicalRecords")
+    @GetMapping(value = "/medicalRecords")
     public List<MedicalRecord> getAllMedialRecords() {
-        return medicalRecordDao.findAll();
+        return medicalRecordRepository.findAll();
     }
 
 }
