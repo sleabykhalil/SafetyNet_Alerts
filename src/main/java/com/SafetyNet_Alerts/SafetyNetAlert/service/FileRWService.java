@@ -5,10 +5,9 @@ import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.SafetyNet_Alerts.SafetyNetAlert.repository.FirestationRepository;
 import com.SafetyNet_Alerts.SafetyNetAlert.repository.MedicalRecordRepository;
 import com.SafetyNet_Alerts.SafetyNetAlert.repository.PersonRepository;
-import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.output.JsonStream;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Data;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +18,15 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Data
 @Service
 public class FileRWService {
+    private final Path path;
+
+    public FileRWService() throws IOException {
+        this.path = Paths.get(new ClassPathResource(JsonDataFileName.dataFileName).getURI());
+        System.out.println(path.toString());
+    }
 
     public void saveToJsonFile() {
         JsonFileModel jsonFileModel;
@@ -29,8 +35,7 @@ public class FileRWService {
                 .firestations(FirestationRepository.firestationList)
                 .medicalrecords(MedicalRecordRepository.medicalRecordList)
                 .build();
-        stringToJsonFile(jsonFileModelToJsonAsString(jsonFileModel), JsonDataFileName.dataFileName);
-
+        stringToJsonFile(jsonFileModelToJsonAsString(jsonFileModel));
     }
 
 
@@ -51,11 +56,9 @@ public class FileRWService {
      *
      * @return all data as string
      */
-    public String jsonFileToString(String fileName) {
-        Path path;
+    public String jsonFileToString() {
         Stream<String> lines = null;
         try {
-            path = Paths.get(new ClassPathResource(fileName).getURI());
             lines = Files.lines(path);
             return lines.collect(Collectors.joining(""));
         } catch (IOException e) {
@@ -85,10 +88,8 @@ public class FileRWService {
      *
      * @param jsonAsString
      */
-    public void stringToJsonFile(String jsonAsString, String fileName) {
-        Path path;
+    public void stringToJsonFile(String jsonAsString) {
         try {
-            path = Paths.get(new ClassPathResource(fileName).getURI());
             if (Files.notExists(path)) {
                 Files.createFile(path);
             }

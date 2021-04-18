@@ -1,9 +1,7 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
-import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileName;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
-import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -22,8 +20,9 @@ public class FirestationRepository {
      *
      * @param fileRWService
      */
-    public FirestationRepository(final FileRWService fileRWService) {
-        firestationList = fileRWService.jsonAsStringToJsonFileModel(fileRWService.jsonFileToString(JsonDataFileName.dataFileName)).getFirestations();
+    public FirestationRepository(FileRWService fileRWService) {
+        this.fileRWService = fileRWService;
+        firestationList = this.fileRWService.jsonAsStringToJsonFileModel(this.fileRWService.jsonFileToString()).getFirestations();
     }
 
     /**

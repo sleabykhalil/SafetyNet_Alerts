@@ -1,9 +1,7 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
-import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileName;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
-import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,19 +14,15 @@ public class PersonRepository {
 
     @Autowired
     private FileRWService fileRWService;
-    @Autowired
-    private JsonFileRW jsonFileRW;
 
     /**
      * Constructor and Data initialize get all person from json file
      *
      * @param fileRWService
-     * @param jsonFileRW
      */
-    public PersonRepository(final FileRWService fileRWService, final JsonFileRW jsonFileRW) {
+    public PersonRepository(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
-        this.jsonFileRW = jsonFileRW;
-        personList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString(JsonDataFileName.dataFileName)).getPersons();
+        personList = this.fileRWService.jsonAsStringToJsonFileModel(this.fileRWService.jsonFileToString()).getPersons();
     }
 
     /**

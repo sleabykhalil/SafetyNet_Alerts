@@ -15,7 +15,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -44,7 +43,7 @@ class FirestationRepositoryTest {
         firestationList = new ArrayList<>();
         firestationList.add(firestationUsedByTest);
         jsonFileModel.setFirestations(firestationList);
-        when(fileRWServiceMock.jsonFileToString(anyString())).thenReturn("data");
+        when(fileRWServiceMock.jsonFileToString()).thenReturn("data");
         when(fileRWServiceMock.jsonAsStringToJsonFileModel("data")).thenReturn(jsonFileModel);
 
         //firestationRepositoryUnderTest = new FirestationRepository(fileRWServiceMock, jsonFileRWMock);
