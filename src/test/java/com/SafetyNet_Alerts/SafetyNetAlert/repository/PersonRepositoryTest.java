@@ -2,7 +2,7 @@ package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
-import com.SafetyNet_Alerts.SafetyNetAlert.servec.Services;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
 import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -26,19 +25,19 @@ class PersonRepositoryTest {
     PersonRepository personRepositoryUnderTest;
 
     @Mock
-    Services servicesMock;
+    FileRWService fileRWServiceMock;
 
     @Mock
     JsonFileRW jsonFileRWMock;
 
     JsonFileModel jsonFileModel;
-    Person personToTest;
+    Person personUsedByTest;
     List<Person> personList;
 
 
     @BeforeEach
     void setUp() {
-        personToTest = Person.builder()
+        personUsedByTest = Person.builder()
                 .firstName("Khalil")
                 .lastName("Sleaby")
                 .address("1509 Culver St")
@@ -47,17 +46,16 @@ class PersonRepositoryTest {
                 .phone("841-874-6512")
                 .email("jaboyd@email.com")
                 .build();
-        lenient().doNothing().when(servicesMock).saveToJsonFile();
+        lenient().doNothing().when(fileRWServiceMock).saveToJsonFile();
 
         jsonFileModel = new JsonFileModel();
         personList = new ArrayList<>();
-        personList.add(personToTest);
+        personList.add(personUsedByTest);
         jsonFileModel.setPersons(personList);
-        when(jsonFileRWMock.jsonFileToString(anyString())).thenReturn("data");
-        when(jsonFileRWMock.jsonAsStringToJsonFileModel("data")).thenReturn(jsonFileModel);
+        when(fileRWServiceMock.jsonFileToString()).thenReturn("data");
+        when(fileRWServiceMock.jsonAsStringToJsonFileModel("data")).thenReturn(jsonFileModel);
 
-        personRepositoryUnderTest = new PersonRepository(servicesMock, jsonFileRWMock);
-
+        personRepositoryUnderTest = new PersonRepository(fileRWServiceMock);
     }
 
     @Test
@@ -68,15 +66,14 @@ class PersonRepositoryTest {
     }
 
     @Test
-    void savePerson_whenPersonPassed_AddToJsonFile() {
-
-        Person result = personRepositoryUnderTest.savePerson(personToTest);
-        assertThat(result).isEqualTo(personToTest);
+    void savePerson_whenPersonPassed_PersonReturn() {
+        Person result = personRepositoryUnderTest.savePerson(personUsedByTest);
+        assertThat(result).isEqualTo(personUsedByTest);
     }
 
     @Test
-    void updatePerson_whenTowPersonsPassed_AddPersonAfterAndRemovePersonBeforeToJsonFile() {
-        Person personBefore = personToTest;
+    void updatePerson_whenTowPersonsPassed_NewPersonShouldReturn() {
+        Person personBefore = personUsedByTest;
         Person personAfter = Person.builder()
                 .firstName("Khalil")
                 .lastName("Boyd")
@@ -93,11 +90,11 @@ class PersonRepositoryTest {
     }
 
     @Test
-    void deletePerson_whenPersonPassed_RemoveFromJsonFile() {
+    void deletePerson_whenPersonPassed_returnTrue() {
 
-        personRepositoryUnderTest.personList.add(personToTest);
+        personRepositoryUnderTest.personList.add(personUsedByTest);
 
-        boolean result = personRepositoryUnderTest.deletePerson(personToTest);
+        boolean result = personRepositoryUnderTest.deletePerson(personUsedByTest);
 
         assertTrue(result);
     }

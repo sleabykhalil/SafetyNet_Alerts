@@ -2,24 +2,65 @@ package com.SafetyNet_Alerts.SafetyNetAlert.controller;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.repository.FirestationRepository;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.FirestationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 public class FirestationController {
+
     @Autowired
-    FirestationRepository firestationDao;
+    FirestationService firestationService;
+
 
     /**
      * Get  for all Firestations
+     *
      * @return list of firestation
      */
-    @GetMapping(value = "/Firestations")
+    @GetMapping(value = "/firestations")
     public List<Firestation> getAllFirestations() {
-        return firestationDao.findAll();
+
+        return firestationService.getAllFirestation();
+    }
+
+    /**
+     * Add new firestation , json string passed in body
+     *
+     * @param firestation data to add
+     * @return firestation after add
+     */
+    @PostMapping(value = "/firestation")
+    public Firestation addFirestation(@RequestBody Firestation firestation) {
+        return firestationService.saveFirestation(firestation);
+    }
+
+    /**
+     * Update firestation ,new data passed throw body
+     *
+     * @param address     firestation adress to be updated
+     * @param firestation new data
+     * @return firestation after update
+     */
+    @PutMapping(value = "/firestation")
+    public Firestation uprateFirestation(@RequestParam String address,
+                                         @RequestBody Firestation firestation) {
+
+        return firestationService.updateFirestation(address, firestation);
+    }
+
+    /**
+     * Delete firestation , address must pass in url
+     *
+     * @param address adress of firestation to be deleted
+     * @return true if delete
+     */
+    @DeleteMapping(value = "/firestation")
+    public boolean deletaFirestation(@RequestParam String address) {
+        return firestationService.deleteFirestation(address);
     }
 
 }

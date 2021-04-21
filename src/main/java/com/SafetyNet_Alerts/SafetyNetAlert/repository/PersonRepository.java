@@ -1,9 +1,7 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
-import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileName;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
-import com.SafetyNet_Alerts.SafetyNetAlert.servec.Services;
-import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,26 +13,22 @@ public class PersonRepository {
     public static List<Person> personList = new ArrayList<>();
 
     @Autowired
-    private Services services;
-    @Autowired
-    private JsonFileRW jsonFileRW;
+    private FileRWService fileRWService;
 
     /**
      * Constructor and Data initialize get all person from json file
      *
-     * @param services
-     * @param jsonFileRW
+     * @param fileRWService
      */
-    public PersonRepository(final Services services, final JsonFileRW jsonFileRW) {
-        this.services = services;
-        this.jsonFileRW = jsonFileRW;
-        personList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString(JsonDataFileName.dataFileName)).getPersons();
+    public PersonRepository(FileRWService fileRWService) {
+        this.fileRWService = fileRWService;
+        personList = this.fileRWService.jsonAsStringToJsonFileModel(this.fileRWService.jsonFileToString()).getPersons();
     }
 
     /**
      * Get list of Persons
      *
-     * @return
+     * @return list of persons
      */
     public List<Person> findAll() {
         List<Person> result;
@@ -43,19 +37,20 @@ public class PersonRepository {
     }
 
     /**
-     * Add person to person list
+     * Add person to person list , and create data json file
      *
      * @param person to add
-     * @return person to add
+     * @return person added
      */
     public Person savePerson(Person person) {
         personList.add(person);
-        services.saveToJsonFile();
+        fileRWService.saveToJsonFile();
         return person;
     }
 
     /**
-     * Update person in person list , first and last name cannot be modified , use add new person insted
+     * Update person in person list , first and last name cannot be modified
+     * and create data json file
      *
      * @param personBefore data before update
      * @param personAfter  data after update
@@ -69,20 +64,21 @@ public class PersonRepository {
                 break;
             }
         }
-        services.saveToJsonFile();
+        fileRWService.saveToJsonFile();
         return personAfter;
     }
 
     /**
-     * Delete person from person list
+     * Delete person from person list  and create data json file
      *
-     * @param person
+     * @param person to be deleted
      * @return true if success
      */
     public boolean deletePerson(Person person) {
-        boolean result = personList.removeIf(personToDelete -> personToDelete.getFirstName().equals(person.getFirstName()) &&
-                personToDelete.getLastName().equals(person.getLastName()));
-        services.saveToJsonFile();
+        boolean result = personList.removeIf(personToDelete ->
+                personToDelete.getFirstName().equals(person.getFirstName()) &&
+                        personToDelete.getLastName().equals(person.getLastName()));
+        fileRWService.saveToJsonFile();
         return result;
     }
 }

@@ -25,7 +25,7 @@ public class PersonController {
     }
 
     /**
-     * Add new person json string passed in body
+     * Add new person, json string passed in body
      *
      * @param person to add
      * @return person after add
@@ -42,7 +42,7 @@ public class PersonController {
      * @param firstName passed in url
      * @param lastName  passed in url
      * @param person    new information passed in body
-     * @return
+     * @return person after update
      */
     @PutMapping(value = "/person")
     public Person updatePerson(@RequestParam String firstName,
@@ -59,19 +59,18 @@ public class PersonController {
     /**
      * Delete person , name must pass in url
      *
-     * @param firstName
-     * @param lastName
-     * @return
+     * @param firstName first param for person who will deleted
+     * @param lastName  second param for person who will deleted
+     * @return true if delete
      */
     @DeleteMapping(value = "/person")
-    public Person deletePerson(@RequestParam String firstName,
-                               @RequestParam String lastName) {
+    public boolean deletePerson(@RequestParam String firstName,
+                                @RequestParam String lastName) {
         Person person = Person.builder()
                 .firstName(firstName)
                 .lastName(lastName)
                 .build();
-        personRepository.deletePerson(person);
-        //TODO change return
-        return person;
+        boolean result = personRepository.deletePerson(person);
+        return result;
     }
 }
