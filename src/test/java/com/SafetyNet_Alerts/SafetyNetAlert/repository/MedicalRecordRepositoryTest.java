@@ -2,8 +2,7 @@ package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
-import com.SafetyNet_Alerts.SafetyNetAlert.servec.Services;
-import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +15,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -26,10 +24,7 @@ public class MedicalRecordRepositoryTest {
     MedicalRecordRepository medicalRecordRepositoryUnderTest;
 
     @Mock
-    Services servicesMock;
-
-    @Mock
-    JsonFileRW jsonFileRWMock;
+    FileRWService fileRWServiceMock;
 
     JsonFileModel jsonFileModel;
     MedicalRecord medicalRecordToTest;
@@ -44,16 +39,16 @@ public class MedicalRecordRepositoryTest {
                 .medications(List.of("firstMed:350mg", "secondMed:100mg"))
                 .allergies(List.of("firstAllergies", "secondAllergies"))
                 .build();
-        lenient().doNothing().when(servicesMock).saveToJsonFile();
+        lenient().doNothing().when(fileRWServiceMock).saveToJsonFile();
 
         jsonFileModel = new JsonFileModel();
         medicalRecordList = new ArrayList<>();
         medicalRecordList.add(medicalRecordToTest);
         jsonFileModel.setMedicalrecords(medicalRecordList);
-        when(jsonFileRWMock.jsonFileToString(anyString())).thenReturn("data");
-        when(jsonFileRWMock.jsonAsStringToJsonFileModel("data")).thenReturn(jsonFileModel);
+        when(fileRWServiceMock.jsonFileToString()).thenReturn("data");
+        when(fileRWServiceMock.jsonAsStringToJsonFileModel("data")).thenReturn(jsonFileModel);
 
-        medicalRecordRepositoryUnderTest = new MedicalRecordRepository(servicesMock, jsonFileRWMock);
+        medicalRecordRepositoryUnderTest = new MedicalRecordRepository(fileRWServiceMock);
     }
 
     @Test

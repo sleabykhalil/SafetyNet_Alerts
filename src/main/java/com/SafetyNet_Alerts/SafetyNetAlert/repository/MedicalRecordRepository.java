@@ -1,9 +1,7 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 
-import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileName;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
-import com.SafetyNet_Alerts.SafetyNetAlert.servec.Services;
-import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,20 +13,16 @@ public class MedicalRecordRepository {
     public static List<MedicalRecord> medicalRecordList = new ArrayList<>();
 
     @Autowired
-    private Services services;
-    @Autowired
-    private JsonFileRW jsonFileRW;
+    private FileRWService fileRWService;
 
     /**
      * Constructor and Data initialize get all Medical records from json file
      *
-     * @param services
-     * @param jsonFileRW
+     * @param fileRWService File read write manager
      */
-    public MedicalRecordRepository(final Services services, final JsonFileRW jsonFileRW) {
-        this.services = services;
-        this.jsonFileRW = jsonFileRW;
-        medicalRecordList = jsonFileRW.jsonAsStringToJsonFileModel(jsonFileRW.jsonFileToString(JsonDataFileName.dataFileName)).getMedicalrecords();
+    public MedicalRecordRepository(FileRWService fileRWService) {
+        this.fileRWService = fileRWService;
+        medicalRecordList = fileRWService.jsonAsStringToJsonFileModel(fileRWService.jsonFileToString()).getMedicalrecords();
     }
 
     public List<MedicalRecord> findAll() {
@@ -39,7 +33,7 @@ public class MedicalRecordRepository {
 
     public MedicalRecord saveMedicalRecord(MedicalRecord medicalRecord) {
         medicalRecordList.add(medicalRecord);
-        services.saveToJsonFile();
+        fileRWService.saveToJsonFile();
         return medicalRecord;
     }
 
@@ -51,14 +45,14 @@ public class MedicalRecordRepository {
                 break;
             }
         }
-        services.saveToJsonFile();
+        fileRWService.saveToJsonFile();
         return medicalRecordAfter;
     }
 
     public boolean deleteMedicalRecord(MedicalRecord medicalRecord) {
         boolean result = medicalRecordList.removeIf(medicalRecordToDelete -> medicalRecordToDelete.getFirstName().equals(medicalRecord.getFirstName()) &&
                 medicalRecordToDelete.getLastName().equals(medicalRecord.getLastName()));
-        services.saveToJsonFile();
+        fileRWService.saveToJsonFile();
         return result;
     }
 }

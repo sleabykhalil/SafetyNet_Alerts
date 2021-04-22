@@ -22,9 +22,6 @@ class FirestationRepositoryTest {
     @Autowired
     FirestationRepository firestationRepositoryUnderTest;
 
-/*    @Mock
-    FileRWService fileRWServiceMock;*/
-
     @Mock
     FileRWService fileRWServiceMock;
 

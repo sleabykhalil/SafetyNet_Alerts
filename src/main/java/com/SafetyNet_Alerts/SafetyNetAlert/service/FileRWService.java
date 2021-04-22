@@ -44,7 +44,7 @@ public class FileRWService {
     /**
      * create File model from string
      *
-     * @param jsonAsString
+     * @param jsonAsString data as string on json form
      * @return all data as java object
      */
     public JsonFileModel jsonAsStringToJsonFileModel(String jsonAsString) {
@@ -60,6 +60,7 @@ public class FileRWService {
         Stream<String> lines = null;
         try {
             lines = Files.lines(path);
+            //System.out.println(path.toString());
             return lines.collect(Collectors.joining(""));
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,7 +77,7 @@ public class FileRWService {
     /**
      * serialize jsonFileModel to string
      *
-     * @param jsonFileModel
+     * @param jsonFileModel data as java object
      * @return all data as string
      */
     public String jsonFileModelToJsonAsString(JsonFileModel jsonFileModel) {
@@ -86,7 +87,7 @@ public class FileRWService {
     /**
      * write string in data.json
      *
-     * @param jsonAsString
+     * @param jsonAsString data as string on json form
      */
     public void stringToJsonFile(String jsonAsString) {
         try {

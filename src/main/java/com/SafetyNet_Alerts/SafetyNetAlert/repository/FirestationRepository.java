@@ -18,11 +18,11 @@ public class FirestationRepository {
     /**
      * All arguments constructor and  Data initialize get all firestation from json file
      *
-     * @param fileRWService
+     * @param fileRWService File read write manager
      */
     public FirestationRepository(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
-        firestationList = this.fileRWService.jsonAsStringToJsonFileModel(this.fileRWService.jsonFileToString()).getFirestations();
+        firestationList = fileRWService.jsonAsStringToJsonFileModel(fileRWService.jsonFileToString()).getFirestations();
     }
 
     /**

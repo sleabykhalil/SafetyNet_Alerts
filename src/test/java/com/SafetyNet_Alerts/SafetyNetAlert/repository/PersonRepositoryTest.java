@@ -3,7 +3,6 @@ package com.SafetyNet_Alerts.SafetyNetAlert.repository;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
-import com.SafetyNet_Alerts.SafetyNetAlert.tools.JsonFileRW;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,9 +25,6 @@ class PersonRepositoryTest {
 
     @Mock
     FileRWService fileRWServiceMock;
-
-    @Mock
-    JsonFileRW jsonFileRWMock;
 
     JsonFileModel jsonFileModel;
     Person personUsedByTest;
