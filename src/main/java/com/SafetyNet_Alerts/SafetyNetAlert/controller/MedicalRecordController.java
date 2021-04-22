@@ -1,7 +1,7 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.controller;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
-import com.SafetyNet_Alerts.SafetyNetAlert.repository.MedicalRecordRepository;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.MedicalRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,8 +9,9 @@ import java.util.List;
 
 @RestController
 public class MedicalRecordController {
+
     @Autowired
-    MedicalRecordRepository medicalRecordRepository;
+    MedicalRecordService medicalRecordService;
 
     /**
      * Get  for all Medical records
@@ -19,7 +20,7 @@ public class MedicalRecordController {
      */
     @GetMapping(value = "/medicalRecords")
     public List<MedicalRecord> getAllMedialRecords() {
-        return medicalRecordRepository.findAll();
+        return medicalRecordService.getAllMedicalRecords();
     }
 
     /**
@@ -30,8 +31,7 @@ public class MedicalRecordController {
      */
     @PostMapping(value = "/medicalRecord")
     public MedicalRecord addMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
-        medicalRecordRepository.saveMedicalRecord(medicalRecord);
-        return medicalRecord;
+        return medicalRecordService.saveMedicalRecord(medicalRecord);
     }
 
     /**
@@ -46,12 +46,7 @@ public class MedicalRecordController {
     public MedicalRecord updateMedicalRecord(@RequestParam String firstName,
                                              @RequestParam String lastName,
                                              @RequestBody MedicalRecord medicalRecord) {
-        MedicalRecord updateMedicalRecordBefore = MedicalRecord.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .build();
-        medicalRecordRepository.updateMedicalRecord(updateMedicalRecordBefore, medicalRecord);
-        return medicalRecord;
+        return medicalRecordService.updateMedicalRecord(firstName, lastName, medicalRecord);
     }
 
     /**
@@ -64,12 +59,7 @@ public class MedicalRecordController {
     @DeleteMapping(value = "/medicalRecord")
     public boolean deletePerson(@RequestParam String firstName,
                                 @RequestParam String lastName) {
-        MedicalRecord medicalRecord = MedicalRecord.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .build();
-        boolean result = medicalRecordRepository.deleteMedicalRecord(medicalRecord);
-        return result;
+        return medicalRecordService.deleteMedicalRecord(firstName, lastName);
     }
 
 }
