@@ -25,18 +25,36 @@ public class MedicalRecordRepository {
         medicalRecordList = fileRWService.jsonAsStringToJsonFileModel(fileRWService.jsonFileToString()).getMedicalrecords();
     }
 
+    /**
+     * Get list of medical records
+     *
+     * @return list of medicalRecords
+     */
     public List<MedicalRecord> findAll() {
         List<MedicalRecord> result;
         result = medicalRecordList;
         return result;
     }
 
+    /**
+     * Add medicalrecord to medicalrecord list and create data json file
+     *
+     * @param medicalRecord medicalrecord to add
+     * @return medicalrecord added
+     */
     public MedicalRecord saveMedicalRecord(MedicalRecord medicalRecord) {
         medicalRecordList.add(medicalRecord);
         fileRWService.saveToJsonFile();
         return medicalRecord;
     }
 
+    /**
+     * Update medical records in medicalRecord list , and create data json file
+     *
+     * @param medicalRecordBefore medical record data before update
+     * @param medicalRecordAfter  medical record data after add
+     * @return medicalRecord after add
+     */
     public MedicalRecord updateMedicalRecord(MedicalRecord medicalRecordBefore, MedicalRecord medicalRecordAfter) {
         for (MedicalRecord medicalRecord : medicalRecordList) {
             if ((medicalRecordBefore.getFirstName().equals(medicalRecord.getFirstName())) &&
@@ -49,6 +67,12 @@ public class MedicalRecordRepository {
         return medicalRecordAfter;
     }
 
+    /**
+     * Delete medical record from medicalRecord list and create data json file
+     *
+     * @param medicalRecord to be deleted
+     * @return true if success
+     */
     public boolean deleteMedicalRecord(MedicalRecord medicalRecord) {
         boolean result = medicalRecordList.removeIf(medicalRecordToDelete -> medicalRecordToDelete.getFirstName().equals(medicalRecord.getFirstName()) &&
                 medicalRecordToDelete.getLastName().equals(medicalRecord.getLastName()));
