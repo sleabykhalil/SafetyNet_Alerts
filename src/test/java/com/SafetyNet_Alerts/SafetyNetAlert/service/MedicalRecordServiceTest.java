@@ -17,8 +17,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class MedicalRecordServiceTest {
     MedicalRecordService medicalRecordServiceUnderTest;
+
     @Mock
     MedicalRecordRepository medicalRecordRepositoryMock;
+
     MedicalRecord firstMedicalRecord;
     MedicalRecord secondMedicalRecord;
     List<MedicalRecord> medicalRecordList = new ArrayList<>();
