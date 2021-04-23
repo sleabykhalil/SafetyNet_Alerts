@@ -18,11 +18,11 @@ public class PersonRepository {
     /**
      * Constructor and Data initialize get all person from json file
      *
-     * @param fileRWService
+     * @param fileRWService File read write manager
      */
     public PersonRepository(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
-        personList = this.fileRWService.jsonAsStringToJsonFileModel(this.fileRWService.jsonFileToString()).getPersons();
+        personList = fileRWService.jsonAsStringToJsonFileModel(fileRWService.jsonFileToString()).getPersons();
     }
 
     /**
