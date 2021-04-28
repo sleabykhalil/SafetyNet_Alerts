@@ -3,15 +3,20 @@ package com.SafetyNet_Alerts.SafetyNetAlert.service;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.FirestationDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.ChildAlertDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.PersonWithAgeCatDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
+import com.SafetyNet_Alerts.SafetyNetAlert.tools.DateHelper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +70,9 @@ class URLsServiceTest {
     }
 
     @Test
+    @Disabled("TODO add when mock")
     void getListOfPersonCoveredByFireStation() {
+
         PersonWithAgeCatDto personWithAgeCatDto;
         personWithAgeCatDto = urLsServiceUnderTest.getListOfPersonCoveredByFireStation("1");
         assertThat(personWithAgeCatDto.getAdultNumber()).isEqualTo(1);
@@ -74,4 +81,15 @@ class URLsServiceTest {
     }
 
 
+    @Test
+    void getListOFChildByAddress() {
+        ChildAlertDto childAlertDto = urLsServiceUnderTest.getListOFChildByAddress("1234 Street St");
+        assertThat(childAlertDto.getChildren().get(0).getFirstName()).isEqualTo("Aram");
+    }
+
+    @Test
+    void calculateAge() {
+        String birthDate = LocalDate.now().format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT));
+        assertThat(urLsServiceUnderTest.calculateAge(birthDate)).isEqualTo(0);
+    }
 }

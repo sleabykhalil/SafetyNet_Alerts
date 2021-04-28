@@ -3,6 +3,7 @@ package com.SafetyNet_Alerts.SafetyNetAlert.service;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.FirestationDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.ChildAlertDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.PersonWithAgeCatDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
@@ -26,7 +27,7 @@ public class URLsService {
     MedicalRecordDaoImpl medicalRecordDao;
 
     /**
-     * get list of person with adult number and child number
+     * get list of person with adult number and Child number
      *
      * @param stationNumber
      * @return PersonWithAgeCat Dto list of person + adults number + childes² number
@@ -36,8 +37,8 @@ public class URLsService {
          * get list of firestation by station number
          * for each firestation.address get list of person by address
          * for each person get medical record by first name and last name
-         * from medical record lest get adult number and child number
-         * return dto contain list of person and number of adult and  child number
+         * from medical record lest get adult number and Child number
+         * return dto contain list of person and number of adult and  Child number
          * */
         List<Firestation> firestationByAddress;
         List<Person> personByAddress = new ArrayList<>();
@@ -57,7 +58,6 @@ public class URLsService {
             } else childNumber += 1;
         }
 
-
         PersonWithAgeCatDto result = PersonWithAgeCatDto.builder()
                 .personList(personByAddress)
                 .adultNumber(adultNumber)
@@ -67,5 +67,15 @@ public class URLsService {
         return result;
     }
 
-
+    public ChildAlertDto getListOFChildByAddress(String address) {
+        /*
+         * get person list by address
+         * get birthday from medicalRecords for each person in person list
+         * calculate age for each person
+         * get childes list
+         * get person list lives in the address
+         * if there is no Child return empty list
+         * */
+        return null;
+    }
 }

@@ -94,11 +94,11 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
     //URLs
 
     /**
-     * get
+     * get list of medical record for person by first name and second name
      *
      * @param firstName
      * @param lastName
-     * @return
+     * @return list of medical record
      */
     public List<MedicalRecord> getMedicalRecordByFirstNameAndLastName(String firstName, String lastName) {
         List<MedicalRecord> result = new ArrayList<>();
