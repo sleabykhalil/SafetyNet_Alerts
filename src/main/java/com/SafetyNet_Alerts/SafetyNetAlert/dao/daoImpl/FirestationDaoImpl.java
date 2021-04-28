@@ -27,22 +27,6 @@ public class FirestationDaoImpl implements FirestationDao {
     }
 
     /**
-     * get list of firestation by station number
-     *
-     * @param station station number
-     * @return list of person corresponding to station
-     */
-    public List<Firestation> findFirestationByStation(String station) {
-        List<Firestation> result = new ArrayList<>();
-        firestationList.forEach(firestation -> {
-            if (firestation.getStation().equals(station)) {
-                result.add(firestation);
-            }
-        });
-        return result;
-    }
-
-    /**
      * Get list of firestations
      *
      * @return list of firestations
@@ -102,6 +86,24 @@ public class FirestationDaoImpl implements FirestationDao {
         boolean result = firestationList.removeIf(firestationToDelete ->
                 firestationToDelete.getAddress().equals(firestation.getAddress()));
         fileRWService.saveToJsonFile();
+        return result;
+    }
+
+    //URLs
+
+    /**
+     * get list of firestation by station number
+     *
+     * @param station station number
+     * @return list of person corresponding to station
+     */
+    public List<Firestation> findFirestationByStation(String station) {
+        List<Firestation> result = new ArrayList<>();
+        firestationList.forEach(firestation -> {
+            if (firestation.getStation().equals(station)) {
+                result.add(firestation);
+            }
+        });
         return result;
     }
 }

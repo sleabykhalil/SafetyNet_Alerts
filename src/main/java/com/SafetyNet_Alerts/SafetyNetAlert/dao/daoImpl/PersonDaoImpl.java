@@ -91,4 +91,22 @@ public class PersonDaoImpl implements PersonDao {
         fileRWService.saveToJsonFile();
         return result;
     }
+
+    //URLs
+
+    /**
+     * Get list of person corresponding to address
+     *
+     * @param address specific address
+     * @return list of person lives in the same address
+     */
+    public List<Person> getPersonByAddress(String address) {
+        List<Person> result = new ArrayList<>();
+        personList.forEach(person -> {
+            if (person.getAddress().equals(address)) {
+                result.add(person);
+            }
+        });
+        return result;
+    }
 }

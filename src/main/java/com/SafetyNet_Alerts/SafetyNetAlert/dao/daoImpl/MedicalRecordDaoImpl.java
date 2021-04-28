@@ -84,9 +84,29 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
      */
     @Override
     public boolean delete(MedicalRecord medicalRecord) {
-        boolean result = medicalRecordList.removeIf(medicalRecordToDelete -> medicalRecordToDelete.getFirstName().equals(medicalRecord.getFirstName()) &&
+        boolean result = medicalRecordList.removeIf(medicalRecordToDelete -> medicalRecordToDelete.getFirstName()
+                .equals(medicalRecord.getFirstName()) &&
                 medicalRecordToDelete.getLastName().equals(medicalRecord.getLastName()));
         fileRWService.saveToJsonFile();
+        return result;
+    }
+
+    //URLs
+
+    /**
+     * get
+     *
+     * @param firstName
+     * @param lastName
+     * @return
+     */
+    public List<MedicalRecord> getMedicalRecordByFirstNameAndLastName(String firstName, String lastName) {
+        List<MedicalRecord> result = new ArrayList<>();
+        medicalRecordList.forEach(medicalRecord -> {
+            if (medicalRecord.getFirstName().equals(firstName) && medicalRecord.getLastName().equals(lastName)) {
+                result.add(medicalRecord);
+            }
+        });
         return result;
     }
 }
