@@ -29,7 +29,7 @@ public class URLsService {
      * get list of person with adult number and child number
      *
      * @param stationNumber
-     * @return PersonWithAgeCat Dto list of person + adults number + childes number
+     * @return PersonWithAgeCat Dto list of person + adults number + childes² number
      */
     public PersonWithAgeCatDto getListOfPersonCoveredByFireStation(String stationNumber) {
         /*
