@@ -12,8 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class URLsServeceTest {
 
@@ -59,6 +57,5 @@ class URLsServeceTest {
                 .station("1")
                 .build();
 
-        when(FirestationDao.getPersonList("1")).thenReturn(listOfPerson);
     }
 }

@@ -1,7 +1,7 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.service;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.FirestationDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
-import com.SafetyNet_Alerts.SafetyNetAlert.repository.FirestationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 class FirestationServiceTest {
     FirestationService firestationServiceUnderTest;
     @Mock
-    FirestationRepository firestationRepositoryMock;
+    FirestationDaoImpl firestationDaoMock;
 
     Firestation firestationFirst;
     Firestation firestationSecond;
@@ -36,37 +36,37 @@ class FirestationServiceTest {
                 .build();
         firestationList.add(firestationFirst);
         firestationList.add(firestationSecond);
-        firestationServiceUnderTest = new FirestationService(firestationRepositoryMock);
+        firestationServiceUnderTest = new FirestationService(firestationDaoMock);
     }
 
     @Test
     void getAllFirestation() {
-        when(firestationRepositoryMock.findAll()).thenReturn(firestationList);
+        when(firestationDaoMock.findAll()).thenReturn(firestationList);
         assertThat(firestationServiceUnderTest.getAllFirestation()).hasSize(2);
-        verify(firestationRepositoryMock, times(1)).findAll();
+        verify(firestationDaoMock, times(1)).findAll();
     }
 
     @Test
     void saveFirestation() {
-        when(firestationRepositoryMock.saveFirestation(firestationFirst)).thenReturn(firestationFirst);
+        when(firestationDaoMock.create(firestationFirst)).thenReturn(firestationFirst);
         assertThat(firestationServiceUnderTest.saveFirestation(firestationFirst)).isEqualTo(firestationFirst);
-        verify(firestationRepositoryMock, times(1)).saveFirestation(firestationFirst);
+        verify(firestationDaoMock, times(1)).create(firestationFirst);
     }
 
     @Test
     void updateFirestation() {
-        when(firestationRepositoryMock.updateFirestation(any(Firestation.class), any(Firestation.class)))
+        when(firestationDaoMock.update(any(Firestation.class), any(Firestation.class)))
                 .thenReturn(firestationSecond);
         assertThat(firestationServiceUnderTest.updateFirestation("new address", firestationFirst))
                 .isEqualTo(firestationSecond);
-        verify(firestationRepositoryMock, times(1))
-                .updateFirestation(any(Firestation.class), any(Firestation.class));
+        verify(firestationDaoMock, times(1))
+                .update(any(Firestation.class), any(Firestation.class));
     }
 
     @Test
     void deleteFirestation() {
-        when(firestationRepositoryMock.deleteFirestation(any(Firestation.class))).thenReturn(true);
+        when(firestationDaoMock.delete(any(Firestation.class))).thenReturn(true);
         assertThat(firestationServiceUnderTest.deleteFirestation("new address")).isTrue();
-        verify(firestationRepositoryMock, times(1)).deleteFirestation(any(Firestation.class));
+        verify(firestationDaoMock, times(1)).delete(any(Firestation.class));
     }
 }

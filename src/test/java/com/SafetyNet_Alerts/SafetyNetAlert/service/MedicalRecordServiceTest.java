@@ -1,7 +1,7 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.service;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
-import com.SafetyNet_Alerts.SafetyNetAlert.repository.MedicalRecordRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +19,7 @@ class MedicalRecordServiceTest {
     MedicalRecordService medicalRecordServiceUnderTest;
 
     @Mock
-    MedicalRecordRepository medicalRecordRepositoryMock;
+    MedicalRecordDaoImpl medicalRecordDaoMock;
 
     MedicalRecord firstMedicalRecord;
     MedicalRecord secondMedicalRecord;
@@ -43,37 +43,37 @@ class MedicalRecordServiceTest {
                 .build();
         medicalRecordList.add(firstMedicalRecord);
         medicalRecordList.add(secondMedicalRecord);
-        medicalRecordServiceUnderTest = new MedicalRecordService(medicalRecordRepositoryMock);
+        medicalRecordServiceUnderTest = new MedicalRecordService(medicalRecordDaoMock);
     }
 
     @Test
     void getAllMedicalRecord() {
-        when(medicalRecordRepositoryMock.findAll()).thenReturn(medicalRecordList);
+        when(medicalRecordDaoMock.findAll()).thenReturn(medicalRecordList);
         assertThat(medicalRecordServiceUnderTest.getAllMedicalRecords()).hasSize(2);
-        verify(medicalRecordRepositoryMock, times(1)).findAll();
+        verify(medicalRecordDaoMock, times(1)).findAll();
     }
 
     @Test
     void saveMedicalRecord() {
-        when(medicalRecordRepositoryMock.saveMedicalRecord(firstMedicalRecord)).thenReturn(firstMedicalRecord);
+        when(medicalRecordDaoMock.create(firstMedicalRecord)).thenReturn(firstMedicalRecord);
         assertThat(medicalRecordServiceUnderTest.saveMedicalRecord(firstMedicalRecord)).isEqualTo(firstMedicalRecord);
-        verify(medicalRecordRepositoryMock, times(1)).saveMedicalRecord(firstMedicalRecord);
+        verify(medicalRecordDaoMock, times(1)).create(firstMedicalRecord);
     }
 
     @Test
     void updateMedicalRecord() {
-        when(medicalRecordRepositoryMock.updateMedicalRecord(any(MedicalRecord.class), any(MedicalRecord.class)))
+        when(medicalRecordDaoMock.update(any(MedicalRecord.class), any(MedicalRecord.class)))
                 .thenReturn(secondMedicalRecord);
         assertThat(medicalRecordServiceUnderTest.updateMedicalRecord("first name", "last name", secondMedicalRecord))
                 .isEqualTo(secondMedicalRecord);
-        verify(medicalRecordRepositoryMock, times(1))
-                .updateMedicalRecord(any(MedicalRecord.class), any(MedicalRecord.class));
+        verify(medicalRecordDaoMock, times(1))
+                .update(any(MedicalRecord.class), any(MedicalRecord.class));
     }
 
     @Test
     void deleteFirestation() {
-        when(medicalRecordRepositoryMock.deleteMedicalRecord(any(MedicalRecord.class))).thenReturn(true);
+        when(medicalRecordDaoMock.delete(any(MedicalRecord.class))).thenReturn(true);
         assertThat(medicalRecordServiceUnderTest.deleteMedicalRecord("first name", "last name")).isTrue();
-        verify(medicalRecordRepositoryMock, times(1)).deleteMedicalRecord(any(MedicalRecord.class));
+        verify(medicalRecordDaoMock, times(1)).delete(any(MedicalRecord.class));
     }
 }
