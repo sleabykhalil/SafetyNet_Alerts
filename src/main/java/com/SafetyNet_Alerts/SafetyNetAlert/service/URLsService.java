@@ -25,7 +25,12 @@ public class URLsService {
     @Autowired
     MedicalRecordDaoImpl medicalRecordDao;
 
-
+    /**
+     * get list of person with adult number and child number
+     *
+     * @param stationNumber
+     * @return PersonWithAgeCat Dto list of person + adults number + childes number
+     */
     public PersonWithAgeCatDto getListOfPersonCoveredByFireStation(String stationNumber) {
         /*
          * get list of firestation by station number
