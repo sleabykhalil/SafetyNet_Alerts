@@ -16,11 +16,21 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
     @Autowired
     private FileRWService fileRWService;
 
+    /**
+     * Constructor and Data initialize get all Medical records from json file
+     *
+     * @param fileRWService File read write manager
+     */
     public MedicalRecordDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
         medicalRecordList = fileRWService.jsonAsStringToJsonFileModel(fileRWService.jsonFileToString()).getMedicalrecords();
     }
 
+    /**
+     * Get list of medical records
+     *
+     * @return list of medicalRecords
+     */
     @Override
     public List<MedicalRecord> findAll() {
         List<MedicalRecord> result;
@@ -28,6 +38,12 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
         return result;
     }
 
+    /**
+     * Add medicalrecord to medicalrecord list and create data json file
+     *
+     * @param medicalRecord medicalrecord to add
+     * @return medicalrecord added
+     */
     @Override
     public MedicalRecord create(MedicalRecord medicalRecord) {
         medicalRecordList.add(medicalRecord);
@@ -40,6 +56,13 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
         return null;
     }
 
+    /**
+     * Update medical records in medicalRecord list , and create data json file
+     *
+     * @param medicalRecordBefore medical record data before update
+     * @param medicalRecordAfter  medical record data after add
+     * @return medicalRecord after add
+     */
     @Override
     public MedicalRecord update(MedicalRecord medicalRecordBefore, MedicalRecord medicalRecordAfter) {
         for (MedicalRecord medicalRecord : medicalRecordList) {
@@ -53,6 +76,12 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
         return medicalRecordAfter;
     }
 
+    /**
+     * Delete medical record from medicalRecord list and create data json file
+     *
+     * @param medicalRecord to be deleted
+     * @return true if success
+     */
     @Override
     public boolean delete(MedicalRecord medicalRecord) {
         boolean result = medicalRecordList.removeIf(medicalRecordToDelete -> medicalRecordToDelete.getFirstName().equals(medicalRecord.getFirstName()) &&

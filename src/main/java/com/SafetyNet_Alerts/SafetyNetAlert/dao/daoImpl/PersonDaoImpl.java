@@ -16,11 +16,21 @@ public class PersonDaoImpl implements PersonDao {
     @Autowired
     private FileRWService fileRWService;
 
+    /**
+     * Constructor and Data initialize get all person from json file
+     *
+     * @param fileRWService File read write manager
+     */
     public PersonDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
         personList = fileRWService.jsonAsStringToJsonFileModel(fileRWService.jsonFileToString()).getPersons();
     }
 
+    /**
+     * Get list of Persons
+     *
+     * @return list of persons
+     */
     @Override
     public List<Person> findAll() {
         List<Person> result;
@@ -28,6 +38,12 @@ public class PersonDaoImpl implements PersonDao {
         return result;
     }
 
+    /**
+     * Add person to person list , and create data json file
+     *
+     * @param person to add
+     * @return person added
+     */
     @Override
     public Person create(Person person) {
         personList.add(person);
@@ -40,6 +56,14 @@ public class PersonDaoImpl implements PersonDao {
         return null;
     }
 
+    /**
+     * Update person in person list , first and last name cannot be modified
+     * and create data json file
+     *
+     * @param personBefore data before update
+     * @param personAfter  data after update
+     * @return person after update
+     */
     @Override
     public Person update(Person personBefore, Person personAfter) {
         for (Person person : personList) {
@@ -53,6 +77,12 @@ public class PersonDaoImpl implements PersonDao {
         return personAfter;
     }
 
+    /**
+     * Delete person from person list  and create data json file
+     *
+     * @param person to be deleted
+     * @return true if success
+     */
     @Override
     public boolean delete(Person person) {
         boolean result = personList.removeIf(personToDelete ->

@@ -16,11 +16,22 @@ public class FirestationDaoImpl implements FirestationDao {
     @Autowired
     private FileRWService fileRWService;
 
+    /**
+     * All arguments constructor and  Data initialize get all firestation from json file
+     *
+     * @param fileRWService File read write manager
+     */
     public FirestationDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
         firestationList = fileRWService.jsonAsStringToJsonFileModel(fileRWService.jsonFileToString()).getFirestations();
     }
 
+    /**
+     * get list of firestation by station number
+     *
+     * @param station station number
+     * @return list of person corresponding to station
+     */
     public List<Firestation> findFirestationByStation(String station) {
         List<Firestation> result = new ArrayList<>();
         firestationList.forEach(firestation -> {
@@ -31,6 +42,11 @@ public class FirestationDaoImpl implements FirestationDao {
         return result;
     }
 
+    /**
+     * Get list of firestations
+     *
+     * @return list of firestations
+     */
     @Override
     public List<Firestation> findAll() {
         List<Firestation> result;
@@ -38,6 +54,12 @@ public class FirestationDaoImpl implements FirestationDao {
         return result;
     }
 
+    /**
+     * Add firestation to firestation list and create data json file
+     *
+     * @param firestation to add
+     * @return firestation added
+     */
     @Override
     public Firestation create(Firestation firestation) {
         firestationList.add(firestation);
@@ -50,6 +72,13 @@ public class FirestationDaoImpl implements FirestationDao {
         return null;
     }
 
+    /**
+     * Update firestation in firestation list , and create data json file
+     *
+     * @param firestationBefore data before update
+     * @param firestationAfter  data after update
+     * @return firestation after update
+     */
     @Override
     public Firestation update(Firestation firestationBefore, Firestation firestationAfter) {
         for (Firestation firestation : firestationList) {
@@ -62,6 +91,12 @@ public class FirestationDaoImpl implements FirestationDao {
         return firestationAfter;
     }
 
+    /**
+     * Delete firestation from firestation list and create data json file
+     *
+     * @param firestation to be deleted
+     * @return true if success
+     */
     @Override
     public boolean delete(Firestation firestation) {
         boolean result = firestationList.removeIf(firestationToDelete ->
