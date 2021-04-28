@@ -1,4 +1,4 @@
-package com.SafetyNet_Alerts.SafetyNetAlert.repository;
+package com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
@@ -18,10 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
+
 @ExtendWith(MockitoExtension.class)
-class PersonRepositoryTest {
+class PersonDaoImplTest {
+
     @Autowired
-    PersonRepository personRepositoryUnderTest;
+    PersonDaoImpl personDaoUnderTest;
 
     @Mock
     FileRWService fileRWServiceMock;
@@ -51,24 +53,28 @@ class PersonRepositoryTest {
         when(fileRWServiceMock.jsonFileToString()).thenReturn("data");
         when(fileRWServiceMock.jsonAsStringToJsonFileModel("data")).thenReturn(jsonFileModel);
 
-        personRepositoryUnderTest = new PersonRepository(fileRWServiceMock);
+        personDaoUnderTest = new PersonDaoImpl(fileRWServiceMock);
     }
 
     @Test
     void findAll() {
         List<Person> result;
-        result = personRepositoryUnderTest.findAll();
+        result = personDaoUnderTest.findAll();
         assertThat(result.toString()).contains("Khalil");
     }
 
     @Test
-    void savePerson_whenPersonPassed_PersonReturn() {
-        Person result = personRepositoryUnderTest.savePerson(personUsedByTest);
+    void create() {
+        Person result = personDaoUnderTest.create(personUsedByTest);
         assertThat(result).isEqualTo(personUsedByTest);
     }
 
     @Test
-    void updatePerson_whenTowPersonsPassed_NewPersonShouldReturn() {
+    void read() {
+    }
+
+    @Test
+    void update() {
         Person personBefore = personUsedByTest;
         Person personAfter = Person.builder()
                 .firstName("Khalil")
@@ -80,18 +86,17 @@ class PersonRepositoryTest {
                 .email("jaboyd@email.com")
                 .build();
 
-        Person result = personRepositoryUnderTest.updatePerson(personBefore, personAfter);
+        Person result = personDaoUnderTest.update(personBefore, personAfter);
 
         assertThat(result).isEqualTo(personAfter);
     }
 
     @Test
-    void deletePerson_whenPersonPassed_returnTrue() {
-        personRepositoryUnderTest.personList.add(personUsedByTest);
+    void delete() {
+        personDaoUnderTest.personList.add(personUsedByTest);
 
-        boolean result = personRepositoryUnderTest.deletePerson(personUsedByTest);
+        boolean result = personDaoUnderTest.delete(personUsedByTest);
 
         assertTrue(result);
     }
-
 }

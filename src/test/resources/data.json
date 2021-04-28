@@ -210,6 +210,10 @@
   ],
   "firestations": [
     {
+      "address": "1234 Street St",
+      "station": "1"
+    },
+    {
       "address": "1509 Culver St",
       "station": "3"
     },
@@ -284,17 +288,13 @@
         "terazine:10mg",
         "noznazol:250mg"
       ],
-      "allergies": [
-
-      ]
+      "allergies": []
     },
     {
       "firstName": "Tenley",
       "lastName": "Boyd",
       "birthdate": "02/18/2012",
-      "medications": [
-
-      ],
+      "medications": [],
       "allergies": [
         "peanut"
       ]
@@ -303,12 +303,8 @@
       "firstName": "Roger",
       "lastName": "Boyd",
       "birthdate": "09/06/2017",
-      "medications": [
-
-      ],
-      "allergies": [
-
-      ]
+      "medications": [],
+      "allergies": []
     },
     {
       "firstName": "Felicia",
@@ -325,31 +321,21 @@
       "firstName": "Jonanathan",
       "lastName": "Marrack",
       "birthdate": "01/03/1989",
-      "medications": [
-
-      ],
-      "allergies": [
-
-      ]
+      "medications": [],
+      "allergies": []
     },
     {
       "firstName": "Tessa",
       "lastName": "Carman",
       "birthdate": "02/18/2012",
-      "medications": [
-
-      ],
-      "allergies": [
-
-      ]
+      "medications": [],
+      "allergies": []
     },
     {
       "firstName": "Peter",
       "lastName": "Duncan",
       "birthdate": "09/06/2000",
-      "medications": [
-
-      ],
+      "medications": [],
       "allergies": [
         "shellfish"
       ]
@@ -358,12 +344,8 @@
       "firstName": "Foster",
       "lastName": "Shepard",
       "birthdate": "01/08/1980",
-      "medications": [
-
-      ],
-      "allergies": [
-
-      ]
+      "medications": [],
+      "allergies": []
     },
     {
       "firstName": "Tony",
@@ -381,12 +363,8 @@
       "firstName": "Lily",
       "lastName": "Cooper",
       "birthdate": "03/06/1994",
-      "medications": [
-
-      ],
-      "allergies": [
-
-      ]
+      "medications": [],
+      "allergies": []
     },
     {
       "firstName": "Sophia",
@@ -408,23 +386,15 @@
       "firstName": "Warren",
       "lastName": "Zemicks",
       "birthdate": "03/06/1985",
-      "medications": [
-
-      ],
-      "allergies": [
-
-      ]
+      "medications": [],
+      "allergies": []
     },
     {
       "firstName": "Zach",
       "lastName": "Zemicks",
       "birthdate": "03/06/2017",
-      "medications": [
-
-      ],
-      "allergies": [
-
-      ]
+      "medications": [],
+      "allergies": []
     },
     {
       "firstName": "Reginold",
@@ -441,23 +411,15 @@
       "firstName": "Jamie",
       "lastName": "Peters",
       "birthdate": "03/06/1982",
-      "medications": [
-
-      ],
-      "allergies": [
-
-      ]
+      "medications": [],
+      "allergies": []
     },
     {
       "firstName": "Ron",
       "lastName": "Peters",
       "birthdate": "04/06/1965",
-      "medications": [
-
-      ],
-      "allergies": [
-
-      ]
+      "medications": [],
+      "allergies": []
     },
     {
       "firstName": "Allison",
@@ -486,12 +448,8 @@
       "firstName": "Shawna",
       "lastName": "Stelzer",
       "birthdate": "07/08/1980",
-      "medications": [
-
-      ],
-      "allergies": [
-
-      ]
+      "medications": [],
+      "allergies": []
     },
     {
       "firstName": "Kendrik",
@@ -501,20 +459,14 @@
         "noxidian:100mg",
         "pharmacol:2500mg"
       ],
-      "allergies": [
-
-      ]
+      "allergies": []
     },
     {
       "firstName": "Clive",
       "lastName": "Ferguson",
       "birthdate": "03/06/1994",
-      "medications": [
-
-      ],
-      "allergies": [
-
-      ]
+      "medications": [],
+      "allergies": []
     },
     {
       "firstName": "Eric",
@@ -523,9 +475,7 @@
       "medications": [
         "tradoxidine:400mg"
       ],
-      "allergies": [
-
-      ]
+      "allergies": []
     }
   ]
 }

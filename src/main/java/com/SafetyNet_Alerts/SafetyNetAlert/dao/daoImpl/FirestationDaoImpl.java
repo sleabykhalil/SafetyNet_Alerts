@@ -21,7 +21,7 @@ public class FirestationDaoImpl implements FirestationDao {
         firestationList = fileRWService.jsonAsStringToJsonFileModel(fileRWService.jsonFileToString()).getFirestations();
     }
 
-    public List<Firestation> findPersonByStation(String station) {
+    public List<Firestation> findFirestationByStation(String station) {
         List<Firestation> result = new ArrayList<>();
         firestationList.forEach(firestation -> {
             if (firestation.getStation().equals(station)) {
