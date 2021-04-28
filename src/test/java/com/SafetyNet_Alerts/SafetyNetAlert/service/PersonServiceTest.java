@@ -1,7 +1,7 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.service;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
-import com.SafetyNet_Alerts.SafetyNetAlert.repository.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 class PersonServiceTest {
     PersonService personServiceUnderTest;
     @Mock
-    PersonRepository personRepositoryMock;
+    PersonDaoImpl personDaoMock;
 
     Person firstPerson;
     Person secondPerson;
@@ -46,37 +46,37 @@ class PersonServiceTest {
                 .build();
         personList.add(firstPerson);
         personList.add(secondPerson);
-        personServiceUnderTest = new PersonService(personRepositoryMock);
+        personServiceUnderTest = new PersonService(personDaoMock);
     }
 
     @Test
     void getAllPerson() {
-        when(personRepositoryMock.findAll()).thenReturn(personList);
+        when(personDaoMock.findAll()).thenReturn(personList);
         assertThat(personServiceUnderTest.getAllPerson()).hasSize(2);
-        verify(personRepositoryMock, times(1)).findAll();
+        verify(personDaoMock, times(1)).findAll();
     }
 
     @Test
     void savePerson() {
-        when(personRepositoryMock.savePerson(firstPerson)).thenReturn(firstPerson);
+        when(personDaoMock.create(firstPerson)).thenReturn(firstPerson);
         assertThat(personServiceUnderTest.savePerson(firstPerson)).isEqualTo(firstPerson);
-        verify(personRepositoryMock, times(1)).savePerson(firstPerson);
+        verify(personDaoMock, times(1)).create(firstPerson);
     }
 
     @Test
     void updatePerson() {
-        when(personRepositoryMock.updatePerson(any(Person.class), any(Person.class)))
+        when(personDaoMock.update(any(Person.class), any(Person.class)))
                 .thenReturn(secondPerson);
         assertThat(personServiceUnderTest.updatePerson("Khalil", "Sleaby", secondPerson))
                 .isEqualTo(secondPerson);
-        verify(personRepositoryMock, times(1))
-                .updatePerson(any(Person.class), any(Person.class));
+        verify(personDaoMock, times(1))
+                .update(any(Person.class), any(Person.class));
     }
 
     @Test
     void deletePerson() {
-        when(personRepositoryMock.deletePerson(any(Person.class))).thenReturn(true);
+        when(personDaoMock.delete(any(Person.class))).thenReturn(true);
         assertThat(personServiceUnderTest.deletePerson("Khalil", "Sleaby")).isTrue();
-        verify(personRepositoryMock, times(1)).deletePerson(any(Person.class));
+        verify(personDaoMock, times(1)).delete(any(Person.class));
     }
 }

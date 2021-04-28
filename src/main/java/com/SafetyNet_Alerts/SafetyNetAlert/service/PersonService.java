@@ -1,7 +1,7 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.service;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
-import com.SafetyNet_Alerts.SafetyNetAlert.repository.PersonRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,14 +12,14 @@ import java.util.List;
 @Service
 public class PersonService {
     @Autowired
-    PersonRepository personRepository;
+    PersonDaoImpl personDao;
 
     public List<Person> getAllPerson() {
-        return personRepository.findAll();
+        return personDao.findAll();
     }
 
     public Person savePerson(Person person) {
-        return personRepository.savePerson(person);
+        return personDao.create(person);
     }
 
     public Person updatePerson(String firstName, String lastName, Person personAfter) {
@@ -28,7 +28,7 @@ public class PersonService {
                 .firstName(firstName)
                 .lastName(lastName)
                 .build();
-        result = personRepository.updatePerson(personBefore, personAfter);
+        result = personDao.update(personBefore, personAfter);
         return result;
     }
 
@@ -37,7 +37,7 @@ public class PersonService {
                 .firstName(firstName)
                 .lastName(lastName)
                 .build();
-        boolean result = personRepository.deletePerson(person);
+        boolean result = personDao.delete(person);
         return result;
     }
 

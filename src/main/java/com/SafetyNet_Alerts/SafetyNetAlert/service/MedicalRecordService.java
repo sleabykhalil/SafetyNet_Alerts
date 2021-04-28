@@ -1,7 +1,7 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.service;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
-import com.SafetyNet_Alerts.SafetyNetAlert.repository.MedicalRecordRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,14 +12,14 @@ import java.util.List;
 @Service
 public class MedicalRecordService {
     @Autowired
-    MedicalRecordRepository medicalRecordRepository;
+    MedicalRecordDaoImpl medicalRecordDao;
 
     public List<MedicalRecord> getAllMedicalRecords() {
-        return medicalRecordRepository.findAll();
+        return medicalRecordDao.findAll();
     }
 
     public MedicalRecord saveMedicalRecord(MedicalRecord medicalRecord) {
-        return medicalRecordRepository.saveMedicalRecord(medicalRecord);
+        return medicalRecordDao.create(medicalRecord);
     }
 
     public MedicalRecord updateMedicalRecord(String firstName, String lastName, MedicalRecord medicalRecord) {
@@ -27,7 +27,7 @@ public class MedicalRecordService {
                 .firstName(firstName)
                 .lastName(lastName)
                 .build();
-        return medicalRecordRepository.updateMedicalRecord(medicalRecordBefore, medicalRecord);
+        return medicalRecordDao.update(medicalRecordBefore, medicalRecord);
     }
 
     public boolean deleteMedicalRecord(String firstName, String lastName) {
@@ -35,7 +35,7 @@ public class MedicalRecordService {
                 .firstName(firstName)
                 .lastName(lastName)
                 .build();
-        return medicalRecordRepository.deleteMedicalRecord(medicalRecordToDelete);
+        return medicalRecordDao.delete(medicalRecordToDelete);
     }
 
 

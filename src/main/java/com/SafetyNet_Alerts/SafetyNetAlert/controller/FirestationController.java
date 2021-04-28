@@ -1,9 +1,9 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.controller;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.PersonWithAgeCatDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
-import com.SafetyNet_Alerts.SafetyNetAlert.repository.FirestationRepository;
-import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.FirestationService;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.URLsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +15,8 @@ public class FirestationController {
     @Autowired
     FirestationService firestationService;
 
+    @Autowired
+    URLsService urLsService;
 
     /**
      * Get  for all Firestations
@@ -63,4 +65,11 @@ public class FirestationController {
         return firestationService.deleteFirestation(address);
     }
 
+
+    //URLs
+
+    @GetMapping(value = "/firestation")
+    public PersonWithAgeCatDto getPersonWithAgeCatDto(@RequestParam String stationNumber) {
+        return urLsService.getListOfPersonCoveredByFireStation(stationNumber);
+    }
 }

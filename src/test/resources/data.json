@@ -2,6 +2,15 @@
   "persons": [
     {
       "firstName": "Khalil",
+      "lastName": "Sleaby",
+      "address": "1234 Street St",
+      "city": "city",
+      "zip": "12345",
+      "phone": "123-456-7890",
+      "email": "khalil@email.com"
+    },
+    {
+      "firstName": "John",
       "lastName": "Boyd",
       "address": "1509 Culver St",
       "city": "Culver",
@@ -210,6 +219,10 @@
   ],
   "firestations": [
     {
+      "address": "1234 Street St",
+      "station": "1"
+    },
+    {
       "address": "1509 Culver St",
       "station": "3"
     },
@@ -264,6 +277,19 @@
   ],
   "medicalrecords": [
     {
+      "firstName": "Khalil",
+      "lastName": "Sleaby",
+      "birthdate": "01/01/1981",
+      "medications": [
+        "firstMed:350mg",
+        "secondMed:100mg"
+      ],
+      "allergies": [
+        "firstAllergy",
+        "secondAllergy"
+      ]
+    },
+    {
       "firstName": "John",
       "lastName": "Boyd",
       "birthdate": "03/06/1984",
@@ -285,7 +311,6 @@
         "noznazol:250mg"
       ],
       "allergies": [
-
       ]
     },
     {
@@ -293,7 +318,6 @@
       "lastName": "Boyd",
       "birthdate": "02/18/2012",
       "medications": [
-
       ],
       "allergies": [
         "peanut"
@@ -304,10 +328,8 @@
       "lastName": "Boyd",
       "birthdate": "09/06/2017",
       "medications": [
-
       ],
       "allergies": [
-
       ]
     },
     {
@@ -326,10 +348,8 @@
       "lastName": "Marrack",
       "birthdate": "01/03/1989",
       "medications": [
-
       ],
       "allergies": [
-
       ]
     },
     {
@@ -337,10 +357,8 @@
       "lastName": "Carman",
       "birthdate": "02/18/2012",
       "medications": [
-
       ],
       "allergies": [
-
       ]
     },
     {
@@ -348,7 +366,6 @@
       "lastName": "Duncan",
       "birthdate": "09/06/2000",
       "medications": [
-
       ],
       "allergies": [
         "shellfish"
@@ -359,10 +376,8 @@
       "lastName": "Shepard",
       "birthdate": "01/08/1980",
       "medications": [
-
       ],
       "allergies": [
-
       ]
     },
     {
@@ -382,10 +397,8 @@
       "lastName": "Cooper",
       "birthdate": "03/06/1994",
       "medications": [
-
       ],
       "allergies": [
-
       ]
     },
     {
@@ -409,10 +422,8 @@
       "lastName": "Zemicks",
       "birthdate": "03/06/1985",
       "medications": [
-
       ],
       "allergies": [
-
       ]
     },
     {
@@ -420,10 +431,8 @@
       "lastName": "Zemicks",
       "birthdate": "03/06/2017",
       "medications": [
-
       ],
       "allergies": [
-
       ]
     },
     {
@@ -442,10 +451,8 @@
       "lastName": "Peters",
       "birthdate": "03/06/1982",
       "medications": [
-
       ],
       "allergies": [
-
       ]
     },
     {
@@ -453,10 +460,8 @@
       "lastName": "Peters",
       "birthdate": "04/06/1965",
       "medications": [
-
       ],
       "allergies": [
-
       ]
     },
     {
@@ -487,10 +492,8 @@
       "lastName": "Stelzer",
       "birthdate": "07/08/1980",
       "medications": [
-
       ],
       "allergies": [
-
       ]
     },
     {
@@ -502,7 +505,6 @@
         "pharmacol:2500mg"
       ],
       "allergies": [
-
       ]
     },
     {
@@ -510,10 +512,8 @@
       "lastName": "Ferguson",
       "birthdate": "03/06/1994",
       "medications": [
-
       ],
       "allergies": [
-
       ]
     },
     {
@@ -524,7 +524,6 @@
         "tradoxidine:400mg"
       ],
       "allergies": [
-
       ]
     }
   ]
