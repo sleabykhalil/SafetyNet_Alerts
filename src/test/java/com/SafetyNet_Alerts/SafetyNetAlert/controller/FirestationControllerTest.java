@@ -82,4 +82,13 @@ public class FirestationControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void getListOfPersonWithAgeCat() throws Exception {
+
+        mockMvc.perform(get("/firestation")
+                .param("station", "1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("1234 Street St")));
+    }
 }

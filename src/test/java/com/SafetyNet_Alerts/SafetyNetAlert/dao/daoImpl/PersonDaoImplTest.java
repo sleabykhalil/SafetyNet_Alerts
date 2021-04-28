@@ -99,4 +99,11 @@ class PersonDaoImplTest {
 
         assertTrue(result);
     }
+
+    @Test
+    void getPersonByAddress() {
+        List<Person> result;
+        result = personDaoUnderTest.getPersonByAddress("1509 Culver St");
+        assertThat(result.get(0).getFirstName()).isEqualTo("Khalil");
+    }
 }

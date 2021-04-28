@@ -1,6 +1,8 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.service;
 
-import com.SafetyNet_Alerts.SafetyNetAlert.dao.FirestationDao;
+import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.FirestationDaoImpl;
+import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
+import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,21 +14,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @ExtendWith(MockitoExtension.class)
-class URLsServeceTest {
+class URLsServiceTest {
 
     @Mock
-    FirestationDao firestationDaoMock;
+    FirestationDaoImpl firestationDaoMock;
+    @Mock
+    PersonDaoImpl personDaoMock;
+    @Mock
+    MedicalRecordDaoImpl medicalRecordDaoMock;
 
+    URLsService urLsServiceUnderTest;
 
     @BeforeEach
     void setUp() {
-
-    }
-
-    @Test
-    void getListOfPersonCoveredByFireStation() {
-
         List<Person> listOfPerson = new ArrayList<>();
         Person firstPerson;
         Person secondPerson;
@@ -56,6 +59,23 @@ class URLsServeceTest {
                 .address("1234 Street St")
                 .station("1")
                 .build();
+
+    }
+
+    @Test
+    void getListOfPersonCoveredByFireStation() {
+        PersonWithAgeCatDto personWithAgeCatDto;
+        personWithAgeCatDto = urLsServiceUnderTest.getListOfPersonCoveredByFireStation("1");
+        assertThat(personWithAgeCatDto.getAdult()).isEqualTo(1);
+        assertThat(personWithAgeCatDto.getChild()).isEqualTo(1);
+
+    }
+
+    @Test
+    void IsAdult() {
+        boolean result;
+        result = urLsServiceUnderTest.IsAdult("01/01/1980");
+        assertTrue(result);
 
     }
 }

@@ -38,6 +38,7 @@ class FirestationDaoImplTest {
         jsonFileModel = new JsonFileModel();
         firestationList = new ArrayList<>();
         firestationList.add(firestationUsedByTest);
+
         jsonFileModel.setFirestations(firestationList);
         when(fileRWServiceMock.jsonFileToString()).thenReturn("data");
         when(fileRWServiceMock.jsonAsStringToJsonFileModel("data")).thenReturn(jsonFileModel);
@@ -47,6 +48,8 @@ class FirestationDaoImplTest {
 
     @Test
     void findFirestationByStation() {
+        List<Firestation> result = firestationDaoUnderTest.findFirestationByStation("1");
+        assertThat(result.get(0).getAddress()).isEqualTo("1234 Street St");
     }
 
     @Test

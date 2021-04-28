@@ -94,4 +94,11 @@ class MedicalRecordDaoImplTest {
 
         assertTrue(result);
     }
+
+    @Test
+    void getPersonByAddress() {
+        List<MedicalRecord> result;
+        result = medicalRecordDaoUnderTest.getMedicalRecordByFirstNameAndLastName("Khalil", "Sleaby");
+        assertThat(result.get(0).getBirthdate()).isEqualTo("01/01/1980");
+    }
 }

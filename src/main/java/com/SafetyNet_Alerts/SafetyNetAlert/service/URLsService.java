@@ -12,7 +12,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Service
-public class URLsServece {
+public class URLsService {
     @Autowired
     PersonRepository personRepository;
     @Autowired
@@ -23,7 +23,7 @@ public class URLsServece {
     public List<Person> getListOfPersonCoveredByFireStation(String StationNumber) {
         /*
          * get list of firestation by station number
-         * for each firestation.address get list of person by first name and last name
+         * for each firestation.address get list of person by address
          * for each person get medical record by first name and last name
          * from medical record lest get adult number and child number
          * return dto contain list of person and number of adult and  child number
