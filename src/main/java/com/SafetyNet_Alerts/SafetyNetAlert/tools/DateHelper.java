@@ -13,4 +13,10 @@ public class DateHelper {
 
         return diff >= 18;
     }
+
+    public static int calculateAge(String birthDateAsString) {
+        LocalDate birthDate = LocalDate.parse(birthDateAsString, DateTimeFormatter.ofPattern(DATE_TIME_FORMAT));
+        long diff = Math.abs(ChronoUnit.YEARS.between(LocalDate.now(), birthDate));
+        return (int) diff;
+    }
 }

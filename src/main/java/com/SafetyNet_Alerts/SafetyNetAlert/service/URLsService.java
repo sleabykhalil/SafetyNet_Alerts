@@ -5,6 +5,8 @@ import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.ChildAlertDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.PersonWithAgeCatDto;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.Child;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.People;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
@@ -49,7 +51,7 @@ public class URLsService {
         firestationByAddress = firestationDao.findFirestationByStation(stationNumber);
         firestationByAddress.forEach(firestation -> personByAddress.addAll(personDao.getPersonByAddress(firestation.getAddress())));
         personByAddress.forEach(person ->
-                medicalRecordByName.addAll(medicalRecordDao
+                medicalRecordByName.add(medicalRecordDao
                         .getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName())));
 
         for (MedicalRecord medicalRecord : medicalRecordByName) {
@@ -72,10 +74,39 @@ public class URLsService {
          * get person list by address
          * get birthday from medicalRecords for each person in person list
          * calculate age for each person
-         * get childes list
-         * get person list lives in the address
+         * if is child add to child with age
+         * if adult ad to people list
          * if there is no Child return empty list
          * */
-        return null;
+        ChildAlertDto childAlertDto = ChildAlertDto.builder().build();
+        List<Child> childList = new ArrayList<>();
+        List<People> peopleListLivesWithChild = new ArrayList<>();
+
+        List<Person> personByAddress = personDao.getPersonByAddress(address);
+        MedicalRecord medicalRecordByName;
+        int age;
+        for (Person person : personByAddress) {
+            medicalRecordByName = medicalRecordDao
+                    .getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+            if (!DateHelper.isAdult(medicalRecordByName.getBirthdate())) {
+                age = DateHelper.calculateAge(medicalRecordByName.getBirthdate());
+                childList.add(new Child(person.getFirstName(), person.getLastName(), age));
+            } else {
+                peopleListLivesWithChild.add(new People(person.getFirstName(), person.getLastName()
+                        , person.getAddress(), person.getPhone()));
+            }
+        }
+        if (!childList.isEmpty()) {
+            for (Child child : childList) {
+                child.setPeopleList(peopleListLivesWithChild);
+            }
+            childAlertDto = ChildAlertDto.builder()
+                    .children(childList)
+                    .build();
+        }
+
+        return childAlertDto;
     }
+
+
 }

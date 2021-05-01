@@ -90,6 +90,6 @@ class URLsServiceTest {
     @Test
     void calculateAge() {
         String birthDate = LocalDate.now().format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT));
-        assertThat(urLsServiceUnderTest.calculateAge(birthDate)).isEqualTo(0);
+        assertThat(DateHelper.calculateAge(birthDate)).isEqualTo(0);
     }
 }

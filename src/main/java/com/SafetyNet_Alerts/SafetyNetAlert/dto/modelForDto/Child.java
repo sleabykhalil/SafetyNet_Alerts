@@ -15,6 +15,13 @@ public class Child {
     private String firstName;
     private String lastName;
     private int age;
-    //people live in the same home with child
+    //people live in the same home with children
     private List<People> peopleList;
+
+    public Child(String firstName, String lastName, int age) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+    }
+
 }

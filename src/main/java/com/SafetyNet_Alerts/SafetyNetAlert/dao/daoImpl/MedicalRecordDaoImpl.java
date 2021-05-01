@@ -100,13 +100,13 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
      * @param lastName
      * @return list of medical record
      */
-    public List<MedicalRecord> getMedicalRecordByFirstNameAndLastName(String firstName, String lastName) {
-        List<MedicalRecord> result = new ArrayList<>();
-        medicalRecordList.forEach(medicalRecord -> {
+    public MedicalRecord getMedicalRecordByFirstNameAndLastName(String firstName, String lastName) {
+
+        for (MedicalRecord medicalRecord : medicalRecordList) {
             if (medicalRecord.getFirstName().equals(firstName) && medicalRecord.getLastName().equals(lastName)) {
-                result.add(medicalRecord);
+                return medicalRecord;
             }
-        });
-        return result;
+        }
+        return null;
     }
 }
