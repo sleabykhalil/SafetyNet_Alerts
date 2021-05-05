@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class People {
+public class PeopleWithAddressAndPhone {
     private String firstName;
     private String lastName;
     private String address;

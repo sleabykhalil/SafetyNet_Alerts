@@ -4,6 +4,9 @@ import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.FirestationDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
+import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
+import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
+import com.SafetyNet_Alerts.SafetyNetAlert.tools.DateHelper;
 import com.jsoniter.JsonIterator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +21,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -122,6 +127,41 @@ class PersonControllerTest {
                 .param("firstName", "Khalil")
                 .param("lastName", "Boyd"))
                 .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getChildAlertDto() throws Exception {
+        //given
+        Person childPerson = Person.builder()
+                .firstName("Aram")
+                .lastName("Sleaby")
+                .address("1234 Street St")
+                .build();
+        MedicalRecord medicalRecordForChild = MedicalRecord.builder()
+                .firstName("Aram")
+                .lastName("Sleaby")
+                .birthdate(LocalDateTime.now().minusYears(3L)
+                        .format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT)))
+                .build();
+        MedicalRecordDaoImpl.medicalRecordList.add(medicalRecordForChild);
+        PersonDaoImpl.personList.add(childPerson);
+
+        //when
+        mockMvc.perform(get("/childAlert")
+                .param("address", "1234 Street St"))
+                .andDo(print())
+                //then
+                .andExpect(content().string(containsString("Aram")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getPhoneNumberDto() throws Exception {
+        mockMvc.perform(get("/phoneAlert")
+                .param("firestation_number", "1"))
+                .andDo(print())
+                .andExpect(content().string(containsString("123-456-7890")))
                 .andExpect(status().isOk());
     }
 

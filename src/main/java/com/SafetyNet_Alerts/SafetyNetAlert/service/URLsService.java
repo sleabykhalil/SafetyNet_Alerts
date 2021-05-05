@@ -5,8 +5,9 @@ import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.ChildAlertDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.PeopleWithAgeCatDto;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.PhoneAlertDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.Child;
-import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.People;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithAddressAndPhone;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
@@ -43,7 +44,7 @@ public class URLsService {
          * return dto contain list of person and number of adult and  Child number
          * */
         List<Firestation> firestationByAddress;
-        List<People> peopleList = new ArrayList<>();
+        List<PeopleWithAddressAndPhone> peopleWithAddressAndPhoneList = new ArrayList<>();
         List<Person> personByAddress = new ArrayList<>();
         List<MedicalRecord> medicalRecordByName = new ArrayList<>();
         int adultNumber = 0;
@@ -57,7 +58,7 @@ public class URLsService {
             medicalRecordByName.add(medicalRecordDao
                     .getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName()));
 
-            peopleList.add(People.builder()
+            peopleWithAddressAndPhoneList.add(PeopleWithAddressAndPhone.builder()
                     .firstName(person.getFirstName())
                     .lastName(person.getLastName())
                     .address(person.getAddress())
@@ -74,7 +75,7 @@ public class URLsService {
         }
 
         PeopleWithAgeCatDto peopleWithAgeCatDto = PeopleWithAgeCatDto.builder()
-                .peopleList(peopleList)
+                .peopleWithAddressAndPhoneList(peopleWithAddressAndPhoneList)
                 .adultNumber(adultNumber)
                 .childNumber(childNumber)
                 .build();
@@ -93,7 +94,7 @@ public class URLsService {
          * */
         ChildAlertDto childAlertDto = ChildAlertDto.builder().build();
         List<Child> childList = new ArrayList<>();
-        List<People> peopleListLivesWithChild = new ArrayList<>();
+        List<PeopleWithAddressAndPhone> peopleWithAddressAndPhoneListLivesWithChild = new ArrayList<>();
 
         List<Person> personByAddress = personDao.getPersonByAddress(address);
         MedicalRecord medicalRecordByName;
@@ -105,21 +106,47 @@ public class URLsService {
                 age = DateHelper.calculateAge(medicalRecordByName.getBirthdate());
                 childList.add(new Child(person.getFirstName(), person.getLastName(), age));
             } else {
-                peopleListLivesWithChild.add(new People(person.getFirstName(), person.getLastName()
+                peopleWithAddressAndPhoneListLivesWithChild.add(new PeopleWithAddressAndPhone(person.getFirstName(), person.getLastName()
                         , person.getAddress(), person.getPhone()));
             }
         }
         if (!childList.isEmpty()) {
             for (Child child : childList) {
-                child.setPeopleList(peopleListLivesWithChild);
+                child.setPeopleWithAddressAndPhoneList(peopleWithAddressAndPhoneListLivesWithChild);
             }
             childAlertDto = ChildAlertDto.builder()
                     .children(childList)
                     .build();
         }
-
         return childAlertDto;
     }
 
+    public PhoneAlertDto getPhoneNumber(String firestationNumber) {
+        /*
+         * get firestation by number
+         * for each firestation address get person by address
+         * get phone number from person
+         * add to phone number list if not exist
+         * return list of phone number
+         */
+        List<Firestation> firestationByAddress;
+        List<Person> personListFromFirestation = new ArrayList<>();
+        List<String> phoneNumberList = new ArrayList<>();
+        PhoneAlertDto phoneAlertDto;
+
+        firestationByAddress = firestationDao.findFirestationByStation(firestationNumber);
+        for (Firestation firestation : firestationByAddress) {
+            personListFromFirestation.addAll(personDao.getPersonByAddress(firestation.getAddress()));
+        }
+        for (Person person : personListFromFirestation) {
+            if (!phoneNumberList.contains(person.getPhone())) {
+                phoneNumberList.add(person.getPhone());
+            }
+        }
+        phoneAlertDto = PhoneAlertDto.builder()
+                .phoneNumberList(phoneNumberList)
+                .build();
+        return phoneAlertDto;
+    }
 
 }

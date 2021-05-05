@@ -1,7 +1,10 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.controller;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.ChildAlertDto;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.PhoneAlertDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.PersonService;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.URLsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +14,9 @@ import java.util.List;
 public class PersonController {
     @Autowired
     PersonService personService;
+
+    @Autowired
+    URLsService urLsService;
 
     /**
      * Get  for all persons
@@ -59,5 +65,17 @@ public class PersonController {
     public boolean deletePerson(@RequestParam String firstName,
                                 @RequestParam String lastName) {
         return personService.deletePerson(firstName, lastName);
+    }
+
+    //URLs
+
+    @GetMapping(value = "/childAlert")
+    public ChildAlertDto getChildAlertDto(@RequestParam String address) {
+        return urLsService.getListOFChildByAddress(address);
+    }
+
+    @GetMapping(value = "/phoneAlert")
+    public PhoneAlertDto getPhoneNumberDto(@RequestParam String firestation_number) {
+        return urLsService.getPhoneNumber(firestation_number);
     }
 }
