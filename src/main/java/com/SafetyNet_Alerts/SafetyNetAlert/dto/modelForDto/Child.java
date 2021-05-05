@@ -16,7 +16,7 @@ public class Child {
     private String lastName;
     private int age;
     //people live in the same home with children
-    private List<People> peopleList;
+    private List<PeopleWithAddressAndPhone> peopleWithAddressAndPhoneList;
 
     public Child(String firstName, String lastName, int age) {
         this.firstName = firstName;

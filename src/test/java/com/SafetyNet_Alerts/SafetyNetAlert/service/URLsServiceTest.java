@@ -5,6 +5,7 @@ import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.ChildAlertDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.PeopleWithAgeCatDto;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.PhoneAlertDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
@@ -74,7 +75,7 @@ class URLsServiceTest {
         //then
         assertThat(result.getAdultNumber()).isEqualTo(1);
         assertThat(result.getChildNumber()).isEqualTo(0);
-        assertThat(result.getPeopleList().get(0).getFirstName()).isEqualTo("Khalil");
+        assertThat(result.getPeopleWithAddressAndPhoneList().get(0).getFirstName()).isEqualTo("Khalil");
         verify(firestationDaoMock, times(1)).findFirestationByStation(anyString());
         verify(personDaoMock, times(1)).getPersonByAddress(anyString());
         verify(medicalRecordDaoMock, times(1))
@@ -132,9 +133,9 @@ class URLsServiceTest {
         when(firestationDaoMock.findFirestationByStation(anyString())).thenReturn(firestationListForTest);
         when(personDaoMock.getPersonByAddress(anyString())).thenReturn(personListForTest);
 
-        PhoneAlertDto result = urLsServiceUnderTest.getListListOfPhoneByfireStation("1");
+        PhoneAlertDto result = urLsServiceUnderTest.getPhoneNumber("1");
 
-        assertThat(result.get(0)).isEqualTo("123-456-7890");
+        assertThat(result.getPhoneNumberList().get(0)).isEqualTo("123-456-7890");
         verify(firestationDaoMock, times(1)).findFirestationByStation(anyString());
         verify(personDaoMock, times(1)).getPersonByAddress(anyString());
     }
