@@ -23,7 +23,7 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
      */
     public MedicalRecordDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
-        medicalRecordList = fileRWService.jsonAsStringToJsonFileModel(fileRWService.jsonFileToString()).getMedicalrecords();
+        medicalRecordList = fileRWService.readFromJsonFile().getMedicalrecords();
     }
 
     /**
@@ -96,8 +96,8 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
     /**
      * get list of medical record for person by first name and second name
      *
-     * @param firstName
-     * @param lastName
+     * @param firstName person first name
+     * @param lastName  person last name
      * @return list of medical record
      */
     public MedicalRecord getMedicalRecordByFirstNameAndLastName(String firstName, String lastName) {

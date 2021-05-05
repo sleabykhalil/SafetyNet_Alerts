@@ -28,6 +28,11 @@ public class FileRWService {
         System.out.println(path.toString());
     }
 
+    public FileRWService(Path path) {
+        this.path = path;
+        System.out.println(path.toString());
+    }
+
     public void saveToJsonFile() {
         JsonFileModel jsonFileModel;
         jsonFileModel = JsonFileModel.builder()
@@ -38,7 +43,9 @@ public class FileRWService {
         stringToJsonFile(jsonFileModelToJsonAsString(jsonFileModel));
     }
 
-
+    public JsonFileModel readFromJsonFile() {
+        return jsonAsStringToJsonFileModel(jsonFileToString());
+    }
     //Read functionality
 
     /**

@@ -23,7 +23,7 @@ public class PersonDaoImpl implements PersonDao {
      */
     public PersonDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
-        personList = fileRWService.jsonAsStringToJsonFileModel(fileRWService.jsonFileToString()).getPersons();
+        personList = fileRWService.readFromJsonFile().getPersons();
     }
 
     /**

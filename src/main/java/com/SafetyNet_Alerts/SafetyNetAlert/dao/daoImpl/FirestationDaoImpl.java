@@ -23,7 +23,7 @@ public class FirestationDaoImpl implements FirestationDao {
      */
     public FirestationDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
-        firestationList = fileRWService.jsonAsStringToJsonFileModel(fileRWService.jsonFileToString()).getFirestations();
+        firestationList = fileRWService.readFromJsonFile().getFirestations();
     }
 
     /**
