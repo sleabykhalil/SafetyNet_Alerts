@@ -125,4 +125,22 @@ class PersonControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void getChildAlertDto() throws Exception {
+        mockMvc.perform(get("/childAlert")
+                .param("address", "1234 Street St"))
+                .andDo(print())
+                .andExpect(content().string(containsString("Khalil")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getPhoneNumberDto() throws Exception {
+        mockMvc.perform(get("/phoneAlert")
+                .param("firestation_number", "1"))
+                .andDo(print())
+                .andExpect(content().string(containsString("123-456-7890")))
+                .andExpect(status().isOk());
+    }
+
 }

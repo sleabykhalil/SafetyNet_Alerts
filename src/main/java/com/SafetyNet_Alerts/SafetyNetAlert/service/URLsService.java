@@ -117,9 +117,18 @@ public class URLsService {
                     .children(childList)
                     .build();
         }
-
         return childAlertDto;
     }
 
+    public PhoneAlertDto getPhoneNumber(String firestationNumber) {
+        /*
+         * get firestation by number
+         * for each firestation address get person by address
+         * get phone number from person
+         * add to phone number list if not exist
+         * return list of phone number
+         */
+        return null;
+    }
 
 }

@@ -114,5 +114,29 @@ class URLsServiceTest {
                 .getMedicalRecordByFirstNameAndLastName(anyString(), anyString());
     }
 
+    @Test
+    void getPhoneAlert() {
+        List<Firestation> firestationListForTest = new ArrayList<>();
+        firestationListForTest.add(Firestation.builder()
+                .station("1")
+                .address("1234 Street St")
+                .build());
+        List<Person> personListForTest = new ArrayList<>();
+        personListForTest.add(Person.builder()
+                .firstName("Khalil")
+                .lastName("Sleaby")
+                .address("1234 Street St")
+                .phone("123-456-7890")
+                .build());
+
+        when(firestationDaoMock.findFirestationByStation(anyString())).thenReturn(firestationListForTest);
+        when(personDaoMock.getPersonByAddress(anyString())).thenReturn(personListForTest);
+
+        PhoneAlertDto result = urLsServiceUnderTest.getListListOfPhoneByfireStation("1");
+
+        assertThat(result.get(0)).isEqualTo("123-456-7890");
+        verify(firestationDaoMock, times(1)).findFirestationByStation(anyString());
+        verify(personDaoMock, times(1)).getPersonByAddress(anyString());
+    }
 
 }
