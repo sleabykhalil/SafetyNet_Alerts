@@ -1,6 +1,6 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.controller;
 
-import com.SafetyNet_Alerts.SafetyNetAlert.dto.PersonWithAgeCatDto;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.PeopleWithAgeCatDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.FirestationService;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.URLsService;
@@ -69,7 +69,7 @@ public class FirestationController {
     //URLs
 
     @GetMapping(value = "/firestation")
-    public PersonWithAgeCatDto getPersonWithAgeCatDto(@RequestParam String stationNumber) {
+    public PeopleWithAgeCatDto getPersonWithAgeCatDto(@RequestParam String stationNumber) {
         return urLsService.getListOfPersonCoveredByFireStation(stationNumber);
     }
 }

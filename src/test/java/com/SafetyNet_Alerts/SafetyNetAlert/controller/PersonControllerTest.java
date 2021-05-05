@@ -1,5 +1,10 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.controller;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.FirestationDaoImpl;
+import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
+import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
+import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
+import com.jsoniter.JsonIterator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +42,14 @@ class PersonControllerTest {
             Files.createFile(path);
         }
         Files.writeString(path, jsonAsString);
+
+        FirestationDaoImpl.firestationList = JsonIterator.deserialize(Files.readString(path), JsonFileModel.class)
+                .getFirestations();
+        MedicalRecordDaoImpl.medicalRecordList = JsonIterator.deserialize(Files.readString(path), JsonFileModel.class)
+                .getMedicalrecords();
+        PersonDaoImpl.personList = JsonIterator.deserialize(Files.readString(path), JsonFileModel.class)
+                .getPersons();
+
     }
 
     @Test

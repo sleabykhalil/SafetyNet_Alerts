@@ -46,8 +46,7 @@ class MedicalRecordDaoImplTest {
         medicalRecordList = new ArrayList<>();
         medicalRecordList.add(medicalRecordToTest);
         jsonFileModel.setMedicalrecords(medicalRecordList);
-        when(fileRWServiceMock.jsonFileToString()).thenReturn("data");
-        when(fileRWServiceMock.jsonAsStringToJsonFileModel("data")).thenReturn(jsonFileModel);
+        when(fileRWServiceMock.readFromJsonFile()).thenReturn(jsonFileModel);
 
         medicalRecordDaoUnderTest = new MedicalRecordDaoImpl(fileRWServiceMock);
     }
