@@ -1,6 +1,6 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.dto;
 
-import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.Child;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonWithAgeCatDto {
-    private List<Person> personList;
-    private int adultNumber;
-    private int childNumber;
+public class ChildAlertDto {
+    List<Child> children;
+
 }

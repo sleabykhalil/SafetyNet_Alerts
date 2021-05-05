@@ -50,8 +50,7 @@ class PersonDaoImplTest {
         personList = new ArrayList<>();
         personList.add(personUsedByTest);
         jsonFileModel.setPersons(personList);
-        when(fileRWServiceMock.jsonFileToString()).thenReturn("data");
-        when(fileRWServiceMock.jsonAsStringToJsonFileModel("data")).thenReturn(jsonFileModel);
+        when(fileRWServiceMock.readFromJsonFile()).thenReturn(jsonFileModel);
 
         personDaoUnderTest = new PersonDaoImpl(fileRWServiceMock);
     }

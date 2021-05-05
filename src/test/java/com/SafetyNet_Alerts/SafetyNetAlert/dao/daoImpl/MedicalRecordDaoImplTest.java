@@ -46,8 +46,7 @@ class MedicalRecordDaoImplTest {
         medicalRecordList = new ArrayList<>();
         medicalRecordList.add(medicalRecordToTest);
         jsonFileModel.setMedicalrecords(medicalRecordList);
-        when(fileRWServiceMock.jsonFileToString()).thenReturn("data");
-        when(fileRWServiceMock.jsonAsStringToJsonFileModel("data")).thenReturn(jsonFileModel);
+        when(fileRWServiceMock.readFromJsonFile()).thenReturn(jsonFileModel);
 
         medicalRecordDaoUnderTest = new MedicalRecordDaoImpl(fileRWServiceMock);
     }
@@ -97,8 +96,8 @@ class MedicalRecordDaoImplTest {
 
     @Test
     void getPersonByAddress() {
-        List<MedicalRecord> result;
+        MedicalRecord result;
         result = medicalRecordDaoUnderTest.getMedicalRecordByFirstNameAndLastName("Khalil", "Sleaby");
-        assertThat(result.get(0).getBirthdate()).isEqualTo("01/01/1980");
+        assertThat(result.getBirthdate()).isEqualTo("01/01/1980");
     }
 }
