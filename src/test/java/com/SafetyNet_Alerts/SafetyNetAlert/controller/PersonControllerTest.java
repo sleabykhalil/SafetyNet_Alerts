@@ -165,4 +165,14 @@ class PersonControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void getHouseDto() throws Exception {
+        mockMvc.perform(get("/flood/stations")
+                .param("stations", "1")
+                .param("stations", "2"))
+                .andDo(print())
+                .andExpect(content().string(containsString("Sleaby")))
+                .andExpect(content().string(containsString("Marrack")))
+                .andExpect(status().isOk());
+    }
 }

@@ -3,10 +3,7 @@ package com.SafetyNet_Alerts.SafetyNetAlert.service;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.FirestationDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
-import com.SafetyNet_Alerts.SafetyNetAlert.dto.ChildAlertDto;
-import com.SafetyNet_Alerts.SafetyNetAlert.dto.PeopleWithAgeCatDto;
-import com.SafetyNet_Alerts.SafetyNetAlert.dto.PeopleWithSpecificAgeDto;
-import com.SafetyNet_Alerts.SafetyNetAlert.dto.PhoneAlertDto;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.*;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.Child;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithAddressAndPhone;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithMedicalBackground;
@@ -188,5 +185,23 @@ public class URLsService {
                 .build();
 
         return peopleWithSpecificAgeDto;
+    }
+
+    public HouseDto getHousesByStationNumber(List<String> stationNumberList) {
+        /*
+         * "/flood/stations?stations=<a list of station_numbers> "
+         *  public String getFoos(@RequestParam List<String> id)
+         *
+         * Cette url doit retourner une liste de tous les foyers desservis par la caserne.
+         * Cette liste doit regrouper les personnes par adresse.
+         * Elle doit aussi inclure le nom, le numéro de téléphone et l'âge des habitants, et
+         * faire figurer leurs antécédents médicaux (médicaments, posologie et allergies) à côté de chaque nom.
+         *
+         * create houseDto
+         * for each station number => getFirestationByStationnomber
+         * for each stationadress get list of people lives there
+
+         */
+        return null;
     }
 }
