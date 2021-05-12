@@ -5,6 +5,7 @@ import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.ChildAlertDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.PeopleWithAgeCatDto;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.PeopleWithSpecificAgeDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.PhoneAlertDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.Child;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithAddressAndPhone;
@@ -139,6 +140,7 @@ public class URLsService {
             personListFromFirestation.addAll(personDao.getPersonByAddress(firestation.getAddress()));
         }
         for (Person person : personListFromFirestation) {
+            // phone number in list will be unique
             if (!phoneNumberList.contains(person.getPhone())) {
                 phoneNumberList.add(person.getPhone());
             }
@@ -149,4 +151,15 @@ public class URLsService {
         return phoneAlertDto;
     }
 
+    public PeopleWithSpecificAgeDto getPeopleListServedByFirestationNumberByAddress(String address) {
+        /*
+         * get person by address
+         * for each firestation address get person by address
+         * get medical records and medicines
+         * calculate le age pour chaque person
+         * add to people list if not exist
+         * return peopleWithSpecificAgeDto
+         */
+        return null;
+    }
 }

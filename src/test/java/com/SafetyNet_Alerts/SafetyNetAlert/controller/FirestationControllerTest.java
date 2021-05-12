@@ -51,7 +51,7 @@ public class FirestationControllerTest {
     }
 
     @Test
-    void getAllFirestations() throws Exception {
+    void getAllFirestationsTest() throws Exception {
 
         mockMvc.perform(get("/firestations"))
                 .andDo(print())
@@ -60,7 +60,7 @@ public class FirestationControllerTest {
     }
 
     @Test
-    void addFirestation() throws Exception {
+    void addFirestationTest() throws Exception {
         mockMvc.perform(post("/firestation")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"address\": \"4321 Street St\",\"station\": \"1\" }")
@@ -72,7 +72,7 @@ public class FirestationControllerTest {
     }
 
     @Test
-    void updateFirestation() throws Exception {
+    void updateFirestationTest() throws Exception {
         mockMvc.perform(put("/firestation")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("address", "1234 Street St")
@@ -85,7 +85,7 @@ public class FirestationControllerTest {
     }
 
     @Test
-    void deleteFirestation() throws Exception {
+    void deleteFirestationTest() throws Exception {
         mockMvc.perform(delete("/firestation")
                 .param("address", "1234 Street St")
                 .param("station", "1"))
@@ -94,12 +94,23 @@ public class FirestationControllerTest {
     }
 
     @Test
-    void getListOfPersonWithAgeCat() throws Exception {
+    void getListOfPersonWithAgeCatTest() throws Exception {
 
         mockMvc.perform(get("/firestation")
-                .param("stationNumber", "1"))
+                .param("station_number", "1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Khalil")));
+    }
+
+    @Test
+    void getPeopleListServedByFirestationNumberByAddressTest() throws Exception {
+
+        mockMvc.perform(get("/fire")
+                .param("address", "1234 Street St"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"firestationNumber\":\"1\",\"peopleWithLastNamePhoneAgesList\":[{\"lastName\":\"Sleaby\",\"phone\":\"123-456-7890\",\"age\":40,\"medications\":[\"firstMed:350mg\",\"secondMed:100mg\"],\"allergies\":[\"firstAllergy\",\"secondAllergy\"]}]}"))
+                .andExpect(content().string(containsString("Sleaby")));
     }
 }

@@ -50,21 +50,21 @@ class PersonServiceTest {
     }
 
     @Test
-    void getAllPerson() {
+    void getAllPersonTest() {
         when(personDaoMock.findAll()).thenReturn(personList);
         assertThat(personServiceUnderTest.getAllPerson()).hasSize(2);
         verify(personDaoMock, times(1)).findAll();
     }
 
     @Test
-    void savePerson() {
+    void savePersonTest() {
         when(personDaoMock.create(firstPerson)).thenReturn(firstPerson);
         assertThat(personServiceUnderTest.savePerson(firstPerson)).isEqualTo(firstPerson);
         verify(personDaoMock, times(1)).create(firstPerson);
     }
 
     @Test
-    void updatePerson() {
+    void updatePersonTest() {
         when(personDaoMock.update(any(Person.class), any(Person.class)))
                 .thenReturn(secondPerson);
         assertThat(personServiceUnderTest.updatePerson("Khalil", "Sleaby", secondPerson))
@@ -74,7 +74,7 @@ class PersonServiceTest {
     }
 
     @Test
-    void deletePerson() {
+    void deletePersonTest() {
         when(personDaoMock.delete(any(Person.class))).thenReturn(true);
         assertThat(personServiceUnderTest.deletePerson("Khalil", "Sleaby")).isTrue();
         verify(personDaoMock, times(1)).delete(any(Person.class));
