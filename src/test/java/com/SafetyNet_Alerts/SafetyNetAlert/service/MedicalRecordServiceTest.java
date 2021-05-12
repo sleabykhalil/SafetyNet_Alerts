@@ -47,21 +47,21 @@ class MedicalRecordServiceTest {
     }
 
     @Test
-    void getAllMedicalRecord() {
+    void getAllMedicalRecordTest() {
         when(medicalRecordDaoMock.findAll()).thenReturn(medicalRecordList);
         assertThat(medicalRecordServiceUnderTest.getAllMedicalRecords()).hasSize(2);
         verify(medicalRecordDaoMock, times(1)).findAll();
     }
 
     @Test
-    void saveMedicalRecord() {
+    void saveMedicalRecordTest() {
         when(medicalRecordDaoMock.create(firstMedicalRecord)).thenReturn(firstMedicalRecord);
         assertThat(medicalRecordServiceUnderTest.saveMedicalRecord(firstMedicalRecord)).isEqualTo(firstMedicalRecord);
         verify(medicalRecordDaoMock, times(1)).create(firstMedicalRecord);
     }
 
     @Test
-    void updateMedicalRecord() {
+    void updateMedicalRecordTest() {
         when(medicalRecordDaoMock.update(any(MedicalRecord.class), any(MedicalRecord.class)))
                 .thenReturn(secondMedicalRecord);
         assertThat(medicalRecordServiceUnderTest.updateMedicalRecord("first name", "last name", secondMedicalRecord))
@@ -71,7 +71,7 @@ class MedicalRecordServiceTest {
     }
 
     @Test
-    void deleteFirestation() {
+    void deleteFirestationTest() {
         when(medicalRecordDaoMock.delete(any(MedicalRecord.class))).thenReturn(true);
         assertThat(medicalRecordServiceUnderTest.deleteMedicalRecord("first name", "last name")).isTrue();
         verify(medicalRecordDaoMock, times(1)).delete(any(MedicalRecord.class));

@@ -40,21 +40,21 @@ class FirestationServiceTest {
     }
 
     @Test
-    void getAllFirestation() {
+    void getAllFirestationTest() {
         when(firestationDaoMock.findAll()).thenReturn(firestationList);
         assertThat(firestationServiceUnderTest.getAllFirestation()).hasSize(2);
         verify(firestationDaoMock, times(1)).findAll();
     }
 
     @Test
-    void saveFirestation() {
+    void saveFirestationTest() {
         when(firestationDaoMock.create(firestationFirst)).thenReturn(firestationFirst);
         assertThat(firestationServiceUnderTest.saveFirestation(firestationFirst)).isEqualTo(firestationFirst);
         verify(firestationDaoMock, times(1)).create(firestationFirst);
     }
 
     @Test
-    void updateFirestation() {
+    void updateFirestationTest() {
         when(firestationDaoMock.update(any(Firestation.class), any(Firestation.class)))
                 .thenReturn(firestationSecond);
         assertThat(firestationServiceUnderTest.updateFirestation("new address", firestationFirst))
@@ -64,7 +64,7 @@ class FirestationServiceTest {
     }
 
     @Test
-    void deleteFirestation() {
+    void deleteFirestationTest() {
         when(firestationDaoMock.delete(any(Firestation.class))).thenReturn(true);
         assertThat(firestationServiceUnderTest.deleteFirestation("new address")).isTrue();
         verify(firestationDaoMock, times(1)).delete(any(Firestation.class));
