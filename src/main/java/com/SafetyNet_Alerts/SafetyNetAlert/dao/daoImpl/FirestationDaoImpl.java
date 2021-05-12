@@ -106,4 +106,13 @@ public class FirestationDaoImpl implements FirestationDao {
         });
         return result;
     }
+
+    public Firestation findFirestationByAddress(String address) {
+        Firestation result = new Firestation();
+        for (Firestation firestation : firestationList) {
+            result = firestation;
+            break;
+        }
+        return result;
+    }
 }

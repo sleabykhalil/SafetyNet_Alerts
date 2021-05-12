@@ -17,5 +17,4 @@ public class PeopleWithMedicalBackground {
     private int age;
     private List<String> medications;
     private List<String> allergies;
-    String firestationNumber;
 }

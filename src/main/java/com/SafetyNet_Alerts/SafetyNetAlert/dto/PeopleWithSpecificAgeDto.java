@@ -13,5 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PeopleWithSpecificAgeDto {
-    List<PeopleWithMedicalBackground> peopleWithLastNamePhoneAgesList;
+    private String firestationNumber;
+    private List<PeopleWithMedicalBackground> peopleWithLastNamePhoneAgesList;
 }

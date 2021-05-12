@@ -9,6 +9,7 @@ import com.SafetyNet_Alerts.SafetyNetAlert.dto.PeopleWithSpecificAgeDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.PhoneAlertDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.Child;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithAddressAndPhone;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithMedicalBackground;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
@@ -75,13 +76,11 @@ public class URLsService {
             } else childNumber += 1;
         }
 
-        PeopleWithAgeCatDto peopleWithAgeCatDto = PeopleWithAgeCatDto.builder()
+        return PeopleWithAgeCatDto.builder()
                 .peopleWithAddressAndPhoneList(peopleWithAddressAndPhoneList)
                 .adultNumber(adultNumber)
                 .childNumber(childNumber)
                 .build();
-
-        return peopleWithAgeCatDto;
     }
 
     public ChildAlertDto getListOFChildByAddress(String address) {
@@ -130,13 +129,13 @@ public class URLsService {
          * add to phone number list if not exist
          * return list of phone number
          */
-        List<Firestation> firestationByAddress;
+        List<Firestation> firestationByStationNumber;
         List<Person> personListFromFirestation = new ArrayList<>();
         List<String> phoneNumberList = new ArrayList<>();
         PhoneAlertDto phoneAlertDto;
 
-        firestationByAddress = firestationDao.findFirestationByStation(firestationNumber);
-        for (Firestation firestation : firestationByAddress) {
+        firestationByStationNumber = firestationDao.findFirestationByStation(firestationNumber);
+        for (Firestation firestation : firestationByStationNumber) {
             personListFromFirestation.addAll(personDao.getPersonByAddress(firestation.getAddress()));
         }
         for (Person person : personListFromFirestation) {
@@ -160,6 +159,34 @@ public class URLsService {
          * add to people list if not exist
          * return peopleWithSpecificAgeDto
          */
-        return null;
+        PeopleWithSpecificAgeDto peopleWithSpecificAgeDto;
+        Firestation firestationByAddress;
+        List<PeopleWithMedicalBackground> peopleWithLastNamePhoneAgesList = new ArrayList<>();
+        List<Person> personListByAddress;
+
+        firestationByAddress = firestationDao.findFirestationByAddress(address);
+
+        personListByAddress = personDao.getPersonByAddress(address);
+        for (Person person : personListByAddress) {
+            MedicalRecord medicalRecord = medicalRecordDao
+                    .getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+            int age = DateHelper.calculateAge(medicalRecord.getBirthdate());
+            PeopleWithMedicalBackground peopleWithMedicalBackground = PeopleWithMedicalBackground.builder()
+                    .lastName(person.getLastName())
+                    .phone(person.getPhone())
+                    .age(age)
+                    .medications(medicalRecord.getMedications())
+                    .allergies(medicalRecord.getAllergies())
+                    .build();
+            if (!peopleWithLastNamePhoneAgesList.contains(peopleWithMedicalBackground)) {
+                peopleWithLastNamePhoneAgesList.add(peopleWithMedicalBackground);
+            }
+        }
+        peopleWithSpecificAgeDto = PeopleWithSpecificAgeDto.builder()
+                .firestationNumber(firestationByAddress.getStation())
+                .peopleWithLastNamePhoneAgesList(peopleWithLastNamePhoneAgesList)
+                .build();
+
+        return peopleWithSpecificAgeDto;
     }
 }
