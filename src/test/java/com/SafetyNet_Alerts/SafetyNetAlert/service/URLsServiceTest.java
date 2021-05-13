@@ -36,169 +36,14 @@ class URLsServiceTest {
 
     URLsService urLsServiceUnderTest;
 
+    List<Firestation> firestationListForTest = new ArrayList<>();
+    List<Person> personListForTest = new ArrayList<>();
+    List<MedicalRecord> medicalRecordListForTest = new ArrayList<>();
+
     @BeforeEach
     void setUp() {
         urLsServiceUnderTest = new URLsService(personDaoMock, firestationDaoMock, medicalRecordDaoMock);
-    }
 
-    @Test
-    void getListOfPersonCoveredByFireStationTest() {
-        //given
-        List<Firestation> firestationListForTest = new ArrayList<>();
-        firestationListForTest.add(Firestation.builder()
-                .station("1")
-                .address("1234 Street St")
-                .build());
-        List<Person> personListForTest = new ArrayList<>();
-        personListForTest.add(Person.builder()
-                .firstName("Khalil")
-                .lastName("Sleaby")
-                .address("1234 Street St")
-                .phone("123-456-7890")
-                .build());
-        MedicalRecord medicalRecordForTest = MedicalRecord.builder()
-                .firstName("Khalil")
-                .lastName("Sleaby")
-                .birthdate("01/01/1981").build();
-
-        when(firestationDaoMock.findFirestationByStation(anyString())).thenReturn(firestationListForTest);
-        when(personDaoMock.getPersonByAddress(anyString())).thenReturn(personListForTest);
-        when(medicalRecordDaoMock.getMedicalRecordByFirstNameAndLastName(anyString(), anyString()))
-                .thenReturn(medicalRecordForTest);
-
-        //when
-        PeopleWithAgeCatDto result;
-
-        result = urLsServiceUnderTest.getListOfPersonCoveredByFireStation("1");
-
-        //then
-        assertThat(result.getAdultNumber()).isEqualTo(1);
-        assertThat(result.getChildNumber()).isEqualTo(0);
-        assertThat(result.getPeopleWithAddressAndPhoneList().get(0).getFirstName()).isEqualTo("Khalil");
-        verify(firestationDaoMock, times(1)).findFirestationByStation(anyString());
-        verify(personDaoMock, times(1)).getPersonByAddress(anyString());
-        verify(medicalRecordDaoMock, times(1))
-                .getMedicalRecordByFirstNameAndLastName(anyString(), anyString());
-    }
-
-
-    @Test
-    void getListOFChildByAddressTest() {
-        //given
-        List<Person> personListForTest = new ArrayList<>();
-        personListForTest.add(Person.builder()
-                .firstName("Aram")
-                .lastName("Sleaby")
-                .address("1234 Street St")
-                .phone("123-456-7890")
-                .build());
-        when(personDaoMock.getPersonByAddress(anyString())).thenReturn(personListForTest);
-
-        MedicalRecord medicalRecordForTest = MedicalRecord.builder()
-                .firstName("Aram")
-                .lastName("Sleaby")
-                .birthdate(LocalDateTime.now().minusYears(3L).
-                        format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT)))
-                .build();
-        when(medicalRecordDaoMock.getMedicalRecordByFirstNameAndLastName(anyString(), anyString()))
-                .thenReturn(medicalRecordForTest);
-
-        //when
-        ChildAlertDto result = urLsServiceUnderTest.getListOFChildByAddress("1234 Street St");
-
-        //then
-        assertThat(result.getChildren().get(0).getFirstName()).isEqualTo("Aram");
-        assertThat(result.getChildren().get(0).getAge()).isEqualTo(3);
-        verify(personDaoMock, times(1)).getPersonByAddress(anyString());
-        verify(medicalRecordDaoMock, times(1))
-                .getMedicalRecordByFirstNameAndLastName(anyString(), anyString());
-    }
-
-    @Test
-    void getPhoneAlertTest() {
-        List<Firestation> firestationListForTest = new ArrayList<>();
-        firestationListForTest.add(Firestation.builder()
-                .station("1")
-                .address("1234 Street St")
-                .build());
-        List<Person> personListForTest = new ArrayList<>();
-        personListForTest.add(Person.builder()
-                .firstName("Khalil")
-                .lastName("Sleaby")
-                .address("1234 Street St")
-                .phone("123-456-7890")
-                .build());
-
-        when(firestationDaoMock.findFirestationByStation(anyString())).thenReturn(firestationListForTest);
-        when(personDaoMock.getPersonByAddress(anyString())).thenReturn(personListForTest);
-
-        PhoneAlertDto result = urLsServiceUnderTest.getPhoneNumber("1");
-
-        assertThat(result.getPhoneNumberList().get(0)).isEqualTo("123-456-7890");
-        verify(firestationDaoMock, times(1)).findFirestationByStation(anyString());
-        verify(personDaoMock, times(1)).getPersonByAddress(anyString());
-    }
-
-    @Test
-    void getPeopleListServedByFirestationNumberByAddressTest() {
-        //given
-        List<Firestation> firestationListForTest = new ArrayList<>();
-        firestationListForTest.add(Firestation.builder()
-                .station("1")
-                .address("1234 Street St")
-                .build());
-        List<Person> personListForTest = new ArrayList<>();
-        personListForTest.add(Person.builder()
-                .firstName("Khalil")
-                .lastName("Sleaby")
-                .address("1234 Street St")
-                .phone("123-456-7890")
-                .build());
-        personListForTest.add(Person.builder()
-                .firstName("Aram")
-                .lastName("Sleaby")
-                .address("1234 Street St")
-                .phone("123-456-7890")
-                .build());
-        List<MedicalRecord> medicalRecordListForTest = new ArrayList<>();
-        medicalRecordListForTest.add(MedicalRecord.builder()
-                .firstName("Khalil")
-                .lastName("Sleaby")
-                .birthdate(LocalDateTime.now().minusYears(40L).
-                        format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT)))
-                .medications(List.of("firstMed:30mg", "secondMed:10mg"))
-                .allergies(List.of("thirdAllergies", "forthAllergies"))
-                .build());
-        medicalRecordListForTest.add(MedicalRecord.builder()
-                .firstName("Aram")
-                .lastName("Sleaby")
-                .birthdate(LocalDateTime.now().minusYears(3L).
-                        format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT)))
-                .medications(Collections.emptyList())
-                .allergies(Collections.emptyList())
-                .build());
-
-
-        when(firestationDaoMock.findFirestationByAddress("1234 Street St")).thenReturn(firestationListForTest.get(0));
-        when(personDaoMock.getPersonByAddress("1234 Street St")).thenReturn(personListForTest);
-        when(medicalRecordDaoMock.getMedicalRecordByFirstNameAndLastName("Khalil", "Sleaby"))
-                .thenReturn(medicalRecordListForTest.get(0));
-        when(medicalRecordDaoMock.getMedicalRecordByFirstNameAndLastName("Aram", "Sleaby"))
-                .thenReturn(medicalRecordListForTest.get(1));
-        //when
-        PeopleWithSpecificAgeDto result = urLsServiceUnderTest.getPeopleListServedByFirestationNumberByAddress("1234 Street St");
-        //then
-        assertThat(result.getPeopleWithLastNamePhoneAgesList().get(0).getLastName()).isEqualTo("Sleaby");
-        assertThat(result.getFirestationNumber()).isEqualTo("1");
-
-        verify(firestationDaoMock, times(1)).findFirestationByAddress("1234 Street St");
-        verify(personDaoMock, times(1)).getPersonByAddress("1234 Street St");
-    }
-
-    @Test
-    void geHouseDto() {
-        //given
-        List<Firestation> firestationListForTest = new ArrayList<>();
         firestationListForTest.add(Firestation.builder()
                 .station("1")
                 .address("1234 Street St")
@@ -208,7 +53,6 @@ class URLsServiceTest {
                 .address("4321 Street St")
                 .build());
 
-        List<Person> personListForTest = new ArrayList<>();
         personListForTest.add(Person.builder()
                 .firstName("Khalil")
                 .lastName("Sleaby")
@@ -228,7 +72,6 @@ class URLsServiceTest {
                 .phone("123-456-7890")
                 .build());
 
-        List<MedicalRecord> medicalRecordListForTest = new ArrayList<>();
         medicalRecordListForTest.add(MedicalRecord.builder()
                 .firstName("Khalil")
                 .lastName("Sleaby")
@@ -253,7 +96,92 @@ class URLsServiceTest {
                 .medications(Collections.emptyList())
                 .allergies(Collections.emptyList())
                 .build());
+    }
 
+    @Test
+    void getListOfPersonCoveredByFireStationTest() {
+        //given
+
+        when(firestationDaoMock.findFirestationByStation("1"))
+                .thenReturn(List.of(firestationListForTest.get(0)));
+        when(personDaoMock.getPersonByAddress("1234 Street St"))
+                .thenReturn(List.of(personListForTest.get(0)));
+        when(medicalRecordDaoMock.getMedicalRecordByFirstNameAndLastName("Khalil", "Sleaby"))
+                .thenReturn(medicalRecordListForTest.get(0));
+
+        //when
+        PeopleWithAgeCatDto result;
+
+        result = urLsServiceUnderTest.getListOfPersonCoveredByFireStation("1");
+
+        //then
+        assertThat(result.getAdultNumber()).isEqualTo(1);
+        assertThat(result.getChildNumber()).isEqualTo(0);
+        assertThat(result.getPeopleWithAddressAndPhoneList().get(0).getFirstName()).isEqualTo("Khalil");
+        verify(firestationDaoMock, times(1)).findFirestationByStation(anyString());
+        verify(personDaoMock, times(1)).getPersonByAddress(anyString());
+        verify(medicalRecordDaoMock, times(1))
+                .getMedicalRecordByFirstNameAndLastName(anyString(), anyString());
+    }
+
+
+    @Test
+    void getListOFChildByAddressTest() {
+        //given
+        when(personDaoMock.getPersonByAddress("1234 Street St"))
+                .thenReturn(List.of(personListForTest.get(1)));
+        when(medicalRecordDaoMock.getMedicalRecordByFirstNameAndLastName("Aram", "Sleaby"))
+                .thenReturn(medicalRecordListForTest.get(1));
+
+        //when
+        ChildAlertDto result = urLsServiceUnderTest.getListOFChildByAddress("1234 Street St");
+
+        //then
+        assertThat(result.getChildren().get(0).getFirstName()).isEqualTo("Aram");
+        assertThat(result.getChildren().get(0).getAge()).isEqualTo(3);
+        verify(personDaoMock, times(1)).getPersonByAddress(anyString());
+        verify(medicalRecordDaoMock, times(1))
+                .getMedicalRecordByFirstNameAndLastName(anyString(), anyString());
+    }
+
+    @Test
+    void getPhoneAlertTest() {
+        //given
+        when(firestationDaoMock.findFirestationByStation("1"))
+                .thenReturn(List.of(firestationListForTest.get(0)));
+        when(personDaoMock.getPersonByAddress("1234 Street St"))
+                .thenReturn(List.of(personListForTest.get(0), personListForTest.get(1)));
+        //when
+        PhoneAlertDto result = urLsServiceUnderTest.getPhoneNumber("1");
+        //then
+        assertThat(result.getPhoneNumberList().get(0)).isEqualTo("123-456-7890");
+        verify(firestationDaoMock, times(1)).findFirestationByStation(anyString());
+        verify(personDaoMock, times(1)).getPersonByAddress(anyString());
+    }
+
+    @Test
+    void getPeopleListServedByFirestationNumberByAddressTest() {
+        //given
+        when(firestationDaoMock.findFirestationByAddress("1234 Street St")).thenReturn(firestationListForTest.get(0));
+        when(personDaoMock.getPersonByAddress("1234 Street St"))
+                .thenReturn(List.of(personListForTest.get(0), personListForTest.get(1)));
+        when(medicalRecordDaoMock.getMedicalRecordByFirstNameAndLastName("Khalil", "Sleaby"))
+                .thenReturn(medicalRecordListForTest.get(0));
+        when(medicalRecordDaoMock.getMedicalRecordByFirstNameAndLastName("Aram", "Sleaby"))
+                .thenReturn(medicalRecordListForTest.get(1));
+        //when
+        PeopleWithSpecificAgeDto result = urLsServiceUnderTest.getPeopleListServedByFirestationNumberByAddress("1234 Street St");
+        //then
+        assertThat(result.getPeopleWithLastNamePhoneAgesList().get(0).getLastName()).isEqualTo("Sleaby");
+        assertThat(result.getFirestationNumber()).isEqualTo("1");
+
+        verify(firestationDaoMock, times(1)).findFirestationByAddress("1234 Street St");
+        verify(personDaoMock, times(1)).getPersonByAddress("1234 Street St");
+    }
+
+    @Test
+    void geHouseDto() {
+        //given
         when(firestationDaoMock.findFirestationByStation("1")).thenReturn(List.of(firestationListForTest.get(0)));
         when(firestationDaoMock.findFirestationByStation("2")).thenReturn(List.of(firestationListForTest.get(1)));
 
@@ -278,5 +206,19 @@ class URLsServiceTest {
 
         verify(firestationDaoMock, times(1)).findFirestationByStation("1");
         verify(personDaoMock, times(1)).getPersonByAddress("1234 Street St");
+    }
+
+    @Test
+    void getListOfPersonInfoTest() {
+        //given
+        when(personDaoMock.getPersonByFirstNameAndLastName("Khalil", "Sleaby"))
+                .thenReturn(List.of(personListForTest.get(0)));
+        when(medicalRecordDaoMock.getMedicalRecordByFirstNameAndLastName("Khalil", "Sleaby"))
+                .thenReturn(medicalRecordListForTest.get(0));
+        //when
+        List<PersonInfoDto> result = urLsServiceUnderTest.getListOfPersonInfo("Khalil", "Sleaby");
+        //then
+        assertThat(result.get(0).getLastName()).isEqualTo("Sleaby");
+        assertThat(result.get(0).getAge()).isEqualTo(40);
     }
 }

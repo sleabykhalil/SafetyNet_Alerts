@@ -1,6 +1,7 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.controller;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.ChildAlertDto;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.PersonInfoDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.PhoneAlertDto;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.PersonService;
@@ -77,5 +78,11 @@ public class PersonController {
     @GetMapping(value = "/phoneAlert")
     public PhoneAlertDto getPhoneNumberDto(@RequestParam String firestation_number) {
         return urLsService.getPhoneNumber(firestation_number);
+    }
+
+    @GetMapping(value = "/personInfo")
+    public PersonInfoDto getListOfPersonalInfo(@RequestParam String firstName,
+                                               @RequestParam String lastName) {
+        return null;
     }
 }
