@@ -85,4 +85,9 @@ public class PersonController {
                                                      @RequestParam String lastName) {
         return urLsService.getListOfPersonInfo(firstName, lastName);
     }
+
+    @GetMapping(value = "/communityEmail")
+    public List<String> getListOfPersonalInfo(@RequestParam String city) {
+        return urLsService.getEmailAddressByCity(city);
+    }
 }

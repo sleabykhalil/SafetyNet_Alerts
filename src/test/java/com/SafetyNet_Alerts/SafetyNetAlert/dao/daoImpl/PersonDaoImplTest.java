@@ -111,7 +111,7 @@ class PersonDaoImplTest {
     }
 
     @Test
-    Void getPersonByCity() {
+    void getPersonByCity() {
         List<Person> result;
         result = personDaoUnderTest.getPersonByCity("Culver");
         assertThat(result.get(0).getFirstName()).isEqualTo("Khalil");
