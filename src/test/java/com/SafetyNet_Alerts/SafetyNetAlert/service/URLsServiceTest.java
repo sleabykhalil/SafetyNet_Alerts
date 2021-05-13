@@ -211,7 +211,7 @@ class URLsServiceTest {
     @Test
     void getListOfPersonInfoTest() {
         //given
-        when(personDaoMock.getPersonByFirstNameAndLastName("Khalil", "Sleaby"))
+        when(personDaoMock.getListOfPersonByFirstNameAndLastName("Khalil", "Sleaby"))
                 .thenReturn(List.of(personListForTest.get(0)));
         when(medicalRecordDaoMock.getMedicalRecordByFirstNameAndLastName("Khalil", "Sleaby"))
                 .thenReturn(medicalRecordListForTest.get(0));

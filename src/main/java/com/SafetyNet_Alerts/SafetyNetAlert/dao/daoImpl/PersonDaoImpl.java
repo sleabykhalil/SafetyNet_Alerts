@@ -109,4 +109,23 @@ public class PersonDaoImpl implements PersonDao {
         });
         return result;
     }
+
+    public Person getPersonByFirstNameAndLastName(String firstName, String lastName) {
+        for (Person person : personList) {
+            if (person.getFirstName().equals(firstName) && person.getLastName().equals(lastName)) {
+                return person;
+            }
+        }
+        return null;
+    }
+
+    public List<Person> getListOfPersonByFirstNameAndLastName(String firstName, String lastName) {
+        List<Person> personListByFirstNameAndLastName = new ArrayList<>();
+        for (Person person : personList) {
+            if (person.getFirstName().equals(firstName) && person.getLastName().equals(lastName)) {
+                personListByFirstNameAndLastName.add(person);
+            }
+        }
+        return personListByFirstNameAndLastName;
+    }
 }

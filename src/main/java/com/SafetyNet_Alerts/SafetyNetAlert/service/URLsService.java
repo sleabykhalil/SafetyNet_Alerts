@@ -5,6 +5,7 @@ import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.*;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.Child;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.MedicalHistory;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithAddressAndPhone;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithMedicalBackground;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
@@ -259,7 +260,19 @@ public class URLsService {
          * getMedicalRecordByFirstNameAndLastName
          * return ListOfPersonInfo
          * */
-
-        return null;
+        List<Person> personListByFirstNameAndLastName = personDao.getListOfPersonByFirstNameAndLastName(firstName, lastName);
+        List<PersonInfoDto> personInfoDtoList = new ArrayList<>();
+        for (Person person : personListByFirstNameAndLastName) {
+            MedicalRecord medicalRecord = medicalRecordDao.getMedicalRecordByFirstNameAndLastName(firstName, lastName);
+            int age = DateHelper.calculateAge(medicalRecord.getBirthdate());
+            personInfoDtoList.add(PersonInfoDto.builder()
+                    .lastName(person.getLastName())
+                    .address(person.getAddress())
+                    .age(age)
+                    .email(person.getEmail())
+                    .medicalHistory(new MedicalHistory(medicalRecord.getMedications(), medicalRecord.getAllergies()))
+                    .build());
+        }
+        return personInfoDtoList;
     }
 }

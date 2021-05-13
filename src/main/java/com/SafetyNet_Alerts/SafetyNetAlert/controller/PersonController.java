@@ -81,8 +81,8 @@ public class PersonController {
     }
 
     @GetMapping(value = "/personInfo")
-    public PersonInfoDto getListOfPersonalInfo(@RequestParam String firstName,
-                                               @RequestParam String lastName) {
-        return null;
+    public List<PersonInfoDto> getListOfPersonalInfo(@RequestParam String firstName,
+                                                     @RequestParam String lastName) {
+        return urLsService.getListOfPersonInfo(firstName, lastName);
     }
 }
