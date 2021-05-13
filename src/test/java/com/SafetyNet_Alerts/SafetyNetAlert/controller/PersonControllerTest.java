@@ -66,11 +66,7 @@ class PersonControllerTest {
                 .andExpect(content().string(containsString("Khalil")));
     }
 
-    /**
-     * Add new person
-     *
-     * @throws Exception
-     */
+
     @Test
     void addPerson() throws Exception {
         mockMvc.perform(post("/person")

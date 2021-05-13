@@ -3,10 +3,7 @@ package com.SafetyNet_Alerts.SafetyNetAlert.service;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.FirestationDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
-import com.SafetyNet_Alerts.SafetyNetAlert.dto.ChildAlertDto;
-import com.SafetyNet_Alerts.SafetyNetAlert.dto.PeopleWithAgeCatDto;
-import com.SafetyNet_Alerts.SafetyNetAlert.dto.PeopleWithSpecificAgeDto;
-import com.SafetyNet_Alerts.SafetyNetAlert.dto.PhoneAlertDto;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.*;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.Child;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithAddressAndPhone;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithMedicalBackground;
@@ -19,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Service
@@ -188,5 +187,61 @@ public class URLsService {
                 .build();
 
         return peopleWithSpecificAgeDto;
+    }
+
+    public HouseDto getHousesByStationNumber(List<String> stationNumberList) {
+        /*
+         * "/flood/stations?stations=<a list of station_numbers> "
+         *  public String getFoos(@RequestParam List<String> id)
+         *
+         * Cette url doit retourner une liste de tous les foyers desservis par la caserne.
+         * Cette liste doit regrouper les personnes par adresse.
+         * Elle doit aussi inclure le nom, le numéro de téléphone et l'âge des habitants, et
+         * faire figurer leurs antécédents médicaux (médicaments, posologie et allergies) à côté de chaque nom. ???
+         *
+         * create houseDto
+         * for each station number => getFirestationByStationnomber
+         * for each stationadress get list of people lives there
+
+         */
+        List<String> addressList = new ArrayList<>();
+        for (String stationNumber : stationNumberList) {
+            List<Firestation> firestationListByStationNumber = firestationDao.findFirestationByStation(stationNumber);
+            for (Firestation firestation :
+                    firestationListByStationNumber) {
+                if (!addressList.contains(firestation.getAddress())) {
+                    addressList.add(firestation.getAddress());
+                }
+            }
+        }
+
+        List<PeopleWithMedicalBackground> peopleWithMedicalBackgroundList = new ArrayList<>();
+        Map<String, List<PeopleWithMedicalBackground>> addressAndPeopleWithSpecificAgeDtoMap = new HashMap<>();
+
+        for (String address : addressList) {
+            List<Person> personListByAddress = personDao.getPersonByAddress(address);
+            for (Person person : personListByAddress) {
+                MedicalRecord medicalRecord = medicalRecordDao
+                        .getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+                int age = DateHelper.calculateAge(medicalRecord.getBirthdate());
+                PeopleWithMedicalBackground peopleWithMedicalBackground = PeopleWithMedicalBackground.builder()
+                        .lastName(person.getLastName())
+                        .phone(person.getPhone())
+                        .age(age)
+                        .medications(medicalRecord.getMedications())
+                        .allergies(medicalRecord.getAllergies())
+                        .build();
+                if (!peopleWithMedicalBackgroundList.contains(peopleWithMedicalBackground)) {
+                    peopleWithMedicalBackgroundList.add(peopleWithMedicalBackground);
+                }
+
+            }
+            addressAndPeopleWithSpecificAgeDtoMap.putIfAbsent(address, peopleWithMedicalBackgroundList);
+        }
+
+
+        return HouseDto.builder()
+                .addressAndPeopleWithSpecificAgeDtoMap(addressAndPeopleWithSpecificAgeDtoMap)
+                .build();
     }
 }
