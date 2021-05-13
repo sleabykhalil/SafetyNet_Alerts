@@ -58,18 +58,24 @@ class URLsServiceTest {
                 .lastName("Sleaby")
                 .address("1234 Street St")
                 .phone("123-456-7890")
+                .city("Culver")
+                .email("Khalil@email.com")
                 .build());
         personListForTest.add(Person.builder()
                 .firstName("Aram")
                 .lastName("Sleaby")
                 .address("1234 Street St")
                 .phone("123-456-7890")
+                .city("Culver")
+                .email("Khalil@email.com")
                 .build());
         personListForTest.add(Person.builder()
                 .firstName("Khalil")
                 .lastName("Other")
                 .address("4321 Street St")
                 .phone("123-456-7890")
+                .city("Culver")
+                .email("OtherKhalil@email.com")
                 .build());
 
         medicalRecordListForTest.add(MedicalRecord.builder()
@@ -220,5 +226,16 @@ class URLsServiceTest {
         //then
         assertThat(result.get(0).getLastName()).isEqualTo("Sleaby");
         assertThat(result.get(0).getAge()).isEqualTo(40);
+    }
+
+    @Test
+    void getListOfEmailAddressByCity() {
+        //given
+        when(personDaoMock.getPersonByCity("Culver")).thenReturn(personListForTest);
+        //when
+        List<String> result = urLsServiceUnderTest.getEmailAddressByCity("Culver");
+        //then
+        assertThat(result.get(0)).isEqualTo("Khalil@email.com");
+
     }
 }

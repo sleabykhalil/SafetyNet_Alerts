@@ -275,4 +275,14 @@ public class URLsService {
         }
         return personInfoDtoList;
     }
+
+    public List<String> getEmailAddressByCity(String city) {
+        /*http://localhost:8080/communityEmail?city=<city>
+            Cette url doit retourner les adresses mail de tous les habitants de la ville.
+        * get person by city
+        *  each person get emailAddress for add if not exist
+        *
+        */
+        return null;
+    }
 }

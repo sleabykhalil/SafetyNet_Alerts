@@ -170,4 +170,13 @@ class PersonControllerTest {
                 .andExpect(content().string(containsString("khalil@email.com")))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void getListOfEmailAddressByCity() throws Exception {
+        mockMvc.perform(get("/communityEmail")
+                .param("city", "city"))
+                .andDo(print())
+                .andExpect(content().string(containsString("khalil@email.com")))
+                .andExpect(status().isOk());
+    }
 }
