@@ -128,4 +128,14 @@ public class PersonDaoImpl implements PersonDao {
         }
         return personListByFirstNameAndLastName;
     }
+
+    public List<Person> getPersonByCity(String cityName) {
+        List<Person> personListByCity = new ArrayList<>();
+        for (Person person : personList) {
+            if (person.getCity().equals(cityName)) {
+                personListByCity.add(person);
+            }
+        }
+        return personListByCity;
+    }
 }
