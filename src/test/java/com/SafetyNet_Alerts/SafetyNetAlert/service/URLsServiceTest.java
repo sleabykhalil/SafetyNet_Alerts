@@ -276,7 +276,7 @@ class URLsServiceTest {
                 .isEqualTo("Sleaby");
         assertThat(result.getAddressAndPeopleWithSpecificAgeDtoMap().containsKey("1234 Street St")).isTrue();
 
-        verify(firestationDaoMock, times(1)).findFirestationByAddress("1");
+        verify(firestationDaoMock, times(1)).findFirestationByStation("1");
         verify(personDaoMock, times(1)).getPersonByAddress("1234 Street St");
     }
 }

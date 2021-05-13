@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Service
@@ -195,13 +197,51 @@ public class URLsService {
          * Cette url doit retourner une liste de tous les foyers desservis par la caserne.
          * Cette liste doit regrouper les personnes par adresse.
          * Elle doit aussi inclure le nom, le numéro de téléphone et l'âge des habitants, et
-         * faire figurer leurs antécédents médicaux (médicaments, posologie et allergies) à côté de chaque nom.
+         * faire figurer leurs antécédents médicaux (médicaments, posologie et allergies) à côté de chaque nom. ???
          *
          * create houseDto
          * for each station number => getFirestationByStationnomber
          * for each stationadress get list of people lives there
 
          */
-        return null;
+        List<String> addressList = new ArrayList<>();
+        for (String stationNumber : stationNumberList) {
+            List<Firestation> firestationListByStationNumber = firestationDao.findFirestationByStation(stationNumber);
+            for (Firestation firestation :
+                    firestationListByStationNumber) {
+                if (!addressList.contains(firestation.getAddress())) {
+                    addressList.add(firestation.getAddress());
+                }
+            }
+        }
+
+        List<PeopleWithMedicalBackground> peopleWithMedicalBackgroundList = new ArrayList<>();
+        Map<String, List<PeopleWithMedicalBackground>> addressAndPeopleWithSpecificAgeDtoMap = new HashMap<>();
+
+        for (String address : addressList) {
+            List<Person> personListByAddress = personDao.getPersonByAddress(address);
+            for (Person person : personListByAddress) {
+                MedicalRecord medicalRecord = medicalRecordDao
+                        .getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+                int age = DateHelper.calculateAge(medicalRecord.getBirthdate());
+                PeopleWithMedicalBackground peopleWithMedicalBackground = PeopleWithMedicalBackground.builder()
+                        .lastName(person.getLastName())
+                        .phone(person.getPhone())
+                        .age(age)
+                        .medications(medicalRecord.getMedications())
+                        .allergies(medicalRecord.getAllergies())
+                        .build();
+                if (!peopleWithMedicalBackgroundList.contains(peopleWithMedicalBackground)) {
+                    peopleWithMedicalBackgroundList.add(peopleWithMedicalBackground);
+                }
+
+            }
+            addressAndPeopleWithSpecificAgeDtoMap.putIfAbsent(address, peopleWithMedicalBackgroundList);
+        }
+
+
+        return HouseDto.builder()
+                .addressAndPeopleWithSpecificAgeDtoMap(addressAndPeopleWithSpecificAgeDtoMap)
+                .build();
     }
 }

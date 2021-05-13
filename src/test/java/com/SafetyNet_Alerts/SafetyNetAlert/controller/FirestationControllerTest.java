@@ -113,4 +113,15 @@ public class FirestationControllerTest {
                 .andExpect(content().json("{\"firestationNumber\":\"1\",\"peopleWithLastNamePhoneAgesList\":[{\"lastName\":\"Sleaby\",\"phone\":\"123-456-7890\",\"age\":40,\"medications\":[\"firstMed:350mg\",\"secondMed:100mg\"],\"allergies\":[\"firstAllergy\",\"secondAllergy\"]}]}"))
                 .andExpect(content().string(containsString("Sleaby")));
     }
+
+    @Test
+    void getHouseDto() throws Exception {
+        mockMvc.perform(get("/flood/stations")
+                .param("stations", "1")
+                .param("stations", "2"))
+                .andDo(print())
+                .andExpect(content().string(containsString("Sleaby")))
+                .andExpect(content().string(containsString("Marrack")))
+                .andExpect(status().isOk());
+    }
 }
