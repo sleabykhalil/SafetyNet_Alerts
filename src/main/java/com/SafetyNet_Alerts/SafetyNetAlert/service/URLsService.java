@@ -5,6 +5,7 @@ import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.*;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.Child;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.MedicalHistory;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithAddressAndPhone;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithMedicalBackground;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
@@ -243,5 +244,35 @@ public class URLsService {
         return HouseDto.builder()
                 .addressAndPeopleWithSpecificAgeDtoMap(addressAndPeopleWithSpecificAgeDtoMap)
                 .build();
+    }
+
+    public List<PersonInfoDto> getListOfPersonInfo(String firstName, String lastName) {
+        /*
+         * http://localhost:8080/personInfo?firstName=<firstName>&lastName=<lastName>
+
+         *  Cette url doit retourner
+         *  le nom,  l'adresse, l'âge, l'adresse mail et les antécédents médicaux (médicaments, posologie, allergies)
+         *  de chaque habitant.
+         *  Si plusieurs personnes portent le même nom, elles doivent toutes apparaître.
+         *
+         * create dto PersonInfoDto
+         * getPersonByFirstNameAndLastName
+         * getMedicalRecordByFirstNameAndLastName
+         * return ListOfPersonInfo
+         * */
+        List<Person> personListByFirstNameAndLastName = personDao.getListOfPersonByFirstNameAndLastName(firstName, lastName);
+        List<PersonInfoDto> personInfoDtoList = new ArrayList<>();
+        for (Person person : personListByFirstNameAndLastName) {
+            MedicalRecord medicalRecord = medicalRecordDao.getMedicalRecordByFirstNameAndLastName(firstName, lastName);
+            int age = DateHelper.calculateAge(medicalRecord.getBirthdate());
+            personInfoDtoList.add(PersonInfoDto.builder()
+                    .lastName(person.getLastName())
+                    .address(person.getAddress())
+                    .age(age)
+                    .email(person.getEmail())
+                    .medicalHistory(new MedicalHistory(medicalRecord.getMedications(), medicalRecord.getAllergies()))
+                    .build());
+        }
+        return personInfoDtoList;
     }
 }

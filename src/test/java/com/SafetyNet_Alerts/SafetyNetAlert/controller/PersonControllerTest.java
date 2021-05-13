@@ -161,4 +161,13 @@ class PersonControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void getListOfPersonInfo() throws Exception {
+        mockMvc.perform(get("/personInfo")
+                .param("firstName", "Khalil")
+                .param("lastName", "Sleaby"))
+                .andDo(print())
+                .andExpect(content().string(containsString("khalil@email.com")))
+                .andExpect(status().isOk());
+    }
 }

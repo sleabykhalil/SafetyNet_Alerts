@@ -38,7 +38,7 @@ class PersonDaoImplTest {
         personUsedByTest = Person.builder()
                 .firstName("Khalil")
                 .lastName("Sleaby")
-                .address("1509 Culver St")
+                .address("1234 Street St")
                 .city("Culver")
                 .zip("97451")
                 .phone("841-874-6512")
@@ -77,7 +77,7 @@ class PersonDaoImplTest {
         Person personBefore = personUsedByTest;
         Person personAfter = Person.builder()
                 .firstName("Khalil")
-                .lastName("Boyd")
+                .lastName("Sleaby")
                 .address("1509 Culver St")//filed to be changed
                 .city("Culver")
                 .zip("97451")
@@ -92,17 +92,21 @@ class PersonDaoImplTest {
 
     @Test
     void delete() {
-        personDaoUnderTest.personList.add(personUsedByTest);
-
         boolean result = personDaoUnderTest.delete(personUsedByTest);
-
         assertTrue(result);
     }
 
     @Test
     void getPersonByAddress() {
         List<Person> result;
-        result = personDaoUnderTest.getPersonByAddress("1509 Culver St");
+        result = personDaoUnderTest.getPersonByAddress("1234 Street St");
         assertThat(result.get(0).getFirstName()).isEqualTo("Khalil");
+    }
+
+    @Test
+    void getPersonByFirstNameAndLastName() {
+        Person result;
+        result = personDaoUnderTest.getPersonByFirstNameAndLastName("Khalil", "Sleaby");
+        assertThat(result.getAddress()).isEqualTo("1234 Street St");
     }
 }
