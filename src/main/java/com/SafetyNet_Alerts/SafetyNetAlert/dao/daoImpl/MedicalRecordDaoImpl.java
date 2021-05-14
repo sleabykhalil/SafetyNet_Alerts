@@ -1,8 +1,10 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.MedicalRecordDao;
+import com.SafetyNet_Alerts.SafetyNetAlert.exception.ValidationException;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.MedicalRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +26,7 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
     public MedicalRecordDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
         medicalRecordList = fileRWService.readFromJsonFile().getMedicalrecords();
+        MedicalRecordService.isMedicalRecordListValid(medicalRecordList);
     }
 
     /**
@@ -35,6 +38,9 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
     public List<MedicalRecord> findAll() {
         List<MedicalRecord> result;
         result = medicalRecordList;
+        if (result.isEmpty()) {
+            throw new ValidationException("Data  file is empty");
+        }
         return result;
     }
 
@@ -46,15 +52,22 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
      */
     @Override
     public MedicalRecord create(MedicalRecord medicalRecord) {
+        if (medicalRecordList.contains(medicalRecord)) {
+            throw new ValidationException(String.format("Medical record for person, first name: %s  last name: %s is already exist."
+                    , medicalRecord.getFirstName(), medicalRecord.getLastName()));
+        }
+
+        List<MedicalRecord> medicalRecordListForValidate = medicalRecordList;
+        medicalRecordListForValidate.add(medicalRecord);
+        if (!MedicalRecordService.isMedicalRecordListValid(medicalRecordListForValidate)) {
+            throw new ValidationException(String.format("Medical record for person, first name: %s  last name: %s is already exist."
+                    , medicalRecord.getFirstName(), medicalRecord.getLastName()));
+        }
         medicalRecordList.add(medicalRecord);
         fileRWService.saveToJsonFile();
         return medicalRecord;
     }
 
-    @Override
-    public MedicalRecord read(String firstName, String lastName) {
-        return null;
-    }
 
     /**
      * Update medical records in medicalRecord list , and create data json file
@@ -65,6 +78,10 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
      */
     @Override
     public MedicalRecord update(MedicalRecord medicalRecordBefore, MedicalRecord medicalRecordAfter) {
+        if (medicalRecordList.contains(medicalRecordAfter)) {
+            throw new ValidationException(String.format("Medical record for person, first name: %s  last name: %s is already exist."
+                    , medicalRecordAfter.getFirstName(), medicalRecordAfter.getLastName()));
+        }
         for (MedicalRecord medicalRecord : medicalRecordList) {
             if ((medicalRecordBefore.getFirstName().equals(medicalRecord.getFirstName())) &&
                     (medicalRecordBefore.getLastName().equals(medicalRecord.getLastName()))) {
@@ -87,8 +104,12 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
         boolean result = medicalRecordList.removeIf(medicalRecordToDelete -> medicalRecordToDelete.getFirstName()
                 .equals(medicalRecord.getFirstName()) &&
                 medicalRecordToDelete.getLastName().equals(medicalRecord.getLastName()));
+        if (!result) {
+            throw new ValidationException(String.format("Medical record for person, first name: %s  last name: %s is not exist."
+                    , medicalRecord.getFirstName(), medicalRecord.getLastName()));
+        }
         fileRWService.saveToJsonFile();
-        return result;
+        return true;
     }
 
     //URLs
@@ -101,12 +122,18 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
      * @return list of medical record
      */
     public MedicalRecord getMedicalRecordByFirstNameAndLastName(String firstName, String lastName) {
-
+        MedicalRecord medicalRecordByFirstNameAndLastName = new MedicalRecord();
         for (MedicalRecord medicalRecord : medicalRecordList) {
             if (medicalRecord.getFirstName().equals(firstName) && medicalRecord.getLastName().equals(lastName)) {
-                return medicalRecord;
+                medicalRecordByFirstNameAndLastName = medicalRecord;
+                break;
             }
         }
-        return null;
+        if (medicalRecordByFirstNameAndLastName.getFirstName().isEmpty()
+                && medicalRecordByFirstNameAndLastName.getLastName().isEmpty()) {
+            throw new ValidationException(String.format("Medical record for person, first name: %s  last name: %s cant be found."
+                    , firstName, lastName));
+        }
+        return medicalRecordByFirstNameAndLastName;
     }
 }

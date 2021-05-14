@@ -1,13 +1,17 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.service;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.People;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @AllArgsConstructor
 @Service
 public class MedicalRecordService {
@@ -38,5 +42,27 @@ public class MedicalRecordService {
         return medicalRecordDao.delete(medicalRecordToDelete);
     }
 
+    public static boolean isMedicalRecordListValid(List<MedicalRecord> medicalRecordListToValid) {
+        List<People> peopleValidationList = new ArrayList<>();
+        for (MedicalRecord medicalRecord : medicalRecordListToValid) {
+            peopleValidationList.add(People.builder()
+                    .firstName(medicalRecord.getFirstName())
+                    .lastName(medicalRecord.getLastName()).build());
+        }
+        for (People peopleEx : peopleValidationList) {
+            int flag = 0;
+            for (People peopleIn : peopleValidationList) {
+                if (peopleIn.equals(peopleEx)) {
+                    flag += 1;
+                    if (flag == 2) {
+                        log.error(String
+                                .format("person with name %s %s already exist", peopleEx.getFirstName(), peopleEx.getLastName()));
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 
 }

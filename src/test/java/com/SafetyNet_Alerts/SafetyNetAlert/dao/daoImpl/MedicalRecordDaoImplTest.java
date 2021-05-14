@@ -61,13 +61,17 @@ class MedicalRecordDaoImplTest {
 
     @Test
     void create() {
-        MedicalRecord result = medicalRecordDaoUnderTest.create(medicalRecordToTest);
-        assertThat(result).isEqualTo(medicalRecordToTest);
+        MedicalRecord medicalRecordToBeCreate = MedicalRecord.builder()
+                .firstName("Khalilnew")
+                .lastName("Sleabynew")
+                .birthdate("01/01/1981")
+                .medications(List.of("firstMed:350mg", "secondMed:100mg"))
+                .allergies(List.of("firstAllergies", "secondAllergies"))
+                .build();
+        MedicalRecord result = medicalRecordDaoUnderTest.create(medicalRecordToBeCreate);
+        assertThat(result).isEqualTo(medicalRecordToBeCreate);
     }
 
-    @Test
-    void read() {
-    }
 
     @Test
     void update() {

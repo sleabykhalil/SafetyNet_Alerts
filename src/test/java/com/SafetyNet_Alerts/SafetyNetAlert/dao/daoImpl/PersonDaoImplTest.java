@@ -64,13 +64,19 @@ class PersonDaoImplTest {
 
     @Test
     void create() {
-        Person result = personDaoUnderTest.create(personUsedByTest);
-        assertThat(result).isEqualTo(personUsedByTest);
+        Person personToBeCreate = Person.builder()
+                .firstName("Khalilnew")
+                .lastName("Sleabynew")
+                .address("1234 Street St")
+                .city("Culver")
+                .zip("97451")
+                .phone("841-874-6512")
+                .email("jaboyd@email.com")
+                .build();
+        Person result = personDaoUnderTest.create(personToBeCreate);
+        assertThat(result).isEqualTo(personToBeCreate);
     }
 
-    @Test
-    void read() {
-    }
 
     @Test
     void update() {

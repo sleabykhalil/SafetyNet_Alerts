@@ -59,13 +59,14 @@ class FirestationDaoImplTest {
 
     @Test
     void create() {
-        Firestation result = firestationDaoUnderTest.create(firestationUsedByTest);
-        assertThat(result).isEqualTo(firestationUsedByTest);
+        Firestation firestationToBeCreate = Firestation.builder()
+                .address("1234 Street St")
+                .station("10")
+                .build();
+        Firestation result = firestationDaoUnderTest.create(firestationToBeCreate);
+        assertThat(result).isEqualTo(firestationToBeCreate);
     }
 
-    @Test
-    void read() {
-    }
 
     @Test
     void update() {
