@@ -63,8 +63,8 @@ public class MedicalRecourdsControllerTest {
         mockMvc.perform(post("/medicalRecord")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(" {" +
-                        "      \"firstName\": \"Khalil\"," +
-                        "      \"lastName\": \"Sleaby\"," +
+                        "      \"firstName\": \"NewFirstName\"," +
+                        "      \"lastName\": \"NewLastName\"," +
                         "      \"birthdate\": \"01/01/1980\"," +
                         "      \"medications\": [" +
                         "        \"aznol:350mg\"," +
@@ -77,8 +77,8 @@ public class MedicalRecourdsControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("Khalil"))
-                .andExpect(jsonPath("$.lastName").value("Sleaby"))
+                .andExpect(jsonPath("$.firstName").value("NewFirstName"))
+                .andExpect(jsonPath("$.lastName").value("NewLastName"))
                 .andExpect(jsonPath("$.birthdate").value("01/01/1980"))
                 .andExpect(jsonPath("$.medications[0]").value("aznol:350mg"))
                 .andExpect(jsonPath("$.medications[1]").value("hydrapermazol:100mg"))
