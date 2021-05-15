@@ -1,8 +1,10 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.PersonDao;
+import com.SafetyNet_Alerts.SafetyNetAlert.exception.ValidationException;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
+import com.SafetyNet_Alerts.SafetyNetAlert.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +26,7 @@ public class PersonDaoImpl implements PersonDao {
     public PersonDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
         personList = fileRWService.readFromJsonFile().getPersons();
+        PersonService.isPersonListValid(personList);
     }
 
     /**
@@ -35,6 +38,9 @@ public class PersonDaoImpl implements PersonDao {
     public List<Person> findAll() {
         List<Person> result;
         result = personList;
+        if (result.isEmpty()) {
+            throw new ValidationException("Data  file is empty");
+        }
         return result;
     }
 
@@ -46,14 +52,21 @@ public class PersonDaoImpl implements PersonDao {
      */
     @Override
     public Person create(Person person) {
+        if (personList.contains(person)) {
+            throw new ValidationException(String.format("Person with first name: %s  last name: %s is already exist."
+                    , person.getFirstName(), person.getLastName()));
+        }
+
+        List<Person> personListForValidate = personList;
+        personListForValidate.add(person);
+        if (!PersonService.isPersonListValid(personListForValidate)) {
+            throw new ValidationException(String.format("Person with the same first name: %s  last name: %s is already exist."
+                    , person.getFirstName(), person.getLastName()));
+        }
+
         personList.add(person);
         fileRWService.saveToJsonFile();
         return person;
-    }
-
-    @Override
-    public Person read(String firstName, String lastName) {
-        return null;
     }
 
     /**
@@ -66,6 +79,10 @@ public class PersonDaoImpl implements PersonDao {
      */
     @Override
     public Person update(Person personBefore, Person personAfter) {
+        if (personList.contains(personAfter)) {
+            throw new ValidationException(String.format("Person with, first name: %s  last name: %s is already exist."
+                    , personAfter.getFirstName(), personAfter.getLastName()));
+        }
         for (Person person : personList) {
             if ((personBefore.getFirstName().equals(person.getFirstName())) &&
                     (personBefore.getLastName().equals(person.getLastName()))) {
@@ -88,8 +105,12 @@ public class PersonDaoImpl implements PersonDao {
         boolean result = personList.removeIf(personToDelete ->
                 personToDelete.getFirstName().equals(person.getFirstName()) &&
                         personToDelete.getLastName().equals(person.getLastName()));
+        if (!result) {
+            throw new ValidationException(String.format("Person with, first name: %s  last name: %s cant be found."
+                    , person.getFirstName(), person.getLastName()));
+        }
         fileRWService.saveToJsonFile();
-        return result;
+        return true;
     }
 
     //URLs

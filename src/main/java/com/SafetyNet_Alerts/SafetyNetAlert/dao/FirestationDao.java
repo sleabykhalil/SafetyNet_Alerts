@@ -11,8 +11,6 @@ public interface FirestationDao {
 
     Firestation create(Firestation firestation);
 
-    Firestation read(String station);
-
     Firestation update(Firestation firestationBefore, Firestation firestationAfter);
 
     boolean delete(Firestation firestation);

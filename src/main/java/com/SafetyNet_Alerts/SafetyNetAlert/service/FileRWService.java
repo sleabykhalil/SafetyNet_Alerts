@@ -1,13 +1,15 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.service;
 
 import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileName;
+import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.FirestationDaoImpl;
+import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
+import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
+import com.SafetyNet_Alerts.SafetyNetAlert.exception.TechnicalException;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
-import com.SafetyNet_Alerts.SafetyNetAlert.repository.FirestationRepository;
-import com.SafetyNet_Alerts.SafetyNetAlert.repository.MedicalRecordRepository;
-import com.SafetyNet_Alerts.SafetyNetAlert.repository.PersonRepository;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.output.JsonStream;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -18,27 +20,28 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @Data
 @Service
 public class FileRWService {
     private final Path path;
 
-    public FileRWService() throws IOException {
-        this.path = Paths.get(new ClassPathResource(JsonDataFileName.dataFileName).getURI());
-        System.out.println(path.toString());
-    }
+    public FileRWService() {
+        ClassPathResource classPathResource = new ClassPathResource(JsonDataFileName.dataFileName);
+        try {
+            this.path = Paths.get(classPathResource.getURI());
+        } catch (IOException ex) {
+            throw new TechnicalException(String.format("File %s not found in resource path", classPathResource.toString()), ex);
+        }
 
-    public FileRWService(Path path) {
-        this.path = path;
-        System.out.println(path.toString());
     }
 
     public void saveToJsonFile() {
         JsonFileModel jsonFileModel;
         jsonFileModel = JsonFileModel.builder()
-                .persons(PersonRepository.personList)
-                .firestations(FirestationRepository.firestationList)
-                .medicalrecords(MedicalRecordRepository.medicalRecordList)
+                .persons(PersonDaoImpl.personList)
+                .firestations(FirestationDaoImpl.firestationList)
+                .medicalrecords(MedicalRecordDaoImpl.medicalRecordList)
                 .build();
         stringToJsonFile(jsonFileModelToJsonAsString(jsonFileModel));
     }
@@ -67,11 +70,9 @@ public class FileRWService {
         Stream<String> lines = null;
         try {
             lines = Files.lines(path);
-            //System.out.println(path.toString());
             return lines.collect(Collectors.joining(""));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "No result found";
+        } catch (IOException ex) {
+            throw new TechnicalException(String.format("File %s is empty or not found in resource path", path.toString()), ex);
         } finally {
             assert lines != null;
             lines.close();
@@ -102,8 +103,9 @@ public class FileRWService {
                 Files.createFile(path);
             }
             Files.writeString(path, jsonAsString);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            throw new TechnicalException(String.format("File %s not found in resource path", path.toString()), ex);
+
         }
     }
 }

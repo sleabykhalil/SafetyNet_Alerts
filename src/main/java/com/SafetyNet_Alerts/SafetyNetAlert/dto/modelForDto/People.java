@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Child {
+public class People {
     private String firstName;
     private String lastName;
-    private int age;
 }

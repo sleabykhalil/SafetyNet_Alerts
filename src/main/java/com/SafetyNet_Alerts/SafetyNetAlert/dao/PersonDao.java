@@ -11,8 +11,6 @@ public interface PersonDao {
 
     Person create(Person person);
 
-    Person read(String firstName, String lastName);
-
     Person update(Person personBefore, Person personAfter);
 
     boolean delete(Person person);

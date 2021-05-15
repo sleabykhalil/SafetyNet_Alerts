@@ -16,10 +16,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -66,8 +63,6 @@ public class URLsService {
                     .address(person.getAddress())
                     .phone(person.getPhone())
                     .build());
-
-
         });
 
         for (MedicalRecord medicalRecord : medicalRecordByName) {
@@ -92,7 +87,7 @@ public class URLsService {
          * if adult ad to people list
          * if there is no Child return empty list
          * */
-        ChildAlertDto childAlertDto = ChildAlertDto.builder().build();
+        ChildAlertDto childAlertDto;
         List<Child> childList = new ArrayList<>();
         List<PeopleWithAddressAndPhone> peopleWithAddressAndPhoneListLivesWithChild = new ArrayList<>();
 
@@ -111,11 +106,14 @@ public class URLsService {
             }
         }
         if (!childList.isEmpty()) {
-            for (Child child : childList) {
-                child.setPeopleWithAddressAndPhoneList(peopleWithAddressAndPhoneListLivesWithChild);
-            }
             childAlertDto = ChildAlertDto.builder()
                     .children(childList)
+                    .peopleWithAddressAndPhoneList(peopleWithAddressAndPhoneListLivesWithChild)
+                    .build();
+        } else {
+            childAlertDto = ChildAlertDto.builder()
+                    .children(Collections.emptyList())
+                    .peopleWithAddressAndPhoneList(Collections.emptyList())
                     .build();
         }
         return childAlertDto;
