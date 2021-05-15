@@ -80,7 +80,7 @@ class FirestationDaoImplTest {
 
     @Test
     void delete() {
-        firestationDaoUnderTest.firestationList.add(firestationUsedByTest);
+        firestationList.add(firestationUsedByTest);
 
         boolean result = firestationDaoUnderTest.delete(firestationUsedByTest);
 
@@ -89,7 +89,7 @@ class FirestationDaoImplTest {
 
     @Test
     void findAllFirestation_whenNoDataFound_validationExceptionThrows() {
-        firestationDaoUnderTest.firestationList.remove(firestationUsedByTest);
+        firestationList.remove(firestationUsedByTest);
 
         RuntimeException ex = assertThrows(ValidationException.class, () -> firestationDaoUnderTest.findAll());
         assertThat(ex.getMessage()).isEqualTo("Data  file is empty");

@@ -22,7 +22,7 @@ class FileRWServiceTest {
     FileRWService fileRWServiceUnderTest;
 
     @BeforeEach
-    void setUp() throws IOException {
+    void setUp() {
         fileRWServiceUnderTest = new FileRWService();
     }
 
@@ -44,10 +44,6 @@ class FileRWServiceTest {
         assertThat(jsonFileModelResult.getFirestations().get(0).getAddress()).isEqualTo("1509 Culver St");
         assertThat(jsonFileModelResult.getMedicalrecords().get(0).getFirstName()).isEqualTo("John");
 
-    }
-
-    @Test
-    void saveToJsonFile() {
     }
 
 

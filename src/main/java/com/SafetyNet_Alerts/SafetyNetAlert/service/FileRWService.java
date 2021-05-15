@@ -36,11 +36,6 @@ public class FileRWService {
 
     }
 
-    public FileRWService(Path path) {
-        this.path = path;
-        log.info(path.toString());
-    }
-
     public void saveToJsonFile() {
         JsonFileModel jsonFileModel;
         jsonFileModel = JsonFileModel.builder()
@@ -76,9 +71,8 @@ public class FileRWService {
         try {
             lines = Files.lines(path);
             return lines.collect(Collectors.joining(""));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "No result found";
+        } catch (IOException ex) {
+            throw new TechnicalException(String.format("File %s is empty or not found in resource path", path.toString()), ex);
         } finally {
             assert lines != null;
             lines.close();
