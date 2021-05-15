@@ -53,14 +53,14 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
     @Override
     public MedicalRecord create(MedicalRecord medicalRecord) {
         if (medicalRecordList.contains(medicalRecord)) {
-            throw new ValidationException(String.format("Medical record for person, first name: %s  last name: %s is already exist."
+            throw new ValidationException(String.format("Medical record for this person, first name: %s  last name: %s is already exist."
                     , medicalRecord.getFirstName(), medicalRecord.getLastName()));
         }
 
         List<MedicalRecord> medicalRecordListForValidate = medicalRecordList;
         medicalRecordListForValidate.add(medicalRecord);
         if (!MedicalRecordService.isMedicalRecordListValid(medicalRecordListForValidate)) {
-            throw new ValidationException(String.format("Medical record for person, first name: %s  last name: %s is already exist."
+            throw new ValidationException(String.format("Medical record for a person with the same, first name: %s  last name: %s is already exist."
                     , medicalRecord.getFirstName(), medicalRecord.getLastName()));
         }
         medicalRecordList.add(medicalRecord);
@@ -129,8 +129,8 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
                 break;
             }
         }
-        if (medicalRecordByFirstNameAndLastName.getFirstName().isEmpty()
-                && medicalRecordByFirstNameAndLastName.getLastName().isEmpty()) {
+        if (medicalRecordByFirstNameAndLastName.getFirstName() == null
+                || medicalRecordByFirstNameAndLastName.getLastName() == null) {
             throw new ValidationException(String.format("Medical record for person, first name: %s  last name: %s cant be found."
                     , firstName, lastName));
         }
