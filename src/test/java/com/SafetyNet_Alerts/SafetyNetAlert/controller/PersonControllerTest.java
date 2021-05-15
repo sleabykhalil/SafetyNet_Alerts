@@ -71,8 +71,8 @@ class PersonControllerTest {
     void addPerson() throws Exception {
         mockMvc.perform(post("/person")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(" { " + "      \"firstName\": \"Khalil\",\n" +
-                        "      \"lastName\": \"Sleaby\",\n" +
+                .content(" { " + "      \"firstName\": \"NewFirstName\",\n" +
+                        "      \"lastName\": \"NewLastName\",\n" +
                         "      \"address\": \"Khalil address\",\n" +
                         "      \"city\": \"Khalil city\",\n" +
                         "      \"zip\": \"12345\",\n" +
@@ -82,8 +82,8 @@ class PersonControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("Khalil"))
-                .andExpect(jsonPath("$.lastName").value("Sleaby"))
+                .andExpect(jsonPath("$.firstName").value("NewFirstName"))
+                .andExpect(jsonPath("$.lastName").value("NewLastName"))
                 .andExpect(jsonPath("$.address").value("Khalil address"))
                 .andExpect(jsonPath("$.city").value("Khalil city"))
                 .andExpect(jsonPath("$.zip").value("12345"))
@@ -121,7 +121,7 @@ class PersonControllerTest {
     void deletePerson() throws Exception {
         mockMvc.perform(delete("/person")
                 .param("firstName", "Khalil")
-                .param("lastName", "Boyd"))
+                .param("lastName", "Sleaby"))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
