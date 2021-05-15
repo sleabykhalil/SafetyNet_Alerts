@@ -60,7 +60,7 @@ public class PersonDaoImpl implements PersonDao {
         List<Person> personListForValidate = personList;
         personListForValidate.add(person);
         if (!PersonService.isPersonListValid(personListForValidate)) {
-            throw new ValidationException(String.format("Person with first name: %s  last name: %s is already exist."
+            throw new ValidationException(String.format("Person with the same first name: %s  last name: %s is already exist."
                     , person.getFirstName(), person.getLastName()));
         }
 
