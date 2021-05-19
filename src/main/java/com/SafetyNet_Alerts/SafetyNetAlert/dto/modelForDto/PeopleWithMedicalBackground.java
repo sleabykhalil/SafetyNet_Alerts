@@ -1,4 +1,4 @@
-package com.SafetyNet_Alerts.SafetyNetAlert.model;
+package com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,19 +7,14 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * Medical Record Entity
- */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MedicalRecord {
-
-    private String firstName;
+public class PeopleWithMedicalBackground {
     private String lastName;
-    private String birthdate;
-
+    private String phone;
+    private int age;
     private List<String> medications;
     private List<String> allergies;
 }

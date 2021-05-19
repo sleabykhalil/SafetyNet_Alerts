@@ -5,15 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Firestation Entity
- */
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Firestation {
+public class JsonFileModel {
+    List<Person> persons;
+    List<Firestation> firestations;
+    List<MedicalRecord> medicalrecords;
 
-    private String address;
-    private String station;
 }

@@ -1,27 +1,19 @@
-package com.SafetyNet_Alerts.SafetyNetAlert.model;
+package com.SafetyNet_Alerts.SafetyNetAlert.dto;
 
-
+import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.MedicalHistory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Person Entity
- */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Person {
-
-    private String firstName;
+public class PersonInfoDto {
     private String lastName;
     private String address;
-    private String city;
-    private String zip;
-    private String phone;
+    private int age;
     private String email;
-
+    private MedicalHistory medicalHistory;
 }
-

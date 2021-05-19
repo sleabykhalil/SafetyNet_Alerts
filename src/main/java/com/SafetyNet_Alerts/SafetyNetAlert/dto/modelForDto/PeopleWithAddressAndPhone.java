@@ -1,19 +1,17 @@
-package com.SafetyNet_Alerts.SafetyNetAlert.model;
+package com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Firestation Entity
- */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Firestation {
-
+public class PeopleWithAddressAndPhone {
+    private String firstName;
+    private String lastName;
     private String address;
-    private String station;
+    private String phone;
 }
