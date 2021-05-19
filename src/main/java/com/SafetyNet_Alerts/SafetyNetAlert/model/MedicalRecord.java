@@ -20,9 +20,6 @@ public class MedicalRecord {
     private String lastName;
     private String birthdate;
 
-    //@JsonProperty(decoder = MaybeEmptyArrayDecoder.class)
     private List<String> medications;
-
-    //@JsonProperty(decoder = MaybeEmptyArrayDecoder.class)
     private List<String> allergies;
 }

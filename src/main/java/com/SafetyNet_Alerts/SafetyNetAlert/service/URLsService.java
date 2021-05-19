@@ -78,6 +78,12 @@ public class URLsService {
                 .build();
     }
 
+    /**
+     * Get list of children with there ages and adults lives with them
+     *
+     * @param address address to search by
+     * @return Dto with list of children or empty list if no children found
+     */
     public ChildAlertDto getListOFChildByAddress(String address) {
         /*
          * get person list by address
@@ -119,6 +125,12 @@ public class URLsService {
         return childAlertDto;
     }
 
+    /**
+     * Get phone number for all persons corresponding to firestation number
+     *
+     * @param firestationNumber fire station number to search by
+     * @return Dto with list of phone number without repeating if phone number present in multiple records
+     */
     public PhoneAlertDto getPhoneNumber(String firestationNumber) {
         /*
          * get firestation by number
@@ -148,6 +160,12 @@ public class URLsService {
         return phoneAlertDto;
     }
 
+    /**
+     * Get person lives in specific address after calculating ther ages
+     *
+     * @param address address to search by
+     * @return Dto list of people with age
+     */
     public PeopleWithSpecificAgeDto getPeopleListServedByFirestationNumberByAddress(String address) {
         /*
          * get person by address
@@ -188,6 +206,12 @@ public class URLsService {
         return peopleWithSpecificAgeDto;
     }
 
+    /**
+     * Get people who lives in addresses corresponding to list of firestation number
+     *
+     * @param stationNumberList List of firestation number
+     * @return Dto containing mab with address as key and list of people lives in this address as value
+     */
     public HouseDto getHousesByStationNumber(List<String> stationNumberList) {
         /*
          * "/flood/stations?stations=<a list of station_numbers> "
@@ -244,6 +268,14 @@ public class URLsService {
                 .build();
     }
 
+    /**
+     * Get persons how has the same first name and last name
+     * //TODO ask product owner because the combination of first and last name are unique identifier
+     *
+     * @param firstName First name to search by
+     * @param lastName  Last name to search by
+     * @return list of all people have the same first and last name
+     */
     public List<PersonInfoDto> getListOfPersonInfo(String firstName, String lastName) {
         /*
          * http://localhost:8080/personInfo?firstName=<firstName>&lastName=<lastName>
@@ -274,13 +306,18 @@ public class URLsService {
         return personInfoDtoList;
     }
 
+    /**
+     * Get all email addresses for persons live in city
+     *
+     * @param cityName city name to search by
+     * @return list of email address , the address present one time in list
+     */
     public List<String> getEmailAddressByCity(String cityName) {
-        /*http://localhost:8080/communityEmail?city=<city>
-            Cette url doit retourner les adresses mail de tous les habitants de la ville.
-        * get person by city
-        *  each person get emailAddress for add if not exist
-        *
-        */
+        /*
+         * get person by city
+         *  each person get emailAddress for add if not exist
+         *
+         */
         List<Person> personListByCity = personDao.getPersonByCity(cityName);
         List<String> addressListByCity = new ArrayList<>();
         for (Person person : personListByCity) {
