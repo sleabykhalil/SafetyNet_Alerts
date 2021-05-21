@@ -10,13 +10,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class PersonController {
@@ -45,7 +43,7 @@ public class PersonController {
      */
     @Operation(summary = "Add person to data source")
     @PostMapping(value = "/person")
-    public Person addPerson(@RequestBody(description = "Person to add",
+    public Person addPerson(@RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Person to add",
             required = true, content = @Content(schema = @Schema(implementation = Person.class))) Person person) {
         return personService.savePerson(person);
     }
@@ -62,7 +60,7 @@ public class PersonController {
     @PutMapping(value = "/person")
     public Person updatePerson(@RequestParam @Parameter(description = "First name to update", required = true) String firstName,
                                @RequestParam @Parameter(description = "Last name to update", required = true) String lastName,
-                               @RequestBody(description = "New data of person",
+                               @RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "New data of person",
                                        required = true, content = @Content(schema = @Schema(implementation = Person.class))) Person person) {
         return personService.updatePerson(firstName, lastName, person);
     }

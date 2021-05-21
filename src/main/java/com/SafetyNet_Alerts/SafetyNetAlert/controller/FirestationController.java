@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +60,7 @@ public class FirestationController {
             @ApiResponse(responseCode = "400", description = "Firestation already exist")})
 
     @PostMapping(value = "/firestation", produces = "application/json", consumes = "application/json")
-    public Firestation addFirestation(@RequestBody(description = "Firestation to add",
+    public Firestation addFirestation(@RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Firestation to add",
             required = true,
             content = @Content(schema = @Schema(implementation = Firestation.class)))
                                               Firestation firestation) {
@@ -85,7 +84,7 @@ public class FirestationController {
     @PutMapping(value = "/firestation")
     public Firestation updateFirestation(@RequestParam @Parameter(description = "Address corresponding to firestation to update",
             required = true) String address,
-                                         @RequestBody(description = "Firestation to add",
+                                         @RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Firestation to add",
                                                  required = true,
                                                  content = @Content(schema = @Schema(implementation = Firestation.class)))
                                                  Firestation firestation) {

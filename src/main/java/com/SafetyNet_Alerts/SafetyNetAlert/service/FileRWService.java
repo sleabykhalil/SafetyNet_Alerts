@@ -8,7 +8,6 @@ import com.SafetyNet_Alerts.SafetyNetAlert.exception.TechnicalException;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.output.JsonStream;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
-@Data
 @Service
 public class FileRWService {
     private final Path path;

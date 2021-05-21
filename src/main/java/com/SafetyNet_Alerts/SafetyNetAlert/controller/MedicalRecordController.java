@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +53,7 @@ public class MedicalRecordController {
             @ApiResponse(responseCode = "400", description = "Medical record already exist")})
 
     @PostMapping(value = "/medicalRecord")
-    public MedicalRecord addMedicalRecord(@RequestBody(description = "Medical record to add",
+    public MedicalRecord addMedicalRecord(@RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Medical record to add",
             required = true,
             content = @Content(schema = @Schema(implementation = MedicalRecord.class)))
                                                   MedicalRecord medicalRecord) {
@@ -81,7 +80,7 @@ public class MedicalRecordController {
             required = true) String firstName,
                                              @RequestParam @Parameter(description = "Last name to update",
                                                      required = true) String lastName,
-                                             @RequestBody(description = "Medical record to add",
+                                             @RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Medical record to add",
                                                      required = true,
                                                      content = @Content(schema = @Schema(implementation = MedicalRecord.class)))
                                                      MedicalRecord medicalRecord) {
