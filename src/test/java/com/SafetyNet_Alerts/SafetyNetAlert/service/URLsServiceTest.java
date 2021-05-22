@@ -33,6 +33,8 @@ class URLsServiceTest {
     PersonDaoImpl personDaoMock;
     @Mock
     MedicalRecordDaoImpl medicalRecordDaoMock;
+    @Mock
+    FileRWService fileRWServiceMock;
 
     URLsService urLsServiceUnderTest;
 
@@ -42,7 +44,7 @@ class URLsServiceTest {
 
     @BeforeEach
     void setUp() {
-        urLsServiceUnderTest = new URLsService(personDaoMock, firestationDaoMock, medicalRecordDaoMock);
+        urLsServiceUnderTest = new URLsService(personDaoMock, firestationDaoMock, medicalRecordDaoMock, fileRWServiceMock);
 
         firestationListForTest.add(Firestation.builder()
                 .station("1")

@@ -1,5 +1,6 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileNames;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.PersonDao;
 import com.SafetyNet_Alerts.SafetyNetAlert.exception.ValidationException;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
@@ -25,7 +26,7 @@ public class PersonDaoImpl implements PersonDao {
      */
     public PersonDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
-        personList = fileRWService.readFromJsonFile().getPersons();
+        personList = fileRWService.readInputFromInputJsonFileAndMabToJsonFileModel(JsonDataFileNames.INPUT_FILE_NAME).getPersons();
         PersonService.isPersonListValid(personList);
     }
 
@@ -65,7 +66,7 @@ public class PersonDaoImpl implements PersonDao {
         }
 
         personList.add(person);
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return person;
     }
 
@@ -90,7 +91,7 @@ public class PersonDaoImpl implements PersonDao {
                 break;
             }
         }
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return personAfter;
     }
 
@@ -109,7 +110,7 @@ public class PersonDaoImpl implements PersonDao {
             throw new ValidationException(String.format("Person with, first name: %s  last name: %s cant be found."
                     , person.getFirstName(), person.getLastName()));
         }
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return true;
     }
 

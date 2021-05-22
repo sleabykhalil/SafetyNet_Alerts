@@ -17,6 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -46,13 +47,13 @@ class PersonDaoImplTest {
                 .phone("841-874-6512")
                 .email("jaboyd@email.com")
                 .build();
-        lenient().doNothing().when(fileRWServiceMock).saveToJsonFile();
+        lenient().doNothing().when(fileRWServiceMock).updateInputFile();
 
         jsonFileModel = new JsonFileModel();
         personList = new ArrayList<>();
         personList.add(personUsedByTest);
         jsonFileModel.setPersons(personList);
-        when(fileRWServiceMock.readFromJsonFile()).thenReturn(jsonFileModel);
+        when(fileRWServiceMock.readInputFromInputJsonFileAndMabToJsonFileModel(anyString())).thenReturn(jsonFileModel);
 
         personDaoUnderTest = new PersonDaoImpl(fileRWServiceMock);
     }

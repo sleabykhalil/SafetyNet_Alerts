@@ -1,5 +1,6 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.service;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileNames;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.FirestationDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
@@ -27,6 +28,8 @@ public class URLsService {
     FirestationDaoImpl firestationDao;
     @Autowired
     MedicalRecordDaoImpl medicalRecordDao;
+    @Autowired
+    FileRWService fileRWService;
 
     /**
      * get list of person with adult number and Child number
@@ -41,6 +44,7 @@ public class URLsService {
          * for each person get medical record by first name and last name
          * from medical record lest get adult number and Child number
          * return dto contain list of person and number of adult and  Child number
+         * create output file
          * */
         List<Firestation> firestationByAddress;
         List<PeopleWithAddressAndPhone> peopleWithAddressAndPhoneList = new ArrayList<>();
@@ -71,11 +75,13 @@ public class URLsService {
             } else childNumber += 1;
         }
 
-        return PeopleWithAgeCatDto.builder()
+        PeopleWithAgeCatDto result = PeopleWithAgeCatDto.builder()
                 .peopleWithAddressAndPhoneList(peopleWithAddressAndPhoneList)
                 .adultNumber(adultNumber)
                 .childNumber(childNumber)
                 .build();
+        fileRWService.saveOutputToJsonFile(result, JsonDataFileNames.PERSONS_COVERED_BY_FIRE_STATION);
+        return result;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileNames;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.FirestationDao;
 import com.SafetyNet_Alerts.SafetyNetAlert.exception.ValidationException;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
@@ -24,7 +25,7 @@ public class FirestationDaoImpl implements FirestationDao {
      */
     public FirestationDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
-        firestationList = fileRWService.readFromJsonFile().getFirestations();
+        firestationList = fileRWService.readInputFromInputJsonFileAndMabToJsonFileModel(JsonDataFileNames.INPUT_FILE_NAME).getFirestations();
     }
 
     /**
@@ -55,7 +56,7 @@ public class FirestationDaoImpl implements FirestationDao {
                     , firestation.getStation(), firestation.getAddress()));
         }
         firestationList.add(firestation);
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return firestation;
     }
 
@@ -78,7 +79,7 @@ public class FirestationDaoImpl implements FirestationDao {
                 break;
             }
         }
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return firestationAfter;
     }
 
@@ -96,7 +97,7 @@ public class FirestationDaoImpl implements FirestationDao {
             throw new ValidationException(String.format("Firestation number %s associated to address %s is not exist."
                     , firestation.getStation(), firestation.getAddress()));
         }
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return true;
     }
 
