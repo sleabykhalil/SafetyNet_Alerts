@@ -3,16 +3,14 @@ package com.SafetyNet_Alerts.SafetyNetAlert.dto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithMedicalBackground;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.Map;
 
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class HouseDto {
     private Map<String, List<PeopleWithMedicalBackground>> addressAndPeopleWithSpecificAgeDtoMap;
 }

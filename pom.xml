@@ -75,9 +75,9 @@
 				<configuration>
 					<excludes>
 						<exclude>**/constants/*</exclude>
-						<exclude>**/dto/**</exclude>
+						<!--<exclude>**/dto/**</exclude>
 						<exclude>**/exception/**</exclude>
-						<exclude>**/model/*</exclude>
+						<exclude>**/model/*</exclude>-->
 					</excludes>
 				</configuration>
 				<executions>

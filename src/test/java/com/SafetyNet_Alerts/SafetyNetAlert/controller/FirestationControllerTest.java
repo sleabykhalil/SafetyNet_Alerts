@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class MedicalRecourdsControllerTestIT {
+public class FirestationControllerTest {
     @Autowired
     MockMvc mockMvc;
 
@@ -37,6 +37,7 @@ public class MedicalRecourdsControllerTestIT {
                 "  \"firestations\":[{\"address\":\"1234 Street St\",\"station\":\"1\"},{\"address\":\"1509 Culver St\",\"station\":\"3\"},{\"address\":\"29 15th St\",\"station\":\"2\"},{\"address\":\"834 Binoc Ave\",\"station\":\"3\"},{\"address\":\"644 Gershwin Cir\",\"station\":\"1\"},{\"address\":\"748 Townings Dr\",\"station\":\"3\"},{\"address\":\"112 Steppes Pl\",\"station\":\"3\"},{\"address\":\"489 Manchester St\",\"station\":\"4\"},{\"address\":\"892 Downing Ct\",\"station\":\"2\"},{\"address\":\"908 73rd St\",\"station\":\"1\"},{\"address\":\"112 Steppes Pl\",\"station\":\"4\"},{\"address\":\"947 E. Rose Dr\",\"station\":\"1\"},{\"address\":\"748 Townings Dr\",\"station\":\"3\"},{\"address\":\"951 LoneTree Rd\",\"station\":\"2\"}],\n" +
                 "  \"medicalrecords\":[{\"firstName\":\"Khalil\",\"lastName\":\"Sleaby\",\"birthdate\":\"01/01/1981\",\"medications\":[\"firstMed:350mg\",\"secondMed:100mg\"],\"allergies\":[\"firstAllergy\",\"secondAllergy\"]},{\"firstName\":\"John\",\"lastName\":\"Boyd\",\"birthdate\":\"03/06/1984\",\"medications\":[\"aznol:350mg\",\"hydrapermazol:100mg\"],\"allergies\":[\"nillacilan\"]},{\"firstName\":\"Jacob\",\"lastName\":\"Boyd\",\"birthdate\":\"03/06/1989\",\"medications\":[\"pharmacol:5000mg\",\"terazine:10mg\",\"noznazol:250mg\"],\"allergies\":[]},{\"firstName\":\"Tenley\",\"lastName\":\"Boyd\",\"birthdate\":\"02/18/2012\",\"medications\":[],\"allergies\":[\"peanut\"]},{\"firstName\":\"Roger\",\"lastName\":\"Boyd\",\"birthdate\":\"09/06/2017\",\"medications\":[],\"allergies\":[]},{\"firstName\":\"Felicia\",\"lastName\":\"Boyd\",\"birthdate\":\"01/08/1986\",\"medications\":[\"tetracyclaz:650mg\"],\"allergies\":[\"xilliathal\"]},{\"firstName\":\"Jonanathan\",\"lastName\":\"Marrack\",\"birthdate\":\"01/03/1989\",\"medications\":[],\"allergies\":[]},{\"firstName\":\"Tessa\",\"lastName\":\"Carman\",\"birthdate\":\"02/18/2012\",\"medications\":[],\"allergies\":[]},{\"firstName\":\"Peter\",\"lastName\":\"Duncan\",\"birthdate\":\"09/06/2000\",\"medications\":[],\"allergies\":[\"shellfish\"]},{\"firstName\":\"Foster\",\"lastName\":\"Shepard\",\"birthdate\":\"01/08/1980\",\"medications\":[],\"allergies\":[]},{\"firstName\":\"Tony\",\"lastName\":\"Cooper\",\"birthdate\":\"03/06/1994\",\"medications\":[\"hydrapermazol:300mg\",\"dodoxadin:30mg\"],\"allergies\":[\"shellfish\"]},{\"firstName\":\"Lily\",\"lastName\":\"Cooper\",\"birthdate\":\"03/06/1994\",\"medications\":[],\"allergies\":[]},{\"firstName\":\"Sophia\",\"lastName\":\"Zemicks\",\"birthdate\":\"03/06/1988\",\"medications\":[\"aznol:60mg\",\"hydrapermazol:900mg\",\"pharmacol:5000mg\",\"terazine:500mg\"],\"allergies\":[\"peanut\",\"shellfish\",\"aznol\"]},{\"firstName\":\"Warren\",\"lastName\":\"Zemicks\",\"birthdate\":\"03/06/1985\",\"medications\":[],\"allergies\":[]},{\"firstName\":\"Zach\",\"lastName\":\"Zemicks\",\"birthdate\":\"03/06/2017\",\"medications\":[],\"allergies\":[]},{\"firstName\":\"Reginold\",\"lastName\":\"Walker\",\"birthdate\":\"08/30/1979\",\"medications\":[\"thradox:700mg\"],\"allergies\":[\"illisoxian\"]},{\"firstName\":\"Jamie\",\"lastName\":\"Peters\",\"birthdate\":\"03/06/1982\",\"medications\":[],\"allergies\":[]},{\"firstName\":\"Ron\",\"lastName\":\"Peters\",\"birthdate\":\"04/06/1965\",\"medications\":[],\"allergies\":[]},{\"firstName\":\"Allison\",\"lastName\":\"Boyd\",\"birthdate\":\"03/15/1965\",\"medications\":[\"aznol:200mg\"],\"allergies\":[\"nillacilan\"]},{\"firstName\":\"Brian\",\"lastName\":\"Stelzer\",\"birthdate\":\"12/06/1975\",\"medications\":[\"ibupurin:200mg\",\"hydrapermazol:400mg\"],\"allergies\":[\"nillacilan\"]},{\"firstName\":\"Shawna\",\"lastName\":\"Stelzer\",\"birthdate\":\"07/08/1980\",\"medications\":[],\"allergies\":[]},{\"firstName\":\"Kendrik\",\"lastName\":\"Stelzer\",\"birthdate\":\"03/06/2014\",\"medications\":[\"noxidian:100mg\",\"pharmacol:2500mg\"],\"allergies\":[]},{\"firstName\":\"Clive\",\"lastName\":\"Ferguson\",\"birthdate\":\"03/06/1994\",\"medications\":[],\"allergies\":[]},{\"firstName\":\"Eric\",\"lastName\":\"Cadigan\",\"birthdate\":\"08/06/1945\",\"medications\":[\"tradoxidine:400mg\"],\"allergies\":[]}]}";
         Path path = Paths.get(new ClassPathResource("data.json").getURI());
+        System.out.println(path.toString());
         if (Files.notExists(path)) {
             Files.createFile(path);
         }
@@ -51,76 +52,77 @@ public class MedicalRecourdsControllerTestIT {
     }
 
     @Test
-    void getAllMedicalRecords() throws Exception {
+    void getAllFirestations() throws Exception {
 
-        mockMvc.perform(get("/medicalRecords"))
+        mockMvc.perform(get("/firestations"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("1234 Street St")));
+    }
+
+    @Test
+    void addFirestation() throws Exception {
+        mockMvc.perform(post("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"address\": \"4321 Street St\",\"station\": \"1\" }")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.address").value("4321 Street St"))
+                .andExpect(jsonPath("$.station").value("1"));
+    }
+
+    @Test
+    void updateFirestation() throws Exception {
+        mockMvc.perform(put("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("address", "1234 Street St")
+                .content("{\"address\": \"1234 Street St\",\"station\": \"2\" }")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.address").value("1234 Street St"))
+                .andExpect(jsonPath("$.station").value("2"));
+    }
+
+    @Test
+    void deleteFirestation() throws Exception {
+        mockMvc.perform(delete("/firestation")
+                .param("address", "1234 Street St")
+                .param("station", "1"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getListOfPersonWithAgeCat() throws Exception {
+
+        mockMvc.perform(get("/firestation")
+                .param("station_number", "1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Khalil")));
     }
 
     @Test
-    void addMedicalRecord() throws Exception {
-        mockMvc.perform(post("/medicalRecord")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(" {" +
-                        "      \"firstName\": \"NewFirstName\"," +
-                        "      \"lastName\": \"NewLastName\"," +
-                        "      \"birthdate\": \"01/01/1980\"," +
-                        "      \"medications\": [" +
-                        "        \"aznol:350mg\"," +
-                        "        \"hydrapermazol:100mg\"" +
-                        "      ]," +
-                        "      \"allergies\": [" +
-                        "        \"nillacilan\"" +
-                        "      ]" +
-                        "    }")
-                .accept(MediaType.APPLICATION_JSON))
+    void getPeopleListServedByFirestationNumberByAddress() throws Exception {
+
+        mockMvc.perform(get("/fire")
+                .param("address", "1234 Street St"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("NewFirstName"))
-                .andExpect(jsonPath("$.lastName").value("NewLastName"))
-                .andExpect(jsonPath("$.birthdate").value("01/01/1980"))
-                .andExpect(jsonPath("$.medications[0]").value("aznol:350mg"))
-                .andExpect(jsonPath("$.medications[1]").value("hydrapermazol:100mg"))
-                .andExpect(jsonPath("$.allergies[0]").value("nillacilan"));
+                .andExpect(content().json("{\"firestationNumber\":\"1\",\"peopleWithLastNamePhoneAgesList\":[{\"lastName\":\"Sleaby\",\"phone\":\"123-456-7890\",\"age\":40,\"medications\":[\"firstMed:350mg\",\"secondMed:100mg\"],\"allergies\":[\"firstAllergy\",\"secondAllergy\"]}]}"))
+                .andExpect(content().string(containsString("Sleaby")));
     }
 
     @Test
-    void updateMedicalRecord() throws Exception {
-        mockMvc.perform(put("/medicalRecord")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("firstName", "Khalil")
-                .param("lastName", "Sleaby")
-                .content(" {" +
-                        "      \"firstName\": \"Khalil\"," +
-                        "      \"lastName\": \"Sleaby\"," +
-                        "      \"birthdate\": \"31/12/1980\"," +
-                        "      \"medications\": [" +
-                        "        \"first:350mg\"," +
-                        "        \"second:100mg\"" +
-                        "      ]," +
-                        "      \"allergies\": [" +
-                        "        \"newAllergy\"" +
-                        "      ]" +
-                        "    }")
-                .accept(MediaType.APPLICATION_JSON))
+    void getHouseDto() throws Exception {
+        mockMvc.perform(get("/flood/stations")
+                .param("stations", "1")
+                .param("stations", "2"))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value("Khalil"))
-                .andExpect(jsonPath("$.lastName").value("Sleaby"))
-                .andExpect(jsonPath("$.birthdate").value("31/12/1980"))
-                .andExpect(jsonPath("$.medications[0]").value("first:350mg"))
-                .andExpect(jsonPath("$.medications[1]").value("second:100mg"))
-                .andExpect(jsonPath("$.allergies[0]").value("newAllergy"));
-    }
-
-    @Test
-    void deleteMedicalRecord() throws Exception {
-        mockMvc.perform(delete("/medicalRecord")
-                .param("firstName", "Khalil")
-                .param("lastName", "Sleaby"))
-                .andDo(print())
+                .andExpect(content().string(containsString("Sleaby")))
+                .andExpect(content().string(containsString("Marrack")))
                 .andExpect(status().isOk());
     }
 
@@ -143,4 +145,3 @@ public class MedicalRecourdsControllerTestIT {
                 .getPersons();
     }
 }
-
