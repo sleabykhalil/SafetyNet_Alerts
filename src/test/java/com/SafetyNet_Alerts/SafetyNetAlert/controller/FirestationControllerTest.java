@@ -105,7 +105,26 @@ public class FirestationControllerTest {
     }
 
     @Test
-    void getPeopleListServedByFirestationNumberByAddress() throws Exception {
+    void getListOfPersonWithAgeCat_whenListIsEmpty_returnEmptyJson() throws Exception {
+        //given
+        mockMvc.perform(post("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"address\": \"No Address corresponding\",\"station\": \"5\" }")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.address").value("No Address corresponding"))
+                .andExpect(jsonPath("$.station").value("5"));
+        //When and then
+        mockMvc.perform(get("/firestation")
+                .param("station_number", "5"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("{}")));
+    }
+
+    @Test
+    void getPeopleListServedByFirestationByAddress() throws Exception {
 
         mockMvc.perform(get("/fire")
                 .param("address", "1234 Street St"))
@@ -116,6 +135,25 @@ public class FirestationControllerTest {
     }
 
     @Test
+    void getPeopleListServedByFirestationByAddress_whenNoPeopleFound_returnEmptyJson() throws Exception {
+        //given
+        mockMvc.perform(post("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"address\": \"No Address corresponding\",\"station\": \"5\" }")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.address").value("No Address corresponding"))
+                .andExpect(jsonPath("$.station").value("5"));
+        //when and then
+        mockMvc.perform(get("/fire")
+                .param("address", "No Address corresponding"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("{}")));
+    }
+
+    @Test
     void getHouseDto() throws Exception {
         mockMvc.perform(get("/flood/stations")
                 .param("stations", "1")
@@ -123,6 +161,25 @@ public class FirestationControllerTest {
                 .andDo(print())
                 .andExpect(content().string(containsString("Sleaby")))
                 .andExpect(content().string(containsString("Marrack")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getHouseDto_WhenNoHousFound_ReturnEmptyJson() throws Exception {
+        //given
+        mockMvc.perform(post("/firestation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"address\": \"No Address corresponding\",\"station\": \"5\" }")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.address").value("No Address corresponding"))
+                .andExpect(jsonPath("$.station").value("5"));
+        //when and then
+        mockMvc.perform(get("/flood/stations")
+                .param("stations", "5"))
+                .andDo(print())
+                .andExpect(content().string(containsString("{}")))
                 .andExpect(status().isOk());
     }
 

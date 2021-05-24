@@ -26,7 +26,7 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
      */
     public MedicalRecordDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
-        medicalRecordList = fileRWService.readInputFromInputJsonFileAndMabToJsonFileModel(JsonDataFileNames.INPUT_FILE_NAME).getMedicalrecords();
+        medicalRecordList = fileRWService.readInputFromInputJsonFileAndMapToJsonFileModel(JsonDataFileNames.INPUT_FILE_NAME).getMedicalrecords();
         MedicalRecordService.isMedicalRecordListValid(medicalRecordList);
     }
 

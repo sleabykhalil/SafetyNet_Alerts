@@ -6,16 +6,20 @@ import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.exception.TechnicalException;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
+import com.SafetyNet_Alerts.SafetyNetAlert.tools.DateHelper;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.output.JsonStream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Managing files read write
@@ -73,9 +77,9 @@ public class FileRWService {
     /**
      * Read input data file
      *
-     * @return
+     * @return all data from input file
      */
-    public JsonFileModel readInputFromInputJsonFileAndMabToJsonFileModel(String inputFileName) {
+    public JsonFileModel readInputFromInputJsonFileAndMapToJsonFileModel(String inputFileName) {
         String inputString = inputJsonFileToString(inputFileName);
         return inputStringToJsonFileModel(inputString);
     }
@@ -87,12 +91,13 @@ public class FileRWService {
      */
     private String inputJsonFileToString(String inputFileName) {
         Path path = getFilePath(inputFileName, true);
+        String input;
         try {
-            String input = Files.readString(path);
-            return input;
+            input = Files.readString(path);
         } catch (IOException ex) {
             throw new TechnicalException(String.format("File %s is empty or not found in resource path", path.toString()), ex);
         }
+        return input;
     }
 
     /**
@@ -138,7 +143,11 @@ public class FileRWService {
 
     //Write functionality
     public void saveOutputToJsonFile(Object object, String fileName) {
-        String serializeEndPointResult = objectToString(object);
+        String serializeEndPointResult;
+        if (!ObjectUtils.isEmpty(object))
+            serializeEndPointResult = objectToString(object);
+        else
+            serializeEndPointResult = "{}";
         stringToJsonFile(serializeEndPointResult, fileName, false);
     }
 
@@ -165,5 +174,9 @@ public class FileRWService {
             throw new TechnicalException(String.format("File %s not found in resource path", filePath.toString()), ex);
         }
 
+    }
+
+    public String createFileName(String filename) {
+        return filename + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT_FOR_FILE_NAMING)) + ".json";
     }
 }

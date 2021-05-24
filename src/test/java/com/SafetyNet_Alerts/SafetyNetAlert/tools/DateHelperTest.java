@@ -26,7 +26,7 @@ class DateHelperTest {
 
     @Test
     void calculateAge() {
-        String birthDate = LocalDate.now().minusYears(3L).format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT));
+        String birthDate = LocalDate.now().minusYears(3L).format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT_FOR_CALCULATING_AGE));
         assertThat(DateHelper.calculateAge(birthDate)).isEqualTo(3);
     }
 }

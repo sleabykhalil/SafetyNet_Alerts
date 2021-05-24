@@ -26,7 +26,7 @@ public class PersonDaoImpl implements PersonDao {
      */
     public PersonDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
-        personList = fileRWService.readInputFromInputJsonFileAndMabToJsonFileModel(JsonDataFileNames.INPUT_FILE_NAME).getPersons();
+        personList = fileRWService.readInputFromInputJsonFileAndMapToJsonFileModel(JsonDataFileNames.INPUT_FILE_NAME).getPersons();
         PersonService.isPersonListValid(personList);
     }
 

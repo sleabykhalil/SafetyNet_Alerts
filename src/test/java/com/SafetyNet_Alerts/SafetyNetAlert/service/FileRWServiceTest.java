@@ -7,6 +7,7 @@ import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
+import com.SafetyNet_Alerts.SafetyNetAlert.tools.DateHelper;
 import com.jsoniter.JsonIterator;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -47,7 +50,7 @@ class FileRWServiceTest {
 
     @Test
     void readInputFromInputJsonFileAndMabToJsonFileModel() {
-        JsonFileModel result = fileRWServiceUnderTest.readInputFromInputJsonFileAndMabToJsonFileModel(JsonFileNameForTest.INPUT_FILE_NAME_FOR_TEST);
+        JsonFileModel result = fileRWServiceUnderTest.readInputFromInputJsonFileAndMapToJsonFileModel(JsonFileNameForTest.INPUT_FILE_NAME_FOR_TEST);
         assertThat(result.getPersons().get(0).getFirstName()).isEqualTo("Khalil");
     }
 
@@ -102,4 +105,9 @@ class FileRWServiceTest {
                 .getPersons();
     }
 
+    @Test
+    void createFileName() {
+        assertThat(fileRWServiceUnderTest.createFileName("test"))
+                .isEqualTo("test" + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT_FOR_FILE_NAMING)) + ".json");
+    }
 }

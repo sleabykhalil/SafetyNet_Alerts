@@ -43,7 +43,7 @@ class FirestationDaoImplTest {
         firestationList.add(firestationUsedByTest);
 
         jsonFileModel.setFirestations(firestationList);
-        when(fileRWServiceMock.readInputFromInputJsonFileAndMabToJsonFileModel(anyString())).thenReturn(jsonFileModel);
+        when(fileRWServiceMock.readInputFromInputJsonFileAndMapToJsonFileModel(anyString())).thenReturn(jsonFileModel);
 
         firestationDaoUnderTest = new FirestationDaoImpl(fileRWServiceMock);
     }

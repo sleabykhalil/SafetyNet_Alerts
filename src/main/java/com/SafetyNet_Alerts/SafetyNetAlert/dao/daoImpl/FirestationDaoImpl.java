@@ -25,7 +25,7 @@ public class FirestationDaoImpl implements FirestationDao {
      */
     public FirestationDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
-        firestationList = fileRWService.readInputFromInputJsonFileAndMabToJsonFileModel(JsonDataFileNames.INPUT_FILE_NAME).getFirestations();
+        firestationList = fileRWService.readInputFromInputJsonFileAndMapToJsonFileModel(JsonDataFileNames.INPUT_FILE_NAME).getFirestations();
     }
 
     /**

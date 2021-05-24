@@ -3,6 +3,7 @@ package com.SafetyNet_Alerts.SafetyNetAlert.controller;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.FirestationDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
+import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
@@ -139,7 +140,7 @@ class PersonControllerTest {
                 .firstName("Aram")
                 .lastName("Sleaby")
                 .birthdate(LocalDateTime.now().minusYears(3L)
-                        .format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT)))
+                        .format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT_FOR_CALCULATING_AGE)))
                 .build();
         MedicalRecordDaoImpl.medicalRecordList.add(medicalRecordForChild);
         PersonDaoImpl.personList.add(childPerson);
@@ -154,11 +155,36 @@ class PersonControllerTest {
     }
 
     @Test
+    void getChildAlertDto_WhenNoChiledFound_returnEmptyJson() throws Exception {
+        //given
+
+        //when
+        mockMvc.perform(get("/childAlert")
+                .param("address", "1234 Street St"))
+                .andDo(print())
+                //then
+                .andExpect(content().string(containsString("{}")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void getPhoneNumberDto() throws Exception {
         mockMvc.perform(get("/phoneAlert")
                 .param("firestation_number", "1"))
                 .andDo(print())
                 .andExpect(content().string(containsString("123-456-7890")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getPhoneNumberDto_WhenNoPhoneNumberFound_ReturnEmptyJson() throws Exception {
+        //given
+        FirestationDaoImpl.firestationList.add(Firestation.builder().station("5").address("No address corresponding").build());
+        //when
+        mockMvc.perform(get("/phoneAlert")
+                .param("firestation_number", "5"))
+                .andDo(print())
+                .andExpect(content().string(containsString("{}")))
                 .andExpect(status().isOk());
     }
 
@@ -178,6 +204,19 @@ class PersonControllerTest {
                 .param("city", "city"))
                 .andDo(print())
                 .andExpect(content().string(containsString("khalil@email.com")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getListOfEmailAddressByCity_WhenNoEmailFound_ReturnEmptyJson() throws Exception {
+        //given
+        PersonDaoImpl.personList.add(Person.builder().firstName("FirstNameWithoutEmail").lastName("LastNameWithoutEmail")
+                .city("CityWithoutEmail").build());
+        //when
+        mockMvc.perform(get("/communityEmail")
+                .param("city", "CityWithoutEmail"))
+                .andDo(print())
+                .andExpect(content().string(containsString("{}")))
                 .andExpect(status().isOk());
     }
 

@@ -49,7 +49,7 @@ class MedicalRecordDaoImplTest {
         medicalRecordList = new ArrayList<>();
         medicalRecordList.add(medicalRecordToTest);
         jsonFileModel.setMedicalrecords(medicalRecordList);
-        when(fileRWServiceMock.readInputFromInputJsonFileAndMabToJsonFileModel(anyString())).thenReturn(jsonFileModel);
+        when(fileRWServiceMock.readInputFromInputJsonFileAndMapToJsonFileModel(anyString())).thenReturn(jsonFileModel);
 
         medicalRecordDaoUnderTest = new MedicalRecordDaoImpl(fileRWServiceMock);
     }
