@@ -2,15 +2,15 @@ package com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
+@EqualsAndHashCode
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class PeopleWithMedicalBackground {
     private String lastName;
     private String phone;

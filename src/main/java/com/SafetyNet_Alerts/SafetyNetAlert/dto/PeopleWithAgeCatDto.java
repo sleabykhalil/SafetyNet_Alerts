@@ -3,12 +3,12 @@ package com.SafetyNet_Alerts.SafetyNetAlert.dto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithAddressAndPhone;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

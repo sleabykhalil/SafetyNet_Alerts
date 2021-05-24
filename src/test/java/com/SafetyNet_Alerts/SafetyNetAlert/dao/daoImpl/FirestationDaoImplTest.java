@@ -17,6 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,7 +43,7 @@ class FirestationDaoImplTest {
         firestationList.add(firestationUsedByTest);
 
         jsonFileModel.setFirestations(firestationList);
-        when(fileRWServiceMock.readFromJsonFile()).thenReturn(jsonFileModel);
+        when(fileRWServiceMock.readInputFromInputJsonFileAndMapToJsonFileModel(anyString())).thenReturn(jsonFileModel);
 
         firestationDaoUnderTest = new FirestationDaoImpl(fileRWServiceMock);
     }

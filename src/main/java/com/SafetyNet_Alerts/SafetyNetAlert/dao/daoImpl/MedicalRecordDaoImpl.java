@@ -1,5 +1,6 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileNames;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.MedicalRecordDao;
 import com.SafetyNet_Alerts.SafetyNetAlert.exception.ValidationException;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
@@ -25,7 +26,7 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
      */
     public MedicalRecordDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
-        medicalRecordList = fileRWService.readFromJsonFile().getMedicalrecords();
+        medicalRecordList = fileRWService.readInputFromInputJsonFileAndMapToJsonFileModel(JsonDataFileNames.INPUT_FILE_NAME).getMedicalrecords();
         MedicalRecordService.isMedicalRecordListValid(medicalRecordList);
     }
 
@@ -64,7 +65,7 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
                     , medicalRecord.getFirstName(), medicalRecord.getLastName()));
         }
         medicalRecordList.add(medicalRecord);
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return medicalRecord;
     }
 
@@ -89,7 +90,7 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
                 break;
             }
         }
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return medicalRecordAfter;
     }
 
@@ -108,7 +109,7 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
             throw new ValidationException(String.format("Medical record for person, first name: %s  last name: %s is not exist."
                     , medicalRecord.getFirstName(), medicalRecord.getLastName()));
         }
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return true;
     }
 

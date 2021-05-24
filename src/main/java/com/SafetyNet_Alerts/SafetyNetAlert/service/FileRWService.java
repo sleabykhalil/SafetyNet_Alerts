@@ -1,53 +1,104 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.service;
 
-import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileName;
+import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileNames;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.FirestationDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.exception.TechnicalException;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
+import com.SafetyNet_Alerts.SafetyNetAlert.tools.DateHelper;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.output.JsonStream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
+/**
+ * Managing files read write
+ * there are two case
+ * 1-managing input file :
+ * in put file is in resources folder
+ * the functionality is read and update
+ * 2-managing output files corresponding to endpoints
+ * no reading just writing
+ */
 @Slf4j
 @Service
 public class FileRWService {
-    private final Path path;
 
-    public FileRWService() {
-        ClassPathResource classPathResource = new ClassPathResource(JsonDataFileName.dataFileName);
-        try {
-            this.path = Paths.get(classPathResource.getURI());
-        } catch (IOException ex) {
-            throw new TechnicalException(String.format("File %s not found in resource path", classPathResource.toString()), ex);
+    /**
+     * get path for input files and output files
+     *
+     * @param fileName input or output file name
+     * @return path of file
+     */
+    private Path getFilePath(String fileName, boolean isInput) {
+        Path path;
+        if (isInput) {
+            ClassPathResource classPathResource = new ClassPathResource(fileName);
+            try {
+                path = Paths.get(classPathResource.getURI());
+            } catch (IOException ex) {
+                throw new TechnicalException(String.format("File %s not found in resource path", classPathResource.toString()), ex);
+            }
+        } else {
+            Path outputDir = Paths.get(JsonDataFileNames.OUTPUT_DIRECTORY_NAME);
+            if (Files.notExists(outputDir)) {
+                try {
+                    Files.createDirectory(outputDir);
+                } catch (IOException ex) {
+                    throw new TechnicalException("Error when create output dir", ex);
+                }
+            }
+            path = Paths.get(JsonDataFileNames.OUTPUT_DIRECTORY_NAME, fileName);
         }
-
+        return path;
     }
 
-    public void saveToJsonFile() {
-        JsonFileModel jsonFileModel;
-        jsonFileModel = JsonFileModel.builder()
-                .persons(PersonDaoImpl.personList)
-                .firestations(FirestationDaoImpl.firestationList)
-                .medicalrecords(MedicalRecordDaoImpl.medicalRecordList)
-                .build();
-        stringToJsonFile(jsonFileModelToJsonAsString(jsonFileModel));
-    }
+    /* manage input file
+    there are two functionality
+       1- read input file when app start
+       2- update input file when change input file
+            - save
+            - delete
+            - update
+     */
 
-    public JsonFileModel readFromJsonFile() {
-        return jsonAsStringToJsonFileModel(jsonFileToString());
-    }
     //Read functionality
+
+    /**
+     * Read input data file
+     *
+     * @return all data from input file
+     */
+    public JsonFileModel readInputFromInputJsonFileAndMapToJsonFileModel(String inputFileName) {
+        String inputString = inputJsonFileToString(inputFileName);
+        return inputStringToJsonFileModel(inputString);
+    }
+
+    /**
+     * create string from json data file
+     *
+     * @return all data as string
+     */
+    private String inputJsonFileToString(String inputFileName) {
+        Path path = getFilePath(inputFileName, true);
+        String input;
+        try {
+            input = Files.readString(path);
+        } catch (IOException ex) {
+            throw new TechnicalException(String.format("File %s is empty or not found in resource path", path.toString()), ex);
+        }
+        return input;
+    }
 
     /**
      * create File model from string
@@ -55,30 +106,25 @@ public class FileRWService {
      * @param jsonAsString data as string on json form
      * @return all data as java object
      */
-    public JsonFileModel jsonAsStringToJsonFileModel(String jsonAsString) {
+    private JsonFileModel inputStringToJsonFileModel(String jsonAsString) {
         return JsonIterator.deserialize(jsonAsString, JsonFileModel.class);
     }
 
+    // input update functionality
+
     /**
-     * create string from jason data file
-     *
-     * @return all data as string
+     * Update input file
      */
-    public String jsonFileToString() {
-        Stream<String> lines = null;
-        try {
-            lines = Files.lines(path);
-            return lines.collect(Collectors.joining(""));
-        } catch (IOException ex) {
-            throw new TechnicalException(String.format("File %s is empty or not found in resource path", path.toString()), ex);
-        } finally {
-            assert lines != null;
-            lines.close();
-        }
+    public void updateInputFile() {
+        JsonFileModel jsonFileModel;
+        jsonFileModel = JsonFileModel.builder()
+                .persons(PersonDaoImpl.personList)
+                .firestations(FirestationDaoImpl.firestationList)
+                .medicalrecords(MedicalRecordDaoImpl.medicalRecordList)
+                .build();
+        String newInputString = jsonFileModelToString(jsonFileModel);
+        stringToJsonFile(newInputString, JsonDataFileNames.INPUT_FILE_NAME, true);
     }
-
-
-    //Write functionality
 
     /**
      * serialize jsonFileModel to string
@@ -86,24 +132,51 @@ public class FileRWService {
      * @param jsonFileModel data as java object
      * @return all data as string
      */
-    public String jsonFileModelToJsonAsString(JsonFileModel jsonFileModel) {
+    private String jsonFileModelToString(JsonFileModel jsonFileModel) {
         return JsonStream.serialize(jsonFileModel);
+    }
+
+    /* Create out put file corresponding to Endpoints:
+     * 1- create output folder if not exist
+     * 2- create out put file
+     */
+
+    //Write functionality
+    public void saveOutputToJsonFile(Object object, String fileName) {
+        String serializeEndPointResult;
+        if (!ObjectUtils.isEmpty(object))
+            serializeEndPointResult = objectToString(object);
+        else
+            serializeEndPointResult = "{}";
+        stringToJsonFile(serializeEndPointResult, fileName, false);
+    }
+
+
+    private String objectToString(Object objectToSerialize) {
+        return JsonStream.serialize(objectToSerialize);
     }
 
     /**
      * write string in data.json
      *
-     * @param jsonAsString data as string on json form
+     * @param jsonAsString json string to write in file
+     * @param filename     output file name for iEndpoint result or input file name to update
      */
-    public void stringToJsonFile(String jsonAsString) {
-        try {
-            if (Files.notExists(path)) {
-                Files.createFile(path);
-            }
-            Files.writeString(path, jsonAsString);
-        } catch (IOException ex) {
-            throw new TechnicalException(String.format("File %s not found in resource path", path.toString()), ex);
+    private void stringToJsonFile(String jsonAsString, String filename, boolean isInput) {
+        Path filePath = getFilePath(filename, isInput);
 
+        try {
+            if (Files.notExists(filePath)) {
+                Files.createFile(filePath);
+            }
+            Files.writeString(filePath, jsonAsString);
+        } catch (IOException ex) {
+            throw new TechnicalException(String.format("File %s not found in resource path", filePath.toString()), ex);
         }
+
+    }
+
+    public String createFileName(String filename) {
+        return filename + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT_FOR_FILE_NAMING)) + ".json";
     }
 }

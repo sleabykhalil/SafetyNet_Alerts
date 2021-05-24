@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -122,9 +124,10 @@ public class FirestationController {
             @ApiResponse(responseCode = "400", description = "station number not found in data source")})
 
     @GetMapping(value = "/firestation")
-    public PeopleWithAgeCatDto getPersonWithAgeCatDto(@RequestParam @Parameter(description = "Firestation number used to search",
+    public ResponseEntity getPersonWithAgeCatDto(@RequestParam @Parameter(description = "Firestation number used to search",
             required = true) String station_number) {
-        return urLsService.getListOfPersonCoveredByFireStation(station_number);
+        PeopleWithAgeCatDto result = urLsService.getListOfPersonCoveredByFireStation(station_number);
+        return ObjectUtils.isEmpty(result) ? ResponseEntity.ok().body(new EmptyJsonResponse()) : ResponseEntity.ok().body(result);
     }
 
     @Operation(summary = "Get list of people with medical history for each one lives on address and the corresponding firestation number.")
@@ -136,9 +139,10 @@ public class FirestationController {
             @ApiResponse(responseCode = "400", description = "Address not found in data source")})
 
     @GetMapping(value = "/fire")
-    public PeopleWithSpecificAgeDto getPeopleWithSpecificAgeDto(@RequestParam @Parameter(description = "Address used to search by it",
+    public ResponseEntity getPeopleWithSpecificAgeDto(@RequestParam @Parameter(description = "Address used to search by it",
             required = true) String address) {
-        return urLsService.getPeopleListServedByFirestationNumberByAddress(address);
+        PeopleWithSpecificAgeDto result = urLsService.getPeopleListServedByFirestationByAddress(address);
+        return ObjectUtils.isEmpty(result) ? ResponseEntity.ok().body(new EmptyJsonResponse()) : ResponseEntity.ok().body(result);
     }
 
     @Operation(summary = "Get list of houses and for each house all people who lives in it with medical history for each one.")
@@ -150,8 +154,9 @@ public class FirestationController {
             @ApiResponse(responseCode = "400", description = "Station number not found in data source")})
 
     @GetMapping(value = "/flood/stations")
-    public HouseDto getHousesWithListOfPeopleWithSpecificAgeDto(@RequestParam @Parameter(description = "List of station number used to search by them",
+    public ResponseEntity getHousesWithListOfPeopleWithSpecificAgeDto(@RequestParam @Parameter(description = "List of station number used to search by them",
             required = true) List<String> stations) {
-        return urLsService.getHousesByStationNumber(stations);
+        HouseDto result = urLsService.getHousesByStationNumber(stations);
+        return ObjectUtils.isEmpty(result) ? ResponseEntity.ok().body(new EmptyJsonResponse()) : ResponseEntity.ok().body(result);
     }
 }

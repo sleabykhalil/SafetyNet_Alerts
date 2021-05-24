@@ -1,5 +1,6 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.service;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileNames;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.FirestationDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
@@ -15,8 +16,12 @@ import com.SafetyNet_Alerts.SafetyNetAlert.tools.DateHelper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Service
@@ -27,6 +32,8 @@ public class URLsService {
     FirestationDaoImpl firestationDao;
     @Autowired
     MedicalRecordDaoImpl medicalRecordDao;
+    @Autowired
+    FileRWService fileRWService;
 
     /**
      * get list of person with adult number and Child number
@@ -41,6 +48,7 @@ public class URLsService {
          * for each person get medical record by first name and last name
          * from medical record lest get adult number and Child number
          * return dto contain list of person and number of adult and  Child number
+         * create output file
          * */
         List<Firestation> firestationByAddress;
         List<PeopleWithAddressAndPhone> peopleWithAddressAndPhoneList = new ArrayList<>();
@@ -71,11 +79,21 @@ public class URLsService {
             } else childNumber += 1;
         }
 
-        return PeopleWithAgeCatDto.builder()
-                .peopleWithAddressAndPhoneList(peopleWithAddressAndPhoneList)
-                .adultNumber(adultNumber)
-                .childNumber(childNumber)
-                .build();
+        PeopleWithAgeCatDto result;
+
+        if (peopleWithAddressAndPhoneList.isEmpty()) {
+            result = null;
+        } else {
+            result = PeopleWithAgeCatDto.builder()
+                    .peopleWithAddressAndPhoneList(peopleWithAddressAndPhoneList)
+                    .adultNumber(adultNumber)
+                    .childNumber(childNumber)
+                    .build();
+        }
+        String filename = fileRWService.createFileName(JsonDataFileNames.PERSONS_COVERED_BY_FIRE_STATION);
+        fileRWService.saveOutputToJsonFile(result, filename);
+
+        return result;
     }
 
     /**
@@ -117,12 +135,14 @@ public class URLsService {
                     .peopleWithAddressAndPhoneList(peopleWithAddressAndPhoneListLivesWithChild)
                     .build();
         } else {
-            childAlertDto = ChildAlertDto.builder()
-                    .children(Collections.emptyList())
-                    .peopleWithAddressAndPhoneList(Collections.emptyList())
-                    .build();
+            childAlertDto = null;
         }
-        return childAlertDto;
+
+        ChildAlertDto result = childAlertDto;
+
+        String filename = fileRWService.createFileName(JsonDataFileNames.CHILD_ALERT);
+        fileRWService.saveOutputToJsonFile(result, filename);
+        return result;
     }
 
     /**
@@ -154,10 +174,21 @@ public class URLsService {
                 phoneNumberList.add(person.getPhone());
             }
         }
-        phoneAlertDto = PhoneAlertDto.builder()
-                .phoneNumberList(phoneNumberList)
-                .build();
-        return phoneAlertDto;
+
+        PhoneAlertDto result;
+        if (!phoneNumberList.isEmpty()) {
+            phoneAlertDto = PhoneAlertDto.builder()
+                    .phoneNumberList(phoneNumberList)
+                    .build();
+            result = phoneAlertDto;
+        } else {
+            result = null;
+        }
+
+        String filename = fileRWService.createFileName(JsonDataFileNames.PHONE_ALERT);
+        fileRWService.saveOutputToJsonFile(result, filename);
+
+        return result;
     }
 
     /**
@@ -166,7 +197,7 @@ public class URLsService {
      * @param address address to search by
      * @return Dto list of people with age
      */
-    public PeopleWithSpecificAgeDto getPeopleListServedByFirestationNumberByAddress(String address) {
+    public PeopleWithSpecificAgeDto getPeopleListServedByFirestationByAddress(String address) {
         /*
          * get person by address
          * for each firestation address get person by address
@@ -198,12 +229,21 @@ public class URLsService {
                 peopleWithLastNamePhoneAgesList.add(peopleWithMedicalBackground);
             }
         }
-        peopleWithSpecificAgeDto = PeopleWithSpecificAgeDto.builder()
-                .firestationNumber(firestationByAddress.getStation())
-                .peopleWithLastNamePhoneAgesList(peopleWithLastNamePhoneAgesList)
-                .build();
+        PeopleWithSpecificAgeDto result;
+        if (!peopleWithLastNamePhoneAgesList.isEmpty()) {
+            peopleWithSpecificAgeDto = PeopleWithSpecificAgeDto.builder()
+                    .firestationNumber(firestationByAddress.getStation())
+                    .peopleWithLastNamePhoneAgesList(peopleWithLastNamePhoneAgesList)
+                    .build();
+            result = peopleWithSpecificAgeDto;
+        } else {
+            result = null;
+        }
 
-        return peopleWithSpecificAgeDto;
+        String filename = fileRWService.createFileName(JsonDataFileNames.FIRE_ACCIDENT);
+        fileRWService.saveOutputToJsonFile(result, filename);
+
+        return result;
     }
 
     /**
@@ -259,13 +299,23 @@ public class URLsService {
                 }
 
             }
-            addressAndPeopleWithSpecificAgeDtoMap.putIfAbsent(address, peopleWithMedicalBackgroundList);
+            if (!peopleWithMedicalBackgroundList.isEmpty()) {
+                addressAndPeopleWithSpecificAgeDtoMap.putIfAbsent(address, peopleWithMedicalBackgroundList);
+            }
+        }
+        HouseDto result;
+        if (!addressAndPeopleWithSpecificAgeDtoMap.isEmpty()) {
+            result = HouseDto.builder()
+                    .addressAndPeopleWithSpecificAgeDtoMap(addressAndPeopleWithSpecificAgeDtoMap)
+                    .build();
+        } else {
+            result = null;
         }
 
+        String filename = fileRWService.createFileName(JsonDataFileNames.FLOOD_ACCIDENT);
+        fileRWService.saveOutputToJsonFile(result, filename);
 
-        return HouseDto.builder()
-                .addressAndPeopleWithSpecificAgeDtoMap(addressAndPeopleWithSpecificAgeDtoMap)
-                .build();
+        return result;
     }
 
     /**
@@ -303,7 +353,16 @@ public class URLsService {
                     .medicalHistory(new MedicalHistory(medicalRecord.getMedications(), medicalRecord.getAllergies()))
                     .build());
         }
-        return personInfoDtoList;
+        List<PersonInfoDto> result;
+        if (!personInfoDtoList.isEmpty()) {
+            result = personInfoDtoList;
+        } else {
+            result = null;
+        }
+        String filename = fileRWService.createFileName(JsonDataFileNames.PERSON_INFO);
+        fileRWService.saveOutputToJsonFile(result, filename);
+
+        return result;
     }
 
     /**
@@ -322,11 +381,20 @@ public class URLsService {
         List<String> addressListByCity = new ArrayList<>();
         for (Person person : personListByCity) {
             if (person.getCity().equals(cityName)) {
-                if (!addressListByCity.contains(person.getEmail())) {
+                if (!ObjectUtils.isEmpty(person.getEmail()) && !addressListByCity.contains(person.getEmail())) {
                     addressListByCity.add(person.getEmail());
                 }
             }
         }
-        return addressListByCity;
+        List<String> result;
+        if (!addressListByCity.isEmpty()) {
+            result = addressListByCity;
+        } else {
+            result = null;
+        }
+        String filename = fileRWService.createFileName(JsonDataFileNames.EMAIL_ALERT_BY_CITY);
+        fileRWService.saveOutputToJsonFile(result, filename);
+
+        return result;
     }
 }
