@@ -9,11 +9,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 public class MedicalRecordController {
 
@@ -35,6 +37,7 @@ public class MedicalRecordController {
 
     @GetMapping(value = "/medicalRecords")
     public List<MedicalRecord> getAllMedialRecords() {
+        log.debug("Get all medical records data");
         return medicalRecordService.getAllMedicalRecords();
     }
 
@@ -57,6 +60,7 @@ public class MedicalRecordController {
             required = true,
             content = @Content(schema = @Schema(implementation = MedicalRecord.class)))
                                                   MedicalRecord medicalRecord) {
+        log.debug("Add/save new medical record {}", medicalRecord.toString());
         return medicalRecordService.saveMedicalRecord(medicalRecord);
     }
 
@@ -84,6 +88,7 @@ public class MedicalRecordController {
                                                      required = true,
                                                      content = @Content(schema = @Schema(implementation = MedicalRecord.class)))
                                                      MedicalRecord medicalRecord) {
+        log.debug("update medical record for {}=[first name] {}=[last name] {}=[new data]", firstName, lastName, medicalRecord.toString());
         return medicalRecordService.updateMedicalRecord(firstName, lastName, medicalRecord);
     }
 
@@ -107,6 +112,8 @@ public class MedicalRecordController {
             required = true) String firstName,
                                 @RequestParam @Parameter(description = "Last name of person to delete his medical record",
                                         required = true) String lastName) {
+
+        log.debug("Delete medical record for {}=[first name] {}=[last name]", firstName, lastName);
         return medicalRecordService.deleteMedicalRecord(firstName, lastName);
     }
 

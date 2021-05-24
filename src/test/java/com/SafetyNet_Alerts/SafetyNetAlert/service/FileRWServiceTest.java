@@ -9,6 +9,7 @@ import com.SafetyNet_Alerts.SafetyNetAlert.model.JsonFileModel;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
 import com.SafetyNet_Alerts.SafetyNetAlert.tools.DateHelper;
 import com.jsoniter.JsonIterator;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Slf4j
 class FileRWServiceTest {
     FileRWService fileRWServiceUnderTest;
 
@@ -107,7 +109,10 @@ class FileRWServiceTest {
 
     @Test
     void createFileName() {
-        assertThat(fileRWServiceUnderTest.createFileName("test"))
-                .isEqualTo("test" + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT_FOR_FILE_NAMING)) + ".json");
+        String localDateTimeAsString = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT_FOR_FILE_NAMING));
+        log.debug(localDateTimeAsString);
+        String fileNameStartWith = "test" + "_" + localDateTimeAsString.substring(0, localDateTimeAsString.length() - 1);
+        log.debug(fileNameStartWith);
+        assertTrue(fileRWServiceUnderTest.createFileName("test").startsWith(fileNameStartWith));
     }
 }

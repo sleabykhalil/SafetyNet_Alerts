@@ -5,12 +5,14 @@ import com.SafetyNet_Alerts.SafetyNetAlert.dao.FirestationDao;
 import com.SafetyNet_Alerts.SafetyNetAlert.exception.ValidationException;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Repository
 public class FirestationDaoImpl implements FirestationDao {
     public static List<Firestation> firestationList = new ArrayList<>();
@@ -25,6 +27,7 @@ public class FirestationDaoImpl implements FirestationDao {
      */
     public FirestationDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
+        log.debug("Read input file to get Firestation");
         firestationList = fileRWService.readInputFromInputJsonFileAndMapToJsonFileModel(JsonDataFileNames.INPUT_FILE_NAME).getFirestations();
     }
 

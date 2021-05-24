@@ -3,12 +3,12 @@ package com.SafetyNet_Alerts.SafetyNetAlert.dto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.PeopleWithMedicalBackground;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 import java.util.List;
 import java.util.Map;
 
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 public class HouseDto {

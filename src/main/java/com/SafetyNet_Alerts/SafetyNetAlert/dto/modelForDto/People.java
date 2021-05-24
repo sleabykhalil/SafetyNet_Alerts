@@ -1,12 +1,11 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
-@EqualsAndHashCode
+@Data
 @Builder
 @AllArgsConstructor
 public class People {
