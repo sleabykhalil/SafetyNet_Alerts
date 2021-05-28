@@ -6,12 +6,14 @@ import com.SafetyNet_Alerts.SafetyNetAlert.exception.ValidationException;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.MedicalRecordService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Repository
 public class MedicalRecordDaoImpl implements MedicalRecordDao {
     public static List<MedicalRecord> medicalRecordList = new ArrayList<>();
@@ -26,6 +28,7 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
      */
     public MedicalRecordDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
+        log.debug("Read input file to get Firestation");
         medicalRecordList = fileRWService.readInputFromInputJsonFileAndMapToJsonFileModel(JsonDataFileNames.INPUT_FILE_NAME).getMedicalrecords();
         MedicalRecordService.isMedicalRecordListValid(medicalRecordList);
     }
@@ -37,6 +40,7 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
      */
     @Override
     public List<MedicalRecord> findAll() {
+        log.debug("Get All Medical records");
         List<MedicalRecord> result;
         result = medicalRecordList;
         if (result.isEmpty()) {
@@ -53,6 +57,7 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
      */
     @Override
     public MedicalRecord create(MedicalRecord medicalRecord) {
+        log.debug("Add/save new Medical record {}=[new medical record]", medicalRecord.toString());
         if (medicalRecordList.contains(medicalRecord)) {
             throw new ValidationException(String.format("Medical record for this person, first name: %s  last name: %s is already exist."
                     , medicalRecord.getFirstName(), medicalRecord.getLastName()));
@@ -79,6 +84,7 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
      */
     @Override
     public MedicalRecord update(MedicalRecord medicalRecordBefore, MedicalRecord medicalRecordAfter) {
+        log.debug("Update  Medical record {}=[old medical record] --> {}=[new medical record]", medicalRecordBefore, medicalRecordAfter.toString());
         if (medicalRecordList.contains(medicalRecordAfter)) {
             throw new ValidationException(String.format("Medical record for person, first name: %s  last name: %s is already exist."
                     , medicalRecordAfter.getFirstName(), medicalRecordAfter.getLastName()));
@@ -102,6 +108,7 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
      */
     @Override
     public boolean delete(MedicalRecord medicalRecord) {
+        log.debug("Delete Medical record {}=[medical record to delete]", medicalRecord.toString());
         boolean result = medicalRecordList.removeIf(medicalRecordToDelete -> medicalRecordToDelete.getFirstName()
                 .equals(medicalRecord.getFirstName()) &&
                 medicalRecordToDelete.getLastName().equals(medicalRecord.getLastName()));
@@ -123,6 +130,7 @@ public class MedicalRecordDaoImpl implements MedicalRecordDao {
      * @return list of medical record
      */
     public MedicalRecord getMedicalRecordByFirstNameAndLastName(String firstName, String lastName) {
+        log.debug("Get medical records by first and last name {}=[first name] , {}=[last name]", firstName, lastName);
         MedicalRecord medicalRecordByFirstNameAndLastName = new MedicalRecord();
         for (MedicalRecord medicalRecord : medicalRecordList) {
             if (medicalRecord.getFirstName().equals(firstName) && medicalRecord.getLastName().equals(lastName)) {

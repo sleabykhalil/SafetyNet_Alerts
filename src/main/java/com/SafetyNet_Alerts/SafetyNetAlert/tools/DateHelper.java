@@ -1,9 +1,12 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.tools;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
+@Slf4j
 public class DateHelper {
     /**
      * date time format uses in Api
@@ -25,7 +28,7 @@ public class DateHelper {
     public static boolean isAdult(String birthDateAsString) {
         LocalDate birthDate = LocalDate.parse(birthDateAsString, DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_FOR_CALCULATING_AGE));
         long diff = Math.abs(ChronoUnit.YEARS.between(LocalDate.now(), birthDate));
-
+        log.debug("Age= {} for {}=[Birthday]", (int) diff, birthDateAsString);
         return diff >= adultAge;
     }
 
@@ -38,6 +41,7 @@ public class DateHelper {
     public static int calculateAge(String birthDateAsString) {
         LocalDate birthDate = LocalDate.parse(birthDateAsString, DateTimeFormatter.ofPattern(DATE_TIME_FORMAT_FOR_CALCULATING_AGE));
         long diff = Math.abs(ChronoUnit.YEARS.between(LocalDate.now(), birthDate));
+        log.debug("Age= {} for {}=[Birthday]", (int) diff, birthDateAsString);
         return (int) diff;
     }
 }

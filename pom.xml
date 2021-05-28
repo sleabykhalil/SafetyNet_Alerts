@@ -74,11 +74,12 @@
 				<version>0.8.6</version>
 				<configuration>
 					<excludes>
-						<exclude>**/constants/*</exclude>
-						<!--<exclude>**/dto/**</exclude>
-						<exclude>**/exception/**</exclude>
-						<exclude>**/model/*</exclude>-->
-					</excludes>
+                        <exclude>**/constants/*</exclude>
+                        <exclude>**/dto/**</exclude>
+                        <exclude>**/exception/**</exclude>
+                        <exclude>**/model/**</exclude>
+                        <exclude>**/logger/**</exclude>
+                    </excludes>
 				</configuration>
 				<executions>
 					<execution>

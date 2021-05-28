@@ -3,9 +3,9 @@ package com.SafetyNet_Alerts.SafetyNetAlert.dto;
 import com.SafetyNet_Alerts.SafetyNetAlert.dto.modelForDto.MedicalHistory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 public class PersonInfoDto {

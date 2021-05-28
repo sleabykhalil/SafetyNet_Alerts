@@ -135,7 +135,7 @@ public class FirestationControllerTest {
     }
 
     @Test
-    void getPeopleListServedByFirestationByAddress_whenNoPeopleFound_returnEmptyJson() throws Exception {
+    void getPeopleListServedByFirestationByAddress_whenNotPeopleFound_returnEmptyJson() throws Exception {
         //given
         mockMvc.perform(post("/firestation")
                 .contentType(MediaType.APPLICATION_JSON)

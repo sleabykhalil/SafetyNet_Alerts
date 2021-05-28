@@ -32,6 +32,7 @@ public class PersonService {
                 .firstName(firstName)
                 .lastName(lastName)
                 .build();
+        log.debug("create person object for update from full name {}=[first name] {}=[last name]", firstName, lastName);
         result = personDao.update(personBefore, personAfter);
         return result;
     }
@@ -41,11 +42,13 @@ public class PersonService {
                 .firstName(firstName)
                 .lastName(lastName)
                 .build();
+        log.debug("create person object for delete from full name {}=[first name] {}=[last name]", firstName, lastName);
         boolean result = personDao.delete(person);
         return result;
     }
 
     public static boolean isPersonListValid(List<Person> personListToValid) {
+        log.debug("Validate Person data");
         List<People> peopleValidationList = new ArrayList<>();
         for (Person person : personListToValid) {
             peopleValidationList.add(People.builder()

@@ -31,6 +31,7 @@ public class MedicalRecordService {
                 .firstName(firstName)
                 .lastName(lastName)
                 .build();
+        log.debug("Create medical record object to update from full name {}=[first name] {}=[last name]", firstName, lastName);
         return medicalRecordDao.update(medicalRecordBefore, medicalRecord);
     }
 
@@ -39,10 +40,18 @@ public class MedicalRecordService {
                 .firstName(firstName)
                 .lastName(lastName)
                 .build();
+        log.debug("Create medical record object for delete from full name {}=[first name] {}=[last name]", firstName, lastName);
         return medicalRecordDao.delete(medicalRecordToDelete);
     }
 
+    /**
+     * Check if there are dublication in ID (first name and last name)
+     *
+     * @param medicalRecordListToValid
+     * @return
+     */
     public static boolean isMedicalRecordListValid(List<MedicalRecord> medicalRecordListToValid) {
+        log.debug("Validate Medical records");
         List<People> peopleValidationList = new ArrayList<>();
         for (MedicalRecord medicalRecord : medicalRecordListToValid) {
             peopleValidationList.add(People.builder()

@@ -41,6 +41,7 @@ public class FileRWService {
      * @return path of file
      */
     private Path getFilePath(String fileName, boolean isInput) {
+        log.debug("Get file path for file {}=[] , is the file is resource input file [{}]", fileName, isInput);
         Path path;
         if (isInput) {
             ClassPathResource classPathResource = new ClassPathResource(fileName);
@@ -60,6 +61,7 @@ public class FileRWService {
             }
             path = Paths.get(JsonDataFileNames.OUTPUT_DIRECTORY_NAME, fileName);
         }
+        log.debug("File path [{}]", path.toString());
         return path;
     }
 
@@ -80,6 +82,7 @@ public class FileRWService {
      * @return all data from input file
      */
     public JsonFileModel readInputFromInputJsonFileAndMapToJsonFileModel(String inputFileName) {
+        log.debug("Get input from file [{}]", inputFileName);
         String inputString = inputJsonFileToString(inputFileName);
         return inputStringToJsonFileModel(inputString);
     }
@@ -90,8 +93,9 @@ public class FileRWService {
      * @return all data as string
      */
     private String inputJsonFileToString(String inputFileName) {
-        Path path = getFilePath(inputFileName, true);
+        Path path = getFilePath(inputFileName, true);// true because it is always input file
         String input;
+        log.debug("Read input file [{}] and store it in string variable", inputFileName);
         try {
             input = Files.readString(path);
         } catch (IOException ex) {
@@ -123,6 +127,7 @@ public class FileRWService {
                 .medicalrecords(MedicalRecordDaoImpl.medicalRecordList)
                 .build();
         String newInputString = jsonFileModelToString(jsonFileModel);
+        log.debug("Update input file with data [{}]", newInputString);
         stringToJsonFile(newInputString, JsonDataFileNames.INPUT_FILE_NAME, true);
     }
 
@@ -143,11 +148,16 @@ public class FileRWService {
 
     //Write functionality
     public void saveOutputToJsonFile(Object object, String fileName) {
+        log.debug("prepare data to save in file [{}]", fileName);
         String serializeEndPointResult;
-        if (!ObjectUtils.isEmpty(object))
+        if (!ObjectUtils.isEmpty(object)) {
+            log.debug("Object not empty");
             serializeEndPointResult = objectToString(object);
-        else
+        } else {
+            log.debug("Object is empty");
             serializeEndPointResult = "{}";
+        }
+        log.debug("Data to save in file [{}] /n {}=[data]", fileName, serializeEndPointResult);
         stringToJsonFile(serializeEndPointResult, fileName, false);
     }
 
@@ -163,8 +173,8 @@ public class FileRWService {
      * @param filename     output file name for iEndpoint result or input file name to update
      */
     private void stringToJsonFile(String jsonAsString, String filename, boolean isInput) {
+        log.debug("Save data to file [{}] , is input file {} /n {}=[data] ", filename, isInput, jsonAsString);
         Path filePath = getFilePath(filename, isInput);
-
         try {
             if (Files.notExists(filePath)) {
                 Files.createFile(filePath);
@@ -177,6 +187,10 @@ public class FileRWService {
     }
 
     public String createFileName(String filename) {
-        return filename + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT_FOR_FILE_NAMING)) + ".json";
+        String localDateTimeAsString = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT_FOR_FILE_NAMING));
+        log.debug("Add timestamp to file name {}=[file name] +  {}=[timestamp]", filename, localDateTimeAsString);
+        String fullFileName = filename + "_" + localDateTimeAsString + ".json";
+        log.debug("Full file name: {}", fullFileName);
+        return fullFileName;
     }
 }
