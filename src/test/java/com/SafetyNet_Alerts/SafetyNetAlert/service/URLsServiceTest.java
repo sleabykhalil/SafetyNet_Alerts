@@ -33,6 +33,8 @@ class URLsServiceTest {
     PersonDaoImpl personDaoMock;
     @Mock
     MedicalRecordDaoImpl medicalRecordDaoMock;
+    @Mock
+    FileRWService fileRWServiceMock;
 
     URLsService urLsServiceUnderTest;
 
@@ -42,7 +44,7 @@ class URLsServiceTest {
 
     @BeforeEach
     void setUp() {
-        urLsServiceUnderTest = new URLsService(personDaoMock, firestationDaoMock, medicalRecordDaoMock);
+        urLsServiceUnderTest = new URLsService(personDaoMock, firestationDaoMock, medicalRecordDaoMock, fileRWServiceMock);
 
         firestationListForTest.add(Firestation.builder()
                 .station("1")
@@ -82,7 +84,7 @@ class URLsServiceTest {
                 .firstName("Khalil")
                 .lastName("Sleaby")
                 .birthdate(LocalDateTime.now().minusYears(40L).
-                        format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT)))
+                        format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT_FOR_CALCULATING_AGE)))
                 .medications(List.of("firstMed:30mg", "secondMed:10mg"))
                 .allergies(List.of("thirdAllergies", "forthAllergies"))
                 .build());
@@ -90,7 +92,7 @@ class URLsServiceTest {
                 .firstName("Aram")
                 .lastName("Sleaby")
                 .birthdate(LocalDateTime.now().minusYears(3L).
-                        format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT)))
+                        format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT_FOR_CALCULATING_AGE)))
                 .medications(Collections.emptyList())
                 .allergies(Collections.emptyList())
                 .build());
@@ -98,7 +100,7 @@ class URLsServiceTest {
                 .firstName("Khalil")
                 .lastName("Other")
                 .birthdate(LocalDateTime.now().minusYears(20L).
-                        format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT)))
+                        format(DateTimeFormatter.ofPattern(DateHelper.DATE_TIME_FORMAT_FOR_CALCULATING_AGE)))
                 .medications(Collections.emptyList())
                 .allergies(Collections.emptyList())
                 .build());
@@ -176,7 +178,7 @@ class URLsServiceTest {
         when(medicalRecordDaoMock.getMedicalRecordByFirstNameAndLastName("Aram", "Sleaby"))
                 .thenReturn(medicalRecordListForTest.get(1));
         //when
-        PeopleWithSpecificAgeDto result = urLsServiceUnderTest.getPeopleListServedByFirestationNumberByAddress("1234 Street St");
+        PeopleWithSpecificAgeDto result = urLsServiceUnderTest.getPeopleListServedByFirestationByAddress("1234 Street St");
         //then
         assertThat(result.getPeopleWithLastNamePhoneAgesList().get(0).getLastName()).isEqualTo("Sleaby");
         assertThat(result.getFirestationNumber()).isEqualTo("1");

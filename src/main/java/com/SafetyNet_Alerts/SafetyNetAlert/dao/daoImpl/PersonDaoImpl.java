@@ -1,16 +1,19 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileNames;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.PersonDao;
 import com.SafetyNet_Alerts.SafetyNetAlert.exception.ValidationException;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.PersonService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Repository
 public class PersonDaoImpl implements PersonDao {
     public static List<Person> personList = new ArrayList<>();
@@ -25,7 +28,7 @@ public class PersonDaoImpl implements PersonDao {
      */
     public PersonDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
-        personList = fileRWService.readFromJsonFile().getPersons();
+        personList = fileRWService.readInputFromInputJsonFileAndMapToJsonFileModel(JsonDataFileNames.INPUT_FILE_NAME).getPersons();
         PersonService.isPersonListValid(personList);
     }
 
@@ -36,6 +39,7 @@ public class PersonDaoImpl implements PersonDao {
      */
     @Override
     public List<Person> findAll() {
+        log.debug("Get all persons");
         List<Person> result;
         result = personList;
         if (result.isEmpty()) {
@@ -52,6 +56,7 @@ public class PersonDaoImpl implements PersonDao {
      */
     @Override
     public Person create(Person person) {
+        log.debug("Add/save new person {}=[new person data]", person.toString());
         if (personList.contains(person)) {
             throw new ValidationException(String.format("Person with first name: %s  last name: %s is already exist."
                     , person.getFirstName(), person.getLastName()));
@@ -65,7 +70,7 @@ public class PersonDaoImpl implements PersonDao {
         }
 
         personList.add(person);
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return person;
     }
 
@@ -79,6 +84,7 @@ public class PersonDaoImpl implements PersonDao {
      */
     @Override
     public Person update(Person personBefore, Person personAfter) {
+        log.debug("Update person data {}=[old person data]-->{}=[new person data]", personBefore.toString(), personAfter.toString());
         if (personList.contains(personAfter)) {
             throw new ValidationException(String.format("Person with, first name: %s  last name: %s is already exist."
                     , personAfter.getFirstName(), personAfter.getLastName()));
@@ -90,7 +96,7 @@ public class PersonDaoImpl implements PersonDao {
                 break;
             }
         }
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return personAfter;
     }
 
@@ -102,6 +108,7 @@ public class PersonDaoImpl implements PersonDao {
      */
     @Override
     public boolean delete(Person person) {
+        log.debug("Delete person {}=[data to delete]", person.toString());
         boolean result = personList.removeIf(personToDelete ->
                 personToDelete.getFirstName().equals(person.getFirstName()) &&
                         personToDelete.getLastName().equals(person.getLastName()));
@@ -109,7 +116,7 @@ public class PersonDaoImpl implements PersonDao {
             throw new ValidationException(String.format("Person with, first name: %s  last name: %s cant be found."
                     , person.getFirstName(), person.getLastName()));
         }
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return true;
     }
 
@@ -122,6 +129,7 @@ public class PersonDaoImpl implements PersonDao {
      * @return list of person lives in the same address
      */
     public List<Person> getPersonByAddress(String address) {
+        log.debug("Get list of person lives in address {}=[address]", address);
         List<Person> result = new ArrayList<>();
         personList.forEach(person -> {
             if (person.getAddress().equals(address)) {
@@ -132,6 +140,7 @@ public class PersonDaoImpl implements PersonDao {
     }
 
     public Person getPersonByFirstNameAndLastName(String firstName, String lastName) {
+        log.debug("Get person By full name {}=[first name] {}=[last name]", firstName, lastName);
         for (Person person : personList) {
             if (person.getFirstName().equals(firstName) && person.getLastName().equals(lastName)) {
                 return person;
@@ -141,6 +150,7 @@ public class PersonDaoImpl implements PersonDao {
     }
 
     public List<Person> getListOfPersonByFirstNameAndLastName(String firstName, String lastName) {
+        log.debug("Get list of person By full name {}=[first name] {}=[last name]", firstName, lastName);
         List<Person> personListByFirstNameAndLastName = new ArrayList<>();
         for (Person person : personList) {
             if (person.getFirstName().equals(firstName) && person.getLastName().equals(lastName)) {
@@ -151,6 +161,7 @@ public class PersonDaoImpl implements PersonDao {
     }
 
     public List<Person> getPersonByCity(String cityName) {
+        log.debug("Get list of person By city  {}=[city ] ", cityName);
         List<Person> personListByCity = new ArrayList<>();
         for (Person person : personList) {
             if (person.getCity().equals(cityName)) {

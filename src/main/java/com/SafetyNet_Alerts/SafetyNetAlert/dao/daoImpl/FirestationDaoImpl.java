@@ -1,15 +1,18 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileNames;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.FirestationDao;
 import com.SafetyNet_Alerts.SafetyNetAlert.exception.ValidationException;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Firestation;
 import com.SafetyNet_Alerts.SafetyNetAlert.service.FileRWService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Repository
 public class FirestationDaoImpl implements FirestationDao {
     public static List<Firestation> firestationList = new ArrayList<>();
@@ -24,7 +27,8 @@ public class FirestationDaoImpl implements FirestationDao {
      */
     public FirestationDaoImpl(FileRWService fileRWService) {
         this.fileRWService = fileRWService;
-        firestationList = fileRWService.readFromJsonFile().getFirestations();
+        log.debug("Read input file to get Firestation");
+        firestationList = fileRWService.readInputFromInputJsonFileAndMapToJsonFileModel(JsonDataFileNames.INPUT_FILE_NAME).getFirestations();
     }
 
     /**
@@ -55,7 +59,7 @@ public class FirestationDaoImpl implements FirestationDao {
                     , firestation.getStation(), firestation.getAddress()));
         }
         firestationList.add(firestation);
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return firestation;
     }
 
@@ -78,7 +82,7 @@ public class FirestationDaoImpl implements FirestationDao {
                 break;
             }
         }
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return firestationAfter;
     }
 
@@ -96,7 +100,7 @@ public class FirestationDaoImpl implements FirestationDao {
             throw new ValidationException(String.format("Firestation number %s associated to address %s is not exist."
                     , firestation.getStation(), firestation.getAddress()));
         }
-        fileRWService.saveToJsonFile();
+        fileRWService.updateInputFile();
         return true;
     }
 

@@ -17,6 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
@@ -42,13 +43,13 @@ class MedicalRecordDaoImplTest {
                 .medications(List.of("firstMed:350mg", "secondMed:100mg"))
                 .allergies(List.of("firstAllergies", "secondAllergies"))
                 .build();
-        lenient().doNothing().when(fileRWServiceMock).saveToJsonFile();
+        lenient().doNothing().when(fileRWServiceMock).updateInputFile();
 
         jsonFileModel = new JsonFileModel();
         medicalRecordList = new ArrayList<>();
         medicalRecordList.add(medicalRecordToTest);
         jsonFileModel.setMedicalrecords(medicalRecordList);
-        when(fileRWServiceMock.readFromJsonFile()).thenReturn(jsonFileModel);
+        when(fileRWServiceMock.readInputFromInputJsonFileAndMapToJsonFileModel(anyString())).thenReturn(jsonFileModel);
 
         medicalRecordDaoUnderTest = new MedicalRecordDaoImpl(fileRWServiceMock);
     }

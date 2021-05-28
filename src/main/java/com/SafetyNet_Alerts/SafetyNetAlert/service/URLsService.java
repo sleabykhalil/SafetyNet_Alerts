@@ -1,5 +1,6 @@
 package com.SafetyNet_Alerts.SafetyNetAlert.service;
 
+import com.SafetyNet_Alerts.SafetyNetAlert.constants.JsonDataFileNames;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.FirestationDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.MedicalRecordDaoImpl;
 import com.SafetyNet_Alerts.SafetyNetAlert.dao.daoImpl.PersonDaoImpl;
@@ -13,11 +14,17 @@ import com.SafetyNet_Alerts.SafetyNetAlert.model.MedicalRecord;
 import com.SafetyNet_Alerts.SafetyNetAlert.model.Person;
 import com.SafetyNet_Alerts.SafetyNetAlert.tools.DateHelper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @AllArgsConstructor
 @Service
 public class URLsService {
@@ -27,6 +34,8 @@ public class URLsService {
     FirestationDaoImpl firestationDao;
     @Autowired
     MedicalRecordDaoImpl medicalRecordDao;
+    @Autowired
+    FileRWService fileRWService;
 
     /**
      * get list of person with adult number and Child number
@@ -41,6 +50,7 @@ public class URLsService {
          * for each person get medical record by first name and last name
          * from medical record lest get adult number and Child number
          * return dto contain list of person and number of adult and  Child number
+         * create output file
          * */
         List<Firestation> firestationByAddress;
         List<PeopleWithAddressAndPhone> peopleWithAddressAndPhoneList = new ArrayList<>();
@@ -50,13 +60,18 @@ public class URLsService {
         int childNumber = 0;
 
         firestationByAddress = firestationDao.findFirestationByStation(stationNumber);
-        firestationByAddress.forEach(firestation -> personByAddress.addAll(personDao
-                .getPersonByAddress(firestation.getAddress())));
+        log.debug("Get person for each address");
+        firestationByAddress.forEach(firestation -> {
+            personByAddress.addAll(personDao
+                    .getPersonByAddress(firestation.getAddress()));
+        });
 
+        log.debug("Get medical record for each person");
         personByAddress.forEach(person -> {
             medicalRecordByName.add(medicalRecordDao
                     .getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName()));
 
+            log.debug("Get person to result list");
             peopleWithAddressAndPhoneList.add(PeopleWithAddressAndPhone.builder()
                     .firstName(person.getFirstName())
                     .lastName(person.getLastName())
@@ -67,15 +82,29 @@ public class URLsService {
 
         for (MedicalRecord medicalRecord : medicalRecordByName) {
             if (DateHelper.isAdult(medicalRecord.getBirthdate())) {
+                log.debug("Verifying is adult for {} {}=[Person name] his/her birthday {}=[Birthday]"
+                        , medicalRecord.getFirstName(), medicalRecord.getLastName(), medicalRecord.getBirthdate());
                 adultNumber += 1;
             } else childNumber += 1;
         }
 
-        return PeopleWithAgeCatDto.builder()
-                .peopleWithAddressAndPhoneList(peopleWithAddressAndPhoneList)
-                .adultNumber(adultNumber)
-                .childNumber(childNumber)
-                .build();
+        PeopleWithAgeCatDto result;
+
+        if (peopleWithAddressAndPhoneList.isEmpty()) {
+            log.debug("return empty json");
+            result = null;
+        } else {
+            log.debug("return final result PeopleWithAgeCatDto");
+            result = PeopleWithAgeCatDto.builder()
+                    .peopleWithAddressAndPhoneList(peopleWithAddressAndPhoneList)
+                    .adultNumber(adultNumber)
+                    .childNumber(childNumber)
+                    .build();
+        }
+        String filename = fileRWService.createFileName(JsonDataFileNames.PERSONS_COVERED_BY_FIRE_STATION);
+        fileRWService.saveOutputToJsonFile(result, filename);
+
+        return result;
     }
 
     /**
@@ -103,8 +132,11 @@ public class URLsService {
         for (Person person : personByAddress) {
             medicalRecordByName = medicalRecordDao
                     .getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+            log.debug("Verifying is adult for {} {}=[Person name] his/her birthday {}=[Birthday]"
+                    , medicalRecordByName.getFirstName(), medicalRecordByName.getLastName(), medicalRecordByName.getBirthdate());
             if (!DateHelper.isAdult(medicalRecordByName.getBirthdate())) {
                 age = DateHelper.calculateAge(medicalRecordByName.getBirthdate());
+                log.debug("calculate child age");
                 childList.add(new Child(person.getFirstName(), person.getLastName(), age));
             } else {
                 peopleWithAddressAndPhoneListLivesWithChild.add(new PeopleWithAddressAndPhone(person.getFirstName(), person.getLastName()
@@ -112,17 +144,21 @@ public class URLsService {
             }
         }
         if (!childList.isEmpty()) {
+            log.debug("Create result childAlertDto ");
             childAlertDto = ChildAlertDto.builder()
                     .children(childList)
                     .peopleWithAddressAndPhoneList(peopleWithAddressAndPhoneListLivesWithChild)
                     .build();
         } else {
-            childAlertDto = ChildAlertDto.builder()
-                    .children(Collections.emptyList())
-                    .peopleWithAddressAndPhoneList(Collections.emptyList())
-                    .build();
+            log.debug("return empty json");
+            childAlertDto = null;
         }
-        return childAlertDto;
+
+        ChildAlertDto result = childAlertDto;
+
+        String filename = fileRWService.createFileName(JsonDataFileNames.CHILD_ALERT);
+        fileRWService.saveOutputToJsonFile(result, filename);
+        return result;
     }
 
     /**
@@ -145,19 +181,36 @@ public class URLsService {
         PhoneAlertDto phoneAlertDto;
 
         firestationByStationNumber = firestationDao.findFirestationByStation(firestationNumber);
+
+        log.debug("For each firestation get person by address");
         for (Firestation firestation : firestationByStationNumber) {
             personListFromFirestation.addAll(personDao.getPersonByAddress(firestation.getAddress()));
         }
+
+        log.debug("For each person get phone number to create phone number list");
         for (Person person : personListFromFirestation) {
             // phone number in list will be unique
             if (!phoneNumberList.contains(person.getPhone())) {
                 phoneNumberList.add(person.getPhone());
             }
         }
-        phoneAlertDto = PhoneAlertDto.builder()
-                .phoneNumberList(phoneNumberList)
-                .build();
-        return phoneAlertDto;
+
+        PhoneAlertDto result;
+        if (!phoneNumberList.isEmpty()) {
+            log.debug("Create result to return  as phoneAlertDto");
+            phoneAlertDto = PhoneAlertDto.builder()
+                    .phoneNumberList(phoneNumberList)
+                    .build();
+            result = phoneAlertDto;
+        } else {
+            log.debug("return empty json");
+            result = null;
+        }
+
+        String filename = fileRWService.createFileName(JsonDataFileNames.PHONE_ALERT);
+        fileRWService.saveOutputToJsonFile(result, filename);
+
+        return result;
     }
 
     /**
@@ -166,7 +219,7 @@ public class URLsService {
      * @param address address to search by
      * @return Dto list of people with age
      */
-    public PeopleWithSpecificAgeDto getPeopleListServedByFirestationNumberByAddress(String address) {
+    public PeopleWithSpecificAgeDto getPeopleListServedByFirestationByAddress(String address) {
         /*
          * get person by address
          * for each firestation address get person by address
@@ -183,9 +236,12 @@ public class URLsService {
         firestationByAddress = firestationDao.findFirestationByAddress(address);
 
         personListByAddress = personDao.getPersonByAddress(address);
+        log.debug("For each person get medical record");
         for (Person person : personListByAddress) {
             MedicalRecord medicalRecord = medicalRecordDao
                     .getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+            log.debug("Calculating age for {} {}=[Person name] his/her birthday {}=[Birthday]"
+                    , medicalRecord.getFirstName(), medicalRecord.getLastName(), medicalRecord.getBirthdate());
             int age = DateHelper.calculateAge(medicalRecord.getBirthdate());
             PeopleWithMedicalBackground peopleWithMedicalBackground = PeopleWithMedicalBackground.builder()
                     .lastName(person.getLastName())
@@ -198,12 +254,23 @@ public class URLsService {
                 peopleWithLastNamePhoneAgesList.add(peopleWithMedicalBackground);
             }
         }
-        peopleWithSpecificAgeDto = PeopleWithSpecificAgeDto.builder()
-                .firestationNumber(firestationByAddress.getStation())
-                .peopleWithLastNamePhoneAgesList(peopleWithLastNamePhoneAgesList)
-                .build();
+        PeopleWithSpecificAgeDto result;
+        if (!peopleWithLastNamePhoneAgesList.isEmpty()) {
+            log.debug("Create result to return as peopleWithSpecificAgeDto");
+            peopleWithSpecificAgeDto = PeopleWithSpecificAgeDto.builder()
+                    .firestationNumber(firestationByAddress.getStation())
+                    .peopleWithLastNamePhoneAgesList(peopleWithLastNamePhoneAgesList)
+                    .build();
+            result = peopleWithSpecificAgeDto;
+        } else {
+            log.debug("return empty json");
+            result = null;
+        }
 
-        return peopleWithSpecificAgeDto;
+        String filename = fileRWService.createFileName(JsonDataFileNames.FIRE_ACCIDENT);
+        fileRWService.saveOutputToJsonFile(result, filename);
+
+        return result;
     }
 
     /**
@@ -230,8 +297,9 @@ public class URLsService {
         List<String> addressList = new ArrayList<>();
         for (String stationNumber : stationNumberList) {
             List<Firestation> firestationListByStationNumber = firestationDao.findFirestationByStation(stationNumber);
-            for (Firestation firestation :
-                    firestationListByStationNumber) {
+
+            log.debug("Create list of address by firestation number");
+            for (Firestation firestation : firestationListByStationNumber) {
                 if (!addressList.contains(firestation.getAddress())) {
                     addressList.add(firestation.getAddress());
                 }
@@ -241,11 +309,15 @@ public class URLsService {
         List<PeopleWithMedicalBackground> peopleWithMedicalBackgroundList = new ArrayList<>();
         Map<String, List<PeopleWithMedicalBackground>> addressAndPeopleWithSpecificAgeDtoMap = new HashMap<>();
 
+        log.debug("For each address get list of people with medical background");
         for (String address : addressList) {
             List<Person> personListByAddress = personDao.getPersonByAddress(address);
+            log.debug("For each person get  medical background and calculate age");
             for (Person person : personListByAddress) {
                 MedicalRecord medicalRecord = medicalRecordDao
                         .getMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+                log.debug("Calculating age for {} {}=[Person name] his/her birthday {}=[Birthday]"
+                        , medicalRecord.getFirstName(), medicalRecord.getLastName(), medicalRecord.getBirthdate());
                 int age = DateHelper.calculateAge(medicalRecord.getBirthdate());
                 PeopleWithMedicalBackground peopleWithMedicalBackground = PeopleWithMedicalBackground.builder()
                         .lastName(person.getLastName())
@@ -259,13 +331,25 @@ public class URLsService {
                 }
 
             }
-            addressAndPeopleWithSpecificAgeDtoMap.putIfAbsent(address, peopleWithMedicalBackgroundList);
+            if (!peopleWithMedicalBackgroundList.isEmpty()) {
+                addressAndPeopleWithSpecificAgeDtoMap.putIfAbsent(address, peopleWithMedicalBackgroundList);
+            }
+        }
+        HouseDto result;
+        if (!addressAndPeopleWithSpecificAgeDtoMap.isEmpty()) {
+            log.debug("Create result as HouseDto");
+            result = HouseDto.builder()
+                    .addressAndPeopleWithSpecificAgeDtoMap(addressAndPeopleWithSpecificAgeDtoMap)
+                    .build();
+        } else {
+            log.debug("return empty json");
+            result = null;
         }
 
+        String filename = fileRWService.createFileName(JsonDataFileNames.FLOOD_ACCIDENT);
+        fileRWService.saveOutputToJsonFile(result, filename);
 
-        return HouseDto.builder()
-                .addressAndPeopleWithSpecificAgeDtoMap(addressAndPeopleWithSpecificAgeDtoMap)
-                .build();
+        return result;
     }
 
     /**
@@ -294,6 +378,8 @@ public class URLsService {
         List<PersonInfoDto> personInfoDtoList = new ArrayList<>();
         for (Person person : personListByFirstNameAndLastName) {
             MedicalRecord medicalRecord = medicalRecordDao.getMedicalRecordByFirstNameAndLastName(firstName, lastName);
+            log.debug("Calculating age for {} {}=[Person name] his/her birthday {}=[Birthday]"
+                    , medicalRecord.getFirstName(), medicalRecord.getLastName(), medicalRecord.getBirthdate());
             int age = DateHelper.calculateAge(medicalRecord.getBirthdate());
             personInfoDtoList.add(PersonInfoDto.builder()
                     .lastName(person.getLastName())
@@ -303,7 +389,17 @@ public class URLsService {
                     .medicalHistory(new MedicalHistory(medicalRecord.getMedications(), medicalRecord.getAllergies()))
                     .build());
         }
-        return personInfoDtoList;
+        List<PersonInfoDto> result;
+        if (!personInfoDtoList.isEmpty()) {
+            result = personInfoDtoList;
+        } else {
+            log.debug("return empty json");
+            result = null;
+        }
+        String filename = fileRWService.createFileName(JsonDataFileNames.PERSON_INFO);
+        fileRWService.saveOutputToJsonFile(result, filename);
+
+        return result;
     }
 
     /**
@@ -320,13 +416,26 @@ public class URLsService {
          */
         List<Person> personListByCity = personDao.getPersonByCity(cityName);
         List<String> addressListByCity = new ArrayList<>();
+
+        log.debug("for each person get email");
         for (Person person : personListByCity) {
             if (person.getCity().equals(cityName)) {
-                if (!addressListByCity.contains(person.getEmail())) {
+                if (!ObjectUtils.isEmpty(person.getEmail()) && !addressListByCity.contains(person.getEmail())) {
                     addressListByCity.add(person.getEmail());
                 }
             }
         }
-        return addressListByCity;
+        List<String> result;
+        if (!addressListByCity.isEmpty()) {
+            log.debug("Create result as List of String");
+            result = addressListByCity;
+        } else {
+            log.debug("return empty json");
+            result = null;
+        }
+        String filename = fileRWService.createFileName(JsonDataFileNames.EMAIL_ALERT_BY_CITY);
+        fileRWService.saveOutputToJsonFile(result, filename);
+
+        return result;
     }
 }

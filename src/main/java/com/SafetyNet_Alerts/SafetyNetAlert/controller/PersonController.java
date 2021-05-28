@@ -10,12 +10,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@Slf4j
 @RestController
 public class PersonController {
     @Autowired
@@ -32,6 +35,7 @@ public class PersonController {
     @Operation(summary = "Get all persons from data source")
     @GetMapping(value = "/persons")
     public List<Person> getAllPersons() {
+        log.debug("get all persons");
         return personService.getAllPerson();
     }
 
@@ -45,6 +49,8 @@ public class PersonController {
     @PostMapping(value = "/person")
     public Person addPerson(@RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Person to add",
             required = true, content = @Content(schema = @Schema(implementation = Person.class))) Person person) {
+
+        log.debug("Add/save new person {}=[new data]", person.toString());
         return personService.savePerson(person);
     }
 
@@ -62,6 +68,8 @@ public class PersonController {
                                @RequestParam @Parameter(description = "Last name to update", required = true) String lastName,
                                @RequestBody @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "New data of person",
                                        required = true, content = @Content(schema = @Schema(implementation = Person.class))) Person person) {
+
+        log.debug("update person info for {}=[first name] {}=[last name] {}=[new data]", firstName, lastName, person.toString());
         return personService.updatePerson(firstName, lastName, person);
     }
 
@@ -76,6 +84,8 @@ public class PersonController {
     @DeleteMapping(value = "/person")
     public boolean deletePerson(@RequestParam @Parameter(description = "First name to update", required = true) String firstName,
                                 @RequestParam @Parameter(description = "Last name to update", required = true) String lastName) {
+
+        log.debug("Delete person info for {}=[first name] {}=[last name]", firstName, lastName);
         return personService.deletePerson(firstName, lastName);
     }
 
@@ -83,26 +93,37 @@ public class PersonController {
 
     @Operation(summary = "Get children with age and adult live with them by address")
     @GetMapping(value = "/childAlert")
-    public ChildAlertDto getChildAlertDto(@RequestParam @Parameter(description = "Address to search by", required = true) String address) {
-        return urLsService.getListOFChildByAddress(address);
+    public ResponseEntity getChildAlertDto(@RequestParam @Parameter(description = "Address to search by", required = true) String address) {
+
+        log.debug("Get Child alert for address {}=[address]", address);
+        ChildAlertDto result = urLsService.getListOFChildByAddress(address);
+        return ObjectUtils.isEmpty(result) ? ResponseEntity.ok().body(new EmptyJsonResponse()) : ResponseEntity.ok().body(result);
     }
 
     @Operation(summary = "Get all phone numbers for people lives in address corresponding to firestation number")
     @GetMapping(value = "/phoneAlert")
-    public PhoneAlertDto getPhoneNumberDto(@RequestParam @Parameter(description = "Firestation number", required = true) String firestation_number) {
-        return urLsService.getPhoneNumber(firestation_number);
+    public ResponseEntity getPhoneNumberDto(@RequestParam @Parameter(description = "Firestation number", required = true) String firestation_number) {
+
+        log.debug("Get phoneAlert for person served by firestaion {}=[firestation number]", firestation_number);
+        PhoneAlertDto result = urLsService.getPhoneNumber(firestation_number);
+        return ObjectUtils.isEmpty(result) ? ResponseEntity.ok().body(new EmptyJsonResponse()) : ResponseEntity.ok().body(result);
     }
 
     @Operation(summary = "Get information of specific person")
     @GetMapping(value = "/personInfo")
-    public List<PersonInfoDto> getListOfPersonalInfo(@RequestParam @Parameter(description = "Person first name", required = true) String firstName,
-                                                     @RequestParam @Parameter(description = "Person last name ", required = true) String lastName) {
-        return urLsService.getListOfPersonInfo(firstName, lastName);
+    public ResponseEntity getListOfPersonalInfo(@RequestParam @Parameter(description = "Person first name", required = true) String firstName,
+                                                @RequestParam @Parameter(description = "Person last name ", required = true) String lastName) {
+        log.debug("Get personInfo for person with name {}=[first name] , {}=[last name]", firstName, lastName);
+        List<PersonInfoDto> result = urLsService.getListOfPersonInfo(firstName, lastName);
+        return ObjectUtils.isEmpty(result) ? ResponseEntity.ok().body(new EmptyJsonResponse()) : ResponseEntity.ok().body(result);
     }
 
     @Operation(summary = "Get all email addresses by city name")
     @GetMapping(value = "/communityEmail")
-    public List<String> getListOfPersonalInfo(@RequestParam @Parameter(description = "City name to search by", required = true) String city) {
-        return urLsService.getEmailAddressByCity(city);
+    public ResponseEntity getListOfPersonalInfo(@RequestParam @Parameter(description = "City name to search by", required = true) String city) {
+
+        log.debug("Get email list for person lives in city: {}=[City name]", city);
+        List<String> result = urLsService.getEmailAddressByCity(city);
+        return ObjectUtils.isEmpty(result) ? ResponseEntity.ok().body(new EmptyJsonResponse()) : ResponseEntity.ok().body(result);
     }
 }
